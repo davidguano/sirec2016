@@ -1,0 +1,44 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:c="http://java.sun.com/jsp/jstl/core">
+    <ui:composition template="/plantillas/sirec_plantilla1.xhtml">
+        <ui:define name="contenido">
+            <!--FICHA DE PATENTE-->
+            <h:form id="frmPat">   
+               <p:growl id="msgs" showDetail="true"   /> 
+                <center>
+                    <p:tabView id="tabPrin" style="font-size:12px">
+                        <p:ajax event="tabChange"/>
+
+                   <p:tab title="IDENTIFICACIÓN" id="patRegFicha">
+                            <ui:include src="patenteFichaReg.xhtml" />
+                        </p:tab> 
+                        <p:tab title="EXONERACIONES, DEDUCCIONES Y MULTAS DE PATENTES" id="exoDedMulPat">
+                            <ui:include src="patentesExoDeducMultas.xhtml" />
+                        </p:tab> 
+                        <p:tab title="DETERMINACIÓN PATENTES" id="patDet">
+                            <ui:include src="patentesDeterminacion.xhtml" />
+                        </p:tab> 
+                        <p:tab title="INGRESO DE TABLA DE AMORTIZACIÓN" >
+                            <ui:include src="patentesTblAmortizacion.xhtml" />
+                        </p:tab>  
+                         <p:tab title="EXONERACIONES Y MULTAS 1.5 POR MIL" >
+                            <ui:include src="15porMilExoDeducMultas.xhtml" />
+                        </p:tab> 
+                        <p:tab title="DETERMINACIÓN 1.5 POR MIL" >
+                            <ui:include src="15porMilDeterminacion.xhtml" />
+                        </p:tab>  
+                        <p:tab title="EMISIÓN DE PATENTES y 1.5 POR MIL" >
+                           <ui:include src="patentesEmision.xhtml" />
+                        </p:tab>
+                    </p:tabView>
+                </center>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>
