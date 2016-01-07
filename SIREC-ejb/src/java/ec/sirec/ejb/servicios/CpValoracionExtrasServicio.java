@@ -7,6 +7,7 @@ package ec.sirec.ejb.servicios;
 
 import ec.sirec.ejb.entidades.AdicionalesDeductivos;
 import ec.sirec.ejb.entidades.CatalogoDetalle;
+import ec.sirec.ejb.entidades.CatastroPredialValoracion;
 import ec.sirec.ejb.entidades.CpValoracionExtras;
 import ec.sirec.ejb.entidades.SegPermiso;
 import ec.sirec.ejb.facade.AdicionalesDeductivosFacade;
@@ -46,9 +47,9 @@ public class CpValoracionExtrasServicio {
         return cpValoracionExtrasDao.listarTodos();
     }
 
-//    public List<CpValoracionExtras> listarCatalogosPorNemonico(String tipo) throws Exception {
-//     return cpValoracionExtrasDao.listarPorCampoOrdenada(nemonico, "catdetOrden", "asc");
-//    }
+    public List<CpValoracionExtras> listarCpValoracionExtrasXCatPreVal(CatastroPredialValoracion catPreValCodigo) throws Exception {
+     return cpValoracionExtrasDao.listarPorCampoOrdenada(ENTIDAD_VALORACION_EXTRAS,"catprevalCodigo", catPreValCodigo,"cpvalextCodigo", "asc");
+    }
     
     
 //    public List<AdicionalesDeductivos> listarAdicionalesDeducibles() throws Exception {
