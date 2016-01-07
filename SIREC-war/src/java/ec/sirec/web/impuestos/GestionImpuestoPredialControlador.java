@@ -506,6 +506,16 @@ public class GestionImpuestoPredialControlador extends BaseControlador {
              }
                System.out.println("ds>: "+VE.getAdidedCodigo().getAdidedNemonico());
            }
+           if(terceraEdad=true){
+           
+               catastroPredialServicio.obtenerPropietarioPrincipalPredio(catastroPredialActual.getCatpreCodigo());
+           
+               
+               
+               
+           }else{
+           
+           }
 
         } catch (Exception ex) {
             LOGGER.log(Level.SEVERE, null, ex);
