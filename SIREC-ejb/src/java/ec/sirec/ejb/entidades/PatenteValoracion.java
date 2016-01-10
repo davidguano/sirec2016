@@ -66,9 +66,7 @@ public class PatenteValoracion implements Serializable {
     private BigDecimal patvalTotal;
      @Column(name = "patval_tasa_bomb")
     private BigDecimal patvalTasaBomb;
-     @Column(name = "patval_activo")
-    private Boolean patvalActivo;
-    @JoinColumn(name = "pat_codigo", referencedColumnName = "pat_codigo")
+        @JoinColumn(name = "pat_codigo", referencedColumnName = "pat_codigo")
     @ManyToOne(optional = false)
     private Patente patCodigo;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "patvalCodigo")
@@ -201,17 +199,7 @@ public class PatenteValoracion implements Serializable {
     public void setBajaList(List<Baja> bajaList) {
         this.bajaList = bajaList;
     }
-
-    public Boolean isPatvalActivo() {
-        return patvalActivo;
-    }
-
-    public void setPatvalActivo(Boolean patvalActivo) {
-        this.patvalActivo = patvalActivo;
-    }
     
-    
-
     @Override
     public int hashCode() {
         int hash = 0;
