@@ -11,17 +11,17 @@
     <h:panelGrid>
         <center>
             <h:panelGrid id="pnlContienePatente" width="1000" columns="1" >
-                <p:panel header="#{txt.lbl_header_patente}">
+                <p:panel style="background: #C5D9F1" header="#{txt.lbl_header_patente}">
                     <h:panelGrid columns="1">
                         <h:panelGrid columns="3">
                             <p:outputLabel style="font-size: #{txt.font_size};" value="#{txt.lbl_num_patente}"/>
-                            <p:inputText  disabled="true" id="compPnl1_1" value="#{gestionPatenteControlador.numPatente}"  
+                            <p:inputText requiredMessage="#{txt.lbl_num_patente} Se nesecita un valor" disabled="true" id="compPnl1_1" value="#{gestionPatenteControlador.numPatente}"  
                                           size="40"/>
-                            <p:message for="compPnl1_1"/>  
+                            <p:message for="compPnl1_1" display="icon"/>  
                         </h:panelGrid>
                         <h:panelGrid columns="6">
                             <h:outputLabel style="font-size: #{txt.font_size}" value="#{txt.lbl_clave_catastrat}"/>
-                            <p:selectOneMenu  requiredMessage="! Debe seleccionar una opción !" required="true" id="cmbCatastro" 
+                            <p:selectOneMenu  requiredMessage="#{txt.lbl_clave_catastrat} Se nesecita un valor" required="true" id="cmbCatastro" 
                                                value="#{gestionPatenteControlador.catastroPredialSelec}" style="width:250px"
                                                converter="#{catastroPredialConverter}" var="t">
                                 <f:selectItem  itemLabel="Seleccione..." itemValue=""/> 
@@ -34,10 +34,10 @@
                                     <h:outputText escape="false" value="#{t.catpreCodNacional}" style="font-size: 10px"/> 
                                 </p:column> 
                             </p:selectOneMenu>                               
-                            <p:message for="cmbCatastro"/>
+                            <p:message for="cmbCatastro" display="icon"/>
 
                             <h:outputLabel style="font-size: #{txt.font_size}" value="#{txt.lbl_estado}"/>
-                            <p:selectOneMenu requiredMessage="! Debe seleccionar una opción !"  required="true" id="cmbIdentEstado" 
+                            <p:selectOneMenu requiredMessage="#{txt.lbl_estado} Se nesecita un valor" required="true" id="cmbIdentEstado" 
                                                value="#{gestionPatenteControlador.catDetIdentEstadoActual}" style="width:250px"
                                                converter="#{catalogoDetalleConverter}" var="t">
                                 <f:selectItem  itemLabel="Seleccione..." itemValue="" /> 
@@ -49,33 +49,33 @@
                                     <h:outputText escape="false" value="#{t.catdetTexto}" style="font-size: 10px"/> 
                                 </p:column> 
                             </p:selectOneMenu>                               
-                            <p:message for="cmbIdentEstado"/>
+                            <p:message for="cmbIdentEstado" display="icon"/>
                         </h:panelGrid>
                         <h:panelGrid columns="3">
                             <p:outputLabel style="font-size: #{txt.font_size}" value="#{txt.lbl_nombre_comercial}"/>
-                            <p:inputText  id="compPnl1_4"  value="#{gestionPatenteControlador.patenteActual.patNombreComercial}" 
-                                          maxlength="20" size="40"/>
-                            <p:message for="compPnl1_4"/>
+                            <p:inputText requiredMessage="#{txt.lbl_nombre_comercial} Se nesecita un valor"  id="compPnl1_4"  value="#{gestionPatenteControlador.patenteActual.patNombreComercial}" 
+                                          maxlength="100" size="40"/>
+                            <p:message for="compPnl1_4" display="icon"/>
                         </h:panelGrid>
                         <p:panel>
                             <h:panelGrid id="panlDatosPropietario" columns="6">
                                 <p:outputLabel  style="font-size: #{txt.font_size}" value="#{txt.lbl_cedula}"/>
-                                <p:inputText  disabled="#{gestionPatenteControlador.habilitaCamposPropietario}" id="compPnl1_2"  value="#{gestionPatenteControlador.propietarioActual.proCi}" 
+                                <p:inputText requiredMessage="#{txt.lbl_cedula} Se nesecita un valor"  disabled="#{gestionPatenteControlador.habilitaCamposPropietario}" id="compPnl1_2"  value="#{gestionPatenteControlador.propietarioActual.proCi}" 
                                               maxlength="20" size="40"/>
-                                <p:message for="compPnl1_2"/>
+                                <p:message for="compPnl1_2" display="icon"/>
 
                                 <p:outputLabel style="font-size: #{txt.font_size}" value="#{txt.lbl_propietario}"/>
-                                <p:inputText disabled="#{gestionPatenteControlador.habilitaCamposPropietario}"   id="compPnl1_3"  value="#{gestionPatenteControlador.propietarioActual.proRazonSocial}" 
+                                <p:inputText requiredMessage="#{txt.lbl_propietario} Se nesecita un valor" disabled="#{gestionPatenteControlador.habilitaCamposPropietario}"   id="compPnl1_3"  value="#{gestionPatenteControlador.propietarioActual.proRazonSocial}" 
                                              size="40"/>
-                                <p:message for="compPnl1_3"/>
+                                <p:message for="compPnl1_3" display="icon"/>
 
                                 <p:outputLabel  style="font-size: #{txt.font_size}" value="#{txt.lbl_direccion}"/>
-                                <p:inputTextarea style="width: 200px" disabled="#{gestionPatenteControlador.habilitaCamposPropietario}" id="compPnl1_5"  value="#{gestionPatenteControlador.propietarioActual.proDireccion}" 
+                                <p:inputTextarea requiredMessage="#{txt.lbl_direccion} Se nesecita un valor" style="width: 200px" disabled="#{gestionPatenteControlador.habilitaCamposPropietario}" id="compPnl1_5"  value="#{gestionPatenteControlador.propietarioActual.proDireccion}" 
                                                  />
-                                <p:message for="compPnl1_5"/>
+                                <p:message for="compPnl1_5" display="icon"/>
 
                                 <p:outputLabel style="font-size: #{txt.font_size}" value="#{txt.lbl_parroquia}"/>
-                                <p:selectOneMenu requiredMessage="! Debe seleccionar una opción !" disabled="#{gestionPatenteControlador.habilitaCamposPropietario}"  required="true" id="cmbPropParroquia" 
+                                <p:selectOneMenu requiredMessage="#{txt.lbl_parroquia} Se nesecita un valor" disabled="#{gestionPatenteControlador.habilitaCamposPropietario}"  required="true" id="cmbPropParroquia" 
                                                    value="#{gestionPatenteControlador.catDetParroquia}" style="width:250px"
                                                    converter="#{catalogoDetalleConverter}" var="t">
                                     <f:selectItem  itemLabel="Seleccione..." itemValue="" /> 
@@ -87,23 +87,23 @@
                                         <h:outputText escape="false" value="#{t.catdetTexto}" style="font-size: 10px"/> 
                                     </p:column> 
                                 </p:selectOneMenu>                               
-                                <p:message for="cmbPropParroquia"/>
+                                <p:message for="cmbPropParroquia" display="icon"/>
 
 
                                 <p:outputLabel style="font-size: #{txt.font_size}" value="#{txt.lbl_sector}"/>
-                                <p:inputText disabled="#{gestionPatenteControlador.habilitaCamposPropietario}"  id="compPnl1_7"  value="#{gestionPatenteControlador.propietarioActual.catdetCiudad.catdetTexto}" 
+                                <p:inputText requiredMessage="#{txt.lbl_sector} Se nesecita un valor" disabled="#{gestionPatenteControlador.habilitaCamposPropietario}"  id="compPnl1_7"  value="#{gestionPatenteControlador.propietarioActual.catdetCiudad.catdetTexto}" 
                                               size="40"/>
-                                <p:message for="compPnl1_7"/>
+                                <p:message for="compPnl1_7" display="icon"/>
 
                                 <p:outputLabel style="font-size: #{txt.font_size}" value="#{txt.lbl_telefono}"/>
-                                <p:inputText disabled="#{gestionPatenteControlador.habilitaCamposPropietario}" id="compPnl1_8"  value="#{gestionPatenteControlador.propietarioActual.proTelefono}" 
+                                <p:inputText requiredMessage="#{txt.lbl_telefono} Se nesecita un valor" disabled="#{gestionPatenteControlador.habilitaCamposPropietario}" id="compPnl1_8"  value="#{gestionPatenteControlador.propietarioActual.proTelefono}" 
                                              size="40"/>
-                                <p:message for="compPnl1_8"/>
+                                <p:message for="compPnl1_8" display="icon"/>
 
                                 <p:outputLabel style="font-size: #{txt.font_size}" value="#{txt.lbl_correo}"/>
-                                <p:inputText disabled="#{gestionPatenteControlador.habilitaCamposPropietario}" id="compPnl1_9"  value="#{gestionPatenteControlador.propietarioActual.proCorreo}" 
+                                <p:inputText requiredMessage="#{txt.lbl_correo} Se nesecita un valor" disabled="#{gestionPatenteControlador.habilitaCamposPropietario}" id="compPnl1_9"  value="#{gestionPatenteControlador.propietarioActual.proCorreo}" 
                                               size="40"/>
-                                <p:message for="compPnl1_9"/>
+                                <p:message for="compPnl1_9" display="icon"/>
                                 <p:column/>
                                 <h:panelGrid columns="3">
                                     <p:commandButton value="#{txt.btn_editar}" process="@this,panlDatosPropietario" update="panlDatosPropietario"
@@ -116,26 +116,26 @@
                         </p:panel>
                         <h:panelGrid columns="3">
                             <p:outputLabel style="font-size: #{txt.font_size}"  value="#{txt.lbl_representante}"/>
-                            <p:inputText  disabled="false" id="compPnl1_10"  value="#{gestionPatenteControlador.patenteActual.patRepresentanteLegal}" 
+                            <p:inputText requiredMessage="#{txt.lbl_representante} Se nesecita un valor"  disabled="false" id="compPnl1_10"  value="#{gestionPatenteControlador.patenteActual.patRepresentanteLegal}" 
                                           maxlength="50" size="40"/>
-                            <p:message for="compPnl1_10"/>
+                            <p:message for="compPnl1_10" display="icon"/>
 
                             <p:outputLabel style="font-size: #{txt.font_size}" value="#{txt.lbl_contado}"/>
-                            <p:inputText  disabled="false" id="compPnl1_11"  value="#{gestionPatenteControlador.patenteActual.patContador}" 
+                            <p:inputText requiredMessage="#{txt.lbl_contado} Se nesecita un valor"  disabled="false" id="compPnl1_11"  value="#{gestionPatenteControlador.patenteActual.patContador}" 
                                           maxlength="50" size="40"/>
-                            <p:message for="compPnl1_11"/>
+                            <p:message for="compPnl1_11" display="icon"/>
 
                             <p:outputLabel style="font-size: #{txt.font_size}" value="#{txt.lbl_ruc_contador}"/>
-                            <p:inputText  disabled="false" id="compPnl1_11ext"  value="#{gestionPatenteControlador.patenteActual.patRucContador}" 
+                            <p:inputText requiredMessage="#{txt.lbl_ruc_contador} Se nesecita un valor" disabled="false" id="compPnl1_11ext"  value="#{gestionPatenteControlador.patenteActual.patRucContador}" 
                                           maxlength="20" size="40"/>
-                            <p:message for="compPnl1_11ext"/>
+                            <p:message for="compPnl1_11ext" display="icon"/>
                         </h:panelGrid>
                     </h:panelGrid>
                 </p:panel>
-                <p:panel>
+                <p:panel style="background: antiquewhite">
                     <h:panelGrid columns="6">
                         <h:outputLabel style="font-size: #{txt.font_size}" value="#{txt.lbl_establecimiento}"/>
-                        <p:selectOneMenu requiredMessage="! Debe seleccionar una opción !"  required="true" id="cmbEstablecimiento" 
+                        <p:selectOneMenu requiredMessage="#{txt.lbl_establecimiento} Se nesecita un valor" required="true" id="cmbEstablecimiento" 
                                            value="#{gestionPatenteControlador.catDetEstablecimientoActual}" style="width:250px"
                                            converter="#{catalogoDetalleConverter}" var="t">
                             <f:selectItem  itemLabel="Seleccione..." itemValue="" /> 
@@ -147,10 +147,10 @@
                                 <h:outputText escape="false" value="#{t.catdetTexto}" style="font-size: 10px"/> 
                             </p:column> 
                         </p:selectOneMenu>                               
-                        <p:message for="cmbEstablecimiento"/>
+                        <p:message for="cmbEstablecimiento" display="icon"/>
 
                         <h:outputLabel style="font-size: #{txt.font_size}" value="#{txt.lbl_tipo_empresa}"/>
-                        <p:selectOneMenu  requiredMessage="! Debe seleccionar una opción !" required="true" id="cmbTipEmpresa" 
+                        <p:selectOneMenu  requiredMessage="#{txt.lbl_tipo_empresa} Se nesecita un valor" required="true" id="cmbTipEmpresa" 
                                            value="#{gestionPatenteControlador.catDetTipoEmpresActual}" style="width:250px"
                                            converter="#{catalogoDetalleConverter}" var="t">
                             <f:selectItem  itemLabel="Seleccione..." itemValue="" /> 
@@ -162,10 +162,10 @@
                                 <h:outputText escape="false" value="#{t.catdetTexto}" style="font-size: 10px"/> 
                             </p:column> 
                         </p:selectOneMenu>                               
-                        <p:message for="cmbTipEmpresa"/>
+                        <p:message for="cmbTipEmpresa" display="icon"/>
 
                         <h:outputLabel style="font-size: #{txt.font_size}" value="#{txt.lbl_tipo_local}"/>
-                        <p:selectOneMenu requiredMessage="! Debe seleccionar una opción !"  required="true" id="cmbTipLocal" 
+                        <p:selectOneMenu requiredMessage="#{txt.lbl_tipo_local} Se nesecita un valor"  required="true" id="cmbTipLocal" 
                                            value="#{gestionPatenteControlador.catDetTipoLocalActual}" style="width:250px"
                                            converter="#{catalogoDetalleConverter}" var="t">
                             <f:selectItem  itemLabel="Seleccione..." itemValue="" /> 
@@ -177,10 +177,10 @@
                                 <h:outputText escape="false" value="#{t.catdetTexto}" style="font-size: 10px"/> 
                             </p:column> 
                         </p:selectOneMenu>                               
-                        <p:message for="cmbTipLocal"/>
+                        <p:message for="cmbTipLocal" display="icon"/>
 
                         <h:outputLabel style="font-size: #{txt.font_size}" value="#{txt.lbl_tipo_actividad_economica}"/>
-                        <p:selectOneMenu requiredMessage="! Debe seleccionar una opción !"  required="true" id="cmbTipActividadEco" 
+                        <p:selectOneMenu requiredMessage="#{txt.lbl_tipo_actividad_economica} Se nesecita un valor"  required="true" id="cmbTipActividadEco" 
                                            value="#{gestionPatenteControlador.catDetTipActEcoActual}" style="width:250px"
                                            converter="#{catalogoDetalleConverter}" var="t">
                             <f:selectItem  itemLabel="Seleccione..." itemValue="" /> 
@@ -193,36 +193,36 @@
                             </p:column> 
 
                         </p:selectOneMenu>                               
-                        <p:message for="cmbTipActividadEco"/>
+                        <p:message for="cmbTipActividadEco" display="icon"/>
                     </h:panelGrid>
                     <h:panelGrid id="panelContienePlaca" columns="3" >
                         <p:outputLabel  style="font-size: #{txt.font_size}" value="#{txt.lbl_placa}"/>
-                        <p:inputText maxlength="20" size="40"   id="txtPlaca"  value="#{gestionPatenteControlador.patenteActual.patPlaca}" 
+                        <p:inputText requiredMessage="#{txt.lbl_placa} Se nesecita un valor" maxlength="20" size="40"   id="txtPlaca"  value="#{gestionPatenteControlador.patenteActual.patPlaca}" 
                                      />
-                        <p:message  for="txtPlaca"/>
+                        <p:message  for="txtPlaca" display="icon"/>
                     </h:panelGrid>
                     <h:panelGrid columns="3">
                         <p:outputLabel style="font-size: #{txt.font_size}" value="#{txt.lbl_des_actividad_economica}"/>
-                        <p:inputTextarea style="width: 200px" id="compPnl1_16"  value="#{gestionPatenteControlador.patenteActual.patDescActEco}" 
+                        <p:inputTextarea requiredMessage="#{txt.lbl_des_actividad_economica} Se nesecita un valor" style="width: 200px" id="compPnl1_16"  value="#{gestionPatenteControlador.patenteActual.patDescActEco}" 
                                           />
-                        <p:message for="compPnl1_16"/>
+                        <p:message for="compPnl1_16" display="icon"/>
 
                         <p:outputLabel style="font-size: #{txt.font_size}" for="button" value="#{txt.lbl_inicio_actividad}"/>                               
-                        <p:calendar id="button" value="#{gestionPatenteControlador.fecActividadEconomica}" showOn="button" />
-                        <p:message for="button"/>
+                        <p:calendar requiredMessage="#{txt.lbl_inicio_actividad} Se nesecita un valor" id="button" value="#{gestionPatenteControlador.fecActividadEconomica}" showOn="button" />
+                        <p:message for="button" display="icon"/>
                     </h:panelGrid>
                     <h:panelGrid columns="6">
                         <p:outputLabel style="font-size: #{txt.font_size}" value="#{txt.lbl_artesano}"/>
-                        <p:selectBooleanButton id="compPnl1_18" value="#{gestionPatenteControlador.artesCalificado}" onLabel="Si" offLabel="No" style="width:60px" />
-                        <p:message for="compPnl1_18"/>
+                        <p:selectBooleanButton requiredMessage="#{txt.lbl_artesano} Se nesecita un valor" id="compPnl1_18" value="#{gestionPatenteControlador.artesCalificado}" onLabel="Si" offLabel="No" style="width:60px" />
+                        <p:message for="compPnl1_18" display="icon"/>
 
                         <p:outputLabel style="font-size: #{txt.font_size}" value="#{txt.lbl_obl_lleva_contab}"/>
-                        <p:selectBooleanButton id="compPnl1_19" value="#{gestionPatenteControlador.llevaConta}" onLabel="Si" offLabel="No" style="width:60px" />
-                        <p:message for="compPnl1_19"/>
+                        <p:selectBooleanButton  requiredMessage="#{txt.lbl_obl_lleva_contab} Se nesecita un valor" id="compPnl1_19" value="#{gestionPatenteControlador.llevaConta}" onLabel="Si" offLabel="No" style="width:60px" />
+                        <p:message for="compPnl1_19" display="icon"/>
                     </h:panelGrid>
                     <h:panelGrid columns="6">
                         <h:outputLabel style="font-size: #{txt.font_size}" value="#{txt.lbl_horario_funcionamiento}"/>
-                        <p:selectOneMenu  requiredMessage="! Debe seleccionar una opción !" required="true" id="cmbHorarioFun" 
+                        <p:selectOneMenu  requiredMessage="#{txt.lbl_horario_funcionamiento}  Se nesecita un valor" required="true" id="cmbHorarioFun" 
                                            value="#{gestionPatenteControlador.catDetHorFuncionaActual}" style="width:250px"
                                            converter="#{catalogoDetalleConverter}" var="t">
                             <f:selectItem  itemLabel="Seleccione..." itemValue="" /> 
@@ -234,16 +234,16 @@
                                 <h:outputText escape="false" value="#{t.catdetTexto}" style="font-size: 10px"/> 
                             </p:column> 
                         </p:selectOneMenu>   
-                        <p:message for="cmbHorarioFun"/>
+                        <p:message for="cmbHorarioFun" display="icon"/>
                     </h:panelGrid>
                     <h:panelGrid columns="6">                                
                         <p:outputLabel style="font-size: #{txt.font_size}" for="compPnl1_21" value="#{txt.lbl_desde}"/>
-                        <p:calendar id="compPnl1_21" value="#{gestionPatenteControlador.horarioDesde}" pattern="HH:mm" timeOnly="true"  />
-                        <p:message for="compPnl1_21"/>
+                        <p:calendar requiredMessage="#{txt.lbl_desde} Se nesecita un valor" id="compPnl1_21" value="#{gestionPatenteControlador.horarioDesde}" pattern="HH:mm" timeOnly="true"  />
+                        <p:message for="compPnl1_21" display="icon"/>
 
                         <p:outputLabel style="font-size: #{txt.font_size}" value="#{txt.lbl_hasta}"/>
-                        <p:calendar id="compPnl1_22" value="#{gestionPatenteControlador.horarioHasta}" pattern="HH:mm" timeOnly="true"  />
-                        <p:message for="compPnl1_22"/>
+                        <p:calendar requiredMessage="#{txt.lbl_hasta} Se nesecita un valor" id="compPnl1_22" value="#{gestionPatenteControlador.horarioHasta}" pattern="HH:mm" timeOnly="true"  />
+                        <p:message for="compPnl1_22" display="icon"/>
                     </h:panelGrid>
                     <h:panelGrid>
                         <p:outputLabel  style="font-size: #{txt.font_size}" value="#{txt.lbl_dias_funcionamiento}"/>
@@ -263,35 +263,35 @@
                             <h:outputText value="Domingo" />
                             <p:selectBooleanCheckbox value="#{gestionPatenteControlador.d7}" />
                         </h:panelGrid>
-                        <p:message for="compPnl1_23"/>
+                        <p:message for="compPnl1_23" display="icon"/>
                     </h:panelGrid>
 
                 </p:panel>
-                <p:panel>
-                    <h:panelGrid columns="6">
+                <p:panel style="background:#80c9c6">
+                    <h:panelGrid columns="6" >
                         <p:outputLabel style="font-size: #{txt.font_size}" value="#{txt.lbl_area_local}"/>
-                        <p:inputText   id="compPnl1_24" value="#{gestionPatenteControlador.patenteActual.patAreaLocal}"  
+                        <p:inputText requiredMessage="#{txt.lbl_area_local} Se nesecita un valor"  id="compPnl1_24" value="#{gestionPatenteControlador.patenteActual.patAreaLocal}"  
                                        size="40"   />
-                        <p:message for="compPnl1_24"/>  
+                        <p:message for="compPnl1_24" display="icon"/>  
 
                         <p:outputLabel style="font-size: #{txt.font_size}" value="#{txt.lbl_aforo}"/>
-                        <p:inputText   id="compPnl1_25"  value="#{gestionPatenteControlador.patenteActual.patLocalAforo}" 
+                        <p:inputText requiredMessage="#{txt.lbl_aforo} Se nesecita un valor"   id="compPnl1_25"  value="#{gestionPatenteControlador.patenteActual.patLocalAforo}" 
                                        maxlength="20" size="40"/>
-                        <p:message for="compPnl1_25"/>
+                        <p:message for="compPnl1_25" display="icon"/>
 
                         <p:outputLabel style="font-size: #{txt.font_size}" value="#{txt.lbl_categoria_tur}"/>
-                        <p:inputText  id="compPnl1_26"  value="#{gestionPatenteControlador.patenteActual.patCategoriaTuristica}" 
+                        <p:inputText requiredMessage="#{txt.lbl_categoria_tur} Se nesecita un valor"  id="compPnl1_26"  value="#{gestionPatenteControlador.patenteActual.patCategoriaTuristica}" 
                                       maxlength="20" size="40"/>
-                        <p:message for="compPnl1_26"/>
+                        <p:message for="compPnl1_26" display="icon"/>
 
                         <p:outputLabel  style="font-size: #{txt.font_size}" value="#{txt.lbl_registro_tur}"/>
-                        <p:inputText    id="compPnl1_27"  value="#{gestionPatenteControlador.patenteActual.patNumRegTuristico}" 
+                        <p:inputText requiredMessage="#{txt.lbl_registro_tur} Se nesecita un valor"    id="compPnl1_27"  value="#{gestionPatenteControlador.patenteActual.patNumRegTuristico}" 
                                         size="40"/>
-                        <p:message for="compPnl1_27"/>
+                        <p:message for="compPnl1_27" display="icon"/>
                     </h:panelGrid>
                     <h:panelGrid columns="3">
                         <h:outputLabel style="font-size: #{txt.font_size}" value="#{txt.lbl_especialidad}"/>
-                        <p:selectOneMenu requiredMessage="! Debe seleccionar una opción !"  required="true" id="cmbEspTuris" 
+                        <p:selectOneMenu requiredMessage="#{txt.lbl_especialidad} Se nesecita un valor"  required="true" id="cmbEspTuris" 
                                            value="#{gestionPatenteControlador.catDetEspTurisActual}" style="width:250px"
                                            converter="#{catalogoDetalleConverter}" var="t">
                             <f:selectItem  itemLabel="Seleccione..." itemValue="" /> 
@@ -303,12 +303,12 @@
                                 <h:outputText escape="false" value="#{t.catdetTexto}" style="font-size: 10px"/> 
                             </p:column> 
                         </p:selectOneMenu>                               
-                        <p:message for="cmbEspTuris"/>
+                        <p:message for="cmbEspTuris" display="icon"/>
 
                         <p:outputLabel style="font-size: #{txt.font_size}" value="#{txt.lbl_obserba}"/>
-                        <p:inputTextarea style="width: 200px" id="compPnl1_29"  value="#{gestionPatenteControlador.patenteActual.patObservaciones}" 
+                        <p:inputTextarea requiredMessage="#{txt.lbl_obserba} Se nesecita un valor" style="width: 200px" id="compPnl1_29"  value="#{gestionPatenteControlador.patenteActual.patObservaciones}" 
                                            />
-                        <p:message for="compPnl1_29"/> 
+                        <p:message for="compPnl1_29" display="icon"/> 
                     </h:panelGrid>
                 </p:panel>
                 <p:panel header="Archivo" style="font-size: #{txt.font_size}">
@@ -317,9 +317,7 @@
                             <h:panelGrid columns="3">
                                 <h:panelGrid width="150">
                                     <p:graphicImage value="/imagenes/subir.png" height="40px" width="40px"/>
-                                    <h:outputText value="Recuerde:" style="color: firebrick;font-size: 10px;font-weight: bold" ></h:outputText>
-                                    <h:outputText value="El archivo debe ser: *.pdf,excel,jpg(max 750 px)" style="color: #666;font-size: 10px;font-weight: bold" ></h:outputText>
-                                </h:panelGrid>
+                                     </h:panelGrid>
                                 <p:fileUpload fileUploadListener="#{gestionPatenteControlador.handleFileUpload}"  
                                               mode="advanced"
                                               dragDropSupport="false"
@@ -440,7 +438,7 @@
             </h:panelGrid>
 
             <h:panelGrid columns="2">
-                <p:commandButton value="#{txt.btn_aceptar}" 
+                <p:commandButton value="#{txt.btn_guardar}" 
                                  id="btnGuardar" 
                                  action="#{gestionPatenteControlador.guardarPatente()}" 
                                  icon="ui-icon-disk"  

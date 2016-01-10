@@ -19,28 +19,28 @@
                             <f:selectItem itemLabel="Seleccione..." itemValue="" /> 
                             <f:selectItem itemLabel="2015" itemValue="#{2015}" />
                         </p:selectOneMenu>
-                        <p:message for="cmbAnioPatPag5"/>
-                         <p:outputLabel  style="font-size: #{txt.font_size}" value="#{txt.lbl_clave_patente}"/>
-                    <p:inputText  id="txtClavePat"  value="#{gestionEmisionPatenteControlador.patenteActual.patCodigo}" 
-                                  maxlength="20" size="40"/>
-                    <p:message for="txtClavePat"/>
-                    <p:outputLabel  style="font-size: #{txt.font_size}" value="#{txt.lbl_parroquia}"/>
-                    <p:selectOneMenu   required="true" id="cmbParroquia" 
-                                       value="#{gestionEmisionPatenteControlador.catDetParroquias}" style="width:250px"
-                                       converter="#{catalogoDetalleConverter}" var="t">
-                        <f:selectItem  itemLabel="Seleccione..." itemValue=""/> 
-                        <f:selectItems var="tipTem"  
-                                       value="#{gestionEmisionPatenteControlador.listDetParroquias}" 
-                                       itemLabel="#{tipTem.catdetTexto}" 
-                                       itemValue="#{tipTem}"/> 
-                        <p:column width="200" style="white-space: normal">  
-                            <h:outputText escape="false" value="#{t.catdetTexto}" style="font-size: 10px"/> 
-                        </p:column> 
-                    </p:selectOneMenu>                               
-                    <p:message for="cmbParroquia"/>
-                      <h:outputLabel style="font-size: #{txt.font_size}" value="#{txt.lbl_toto}"/>
-                    <p:selectBooleanButton id="datGlobal" value="#{gestionExoDedMulPatenteControlador.patValExActual.patvalextReduccionMitad}" onLabel="Si" offLabel="No" style="width:60px" />
-                    <p:message for="datGlobal"/>
+                        <p:message for="cmbAnioPatPag5" display="icon"/>
+                        <p:outputLabel  style="font-size: #{txt.font_size}" value="#{txt.lbl_clave_patente}"/>
+                        <p:inputText  id="txtClavePat"  value="#{gestionEmisionPatenteControlador.patenteActual.patCodigo}" 
+                                      maxlength="20" size="40"/>
+                        <p:message for="txtClavePat" display="icon"/>
+                        <p:outputLabel  style="font-size: #{txt.font_size}" value="#{txt.lbl_parroquia}"/>
+                        <p:selectOneMenu   required="true" id="cmbParroquia" 
+                                           value="#{gestionEmisionPatenteControlador.catDetParroquias}" style="width:250px"
+                                           converter="#{catalogoDetalleConverter}" var="t">
+                            <f:selectItem  itemLabel="Seleccione..." itemValue=""/> 
+                            <f:selectItems var="tipTem"  
+                                           value="#{gestionEmisionPatenteControlador.listDetParroquias}" 
+                                           itemLabel="#{tipTem.catdetTexto}" 
+                                           itemValue="#{tipTem}"/> 
+                            <p:column width="200" style="white-space: normal">  
+                                <h:outputText escape="false" value="#{t.catdetTexto}" style="font-size: 10px"/> 
+                            </p:column> 
+                        </p:selectOneMenu>                               
+                        <p:message for="cmbParroquia" display="icon"/>
+                        <h:outputLabel style="font-size: #{txt.font_size}" value="#{txt.lbl_toto}"/>
+                        <p:selectBooleanButton id="datGlobal" value="#{gestionExoDedMulPatenteControlador.patValExActual.patvalextReduccionMitad}" onLabel="Si" offLabel="No" style="width:60px" />
+                        <p:message for="datGlobal" display="icon"/>
                     </h:panelGrid>
                     <psirec:panelInformativo  rendered="#{gestionEmisionPatenteControlador.numPatente==null}" id="infEmiPatente" background="#042B69" ancho="220" icono="fa-exclamation-triangle"
                                               titulo="#{txt.lbl_head_error_patente}" tamanioTitulo="15" colorTitulo="white"
@@ -48,26 +48,25 @@
                 </h:panelGrid>
 
 
-                
-               
-                               <h:panelGrid columns="2">
-                    <p:commandButton value="#{txt.btn_pre_emision}" 
+
+
+                <h:panelGrid columns="2">
+                    <p:commandButton value="#{txt.btn_cargar_infor}" 
                                      id="btnEmision" 
                                      action="#{gestionEmisionPatenteControlador.listarEmisionPatente()}" 
-                                     icon="ui-icon-disk"  
+                                     icon="ui-icon-search"  
                                      process="@this,pnlConEmiPatente" 
 
                                      update=":frmPat:tabPrin:pnlConListEmision,pnlConEmisionPatente"
                                      async="true"
                                      global="false"
                                      />
-                    <p:commandButton value="#{txt.btn_emision}" 
-                                     id="btnPreEmision" 
+                    <p:commandButton value="#{txt.btn_nuevo}" 
+                                     id="btNuevo" 
                                      action="#{gestionEmisionPatenteControlador.inicializar()}" 
-                                     icon="ui-icon-disk"  
+                                     icon="ui-icon-document"  
                                      process="@this,pnlConEmiPatente" 
-                                     update=":frmPat:tabPrin:pnlConListEmision"
-                                     ajax="false"
+                                     update=":frmPat:tabPrin:pnlConListEmision,pnlConEmisionPatente"
                                      async="true"
                                      global="false"
                                      />
@@ -75,52 +74,50 @@
                 </h:panelGrid>
                 <p:panel>
                     <h:panelGrid id="pnlConListEmision">
-
-
                         <p:dataTable rendered="#{gestionEmisionPatenteControlador.listaEmisionPatente.size()>0}" id="listaDatosCapturados" var="car" value="#{gestionEmisionPatenteControlador.listaEmisionPatente}" scrollable="true" scrollHeight="200" scrollWidth="1000" widgetVar="carsTable"  >                    
-                            <p:column headerText="#{txt.lbl_emi_clave_pat}">
+                            <p:column width="40" headerText="#{txt.lbl_emi_clave_pat}">
                                 <h:outputText value="#{car[0]}" />
                             </p:column>
-                            <p:column headerText="#{txt.lbl_emi_nom_contri}">
+                            <p:column width="200" headerText="#{txt.lbl_emi_nom_contri}">
                                 <h:outputText value="#{car[1]}" />
                             </p:column>
-                            <p:column headerText="#{txt.lbl_emi_ruc}">
+                            <p:column width="60" headerText="#{txt.lbl_emi_ruc}">
                                 <h:outputText value="#{car[2]}" />
                             </p:column>
-                            <p:column headerText="#{txt.lbl_emi_direccion}">
+                            <p:column width="250" headerText="#{txt.lbl_emi_direccion}">
                                 <h:outputText value="#{car[3]}" />
                             </p:column>
-                            <p:column headerText="#{txt.lbl_emi_parroquia}">
+                            <p:column width="150" headerText="#{txt.lbl_emi_parroquia}">
                                 <h:outputText value="#{car[4]}" />
                             </p:column>
-                            <p:column headerText="#{txt.lbl_emi_anio}">
+                            <p:column width="20" headerText="#{txt.lbl_emi_anio}">
                                 <h:outputText value="#{car[5]}" />
                             </p:column>
-                            <p:column headerText="#{txt.lbl_emi_patri}">
+                            <p:column width="60" headerText="#{txt.lbl_emi_patri}">
                                 <h:outputText value="#{car[6]}" />
                             </p:column>
-                            <p:column headerText="#{txt.lbl_emi_imp}">
+                            <p:column width="50" headerText="#{txt.lbl_emi_imp}">
                                 <h:outputText value="#{car[7]}" />
                             </p:column>
-                            <p:column headerText="#{txt.lbl_emi_bomb}">
+                            <p:column width="60" headerText="#{txt.lbl_emi_bomb}">
                                 <h:outputText value="#{car[8]}" />
                             </p:column>
-                            <p:column headerText="#{txt.lbl_emi_tasa_proc}">
+                            <p:column width="60" headerText="#{txt.lbl_emi_tasa_proc}">
                                 <h:outputText value="#{car[9]}" />
                             </p:column>
-                            <p:column headerText="#{txt.lbl_emi_tot_patente}">
+                            <p:column width="60" headerText="#{txt.lbl_emi_tot_patente}">
                                 <h:outputText value="#{car[10]}" />
                             </p:column>
-                            <p:column headerText="#{txt.lbl_emi_bas_imp}">
+                            <p:column width="50" headerText="#{txt.lbl_emi_bas_imp}">
                                 <h:outputText value="#{car[11]}" />
                             </p:column>
-                            <p:column headerText="#{txt.lbl_emi_imporMil}">
+                            <p:column width="50" headerText="#{txt.lbl_emi_imporMil}">
                                 <h:outputText value="#{car[12]}" />
                             </p:column>
-                            <p:column headerText="#{txt.lbl_emi_tas_proc_mil}">
+                            <p:column width="50" headerText="#{txt.lbl_emi_tas_proc_mil}">
                                 <h:outputText value="#{car[13]}" />
                             </p:column>
-                            <p:column headerText="#{txt.lbl_emi_tot_porMil}">
+                            <p:column width="40" headerText="#{txt.lbl_emi_tot_porMil}">
                                 <h:outputText value="#{car[14]}" />
                             </p:column>
                         </p:dataTable>

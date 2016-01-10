@@ -12,46 +12,48 @@
         <center>
             <h:panelGrid id="pnlConDetPatente" width="1000" columns="1" >
                 <p:panel>
-                    <h:panelGrid id="DedPatBuscaPatente" columns="2">
-                        <h:panelGrid>
-                            <p:commandButton value="#{txt.btn_buscar}" 
-                                             id="btnDedBusPat" 
-                                             action="#{gestionDetPatenteControlador.buscarPatente()}" 
-                                             icon="ui-icon-disk"  
-                                             process="@this,DedPatBuscaPatente" 
-                                             update=":frmPat,DedPatBuscaPatente"
-                                             async="true"
-                                             global="false"
-                                             />  
-                            <p:commandButton value="#{txt.btn_nuevo}" 
-                                             id="btDetNuePat" 
-                                             action="#{gestionDetPatenteControlador.inicializar()}" 
-                                             icon="ui-icon-disk"  
-                                             process="@this,DedPatBuscaPatente" 
-                                             update=":frmPat,DedPatBuscaPatente"
-                                             async="true"
-                                             global="false"
-                                             />    
-                        </h:panelGrid>
-                        <p:panel rendered="#{gestionDetPatenteControlador.verBuscaPatente==1}" header="Búsqueda de Patente:">
-                            <h:panelGrid columns="4">
-                                <p:outputLabel  style="font-size: #{txt.font_size}" value="#{txt.lbl_ingre_valor_busca}: AE-MPM-"/>
-                                <p:inputText  id="txtDedBusPatente"  value="#{gestionDetPatenteControlador.buscNumPat}" 
-                                              maxlength="20" size="40"/>
-                                <p:message for="txtDedBusPatente"/>
+                    <center>
+                        <h:panelGrid id="DedPatBuscaPatente" columns="1">
+                            <p:panel rendered="#{gestionDetPatenteControlador.verBuscaPatente==1}" header="Búsqueda de Patente:">
+                                <h:panelGrid columns="4">
+                                    <p:outputLabel  style="font-size: #{txt.font_size}" value="#{txt.lbl_ingre_valor_busca}: AE-MPM-"/>
+                                    <p:inputText  id="txtDedBusPatente"  value="#{gestionDetPatenteControlador.buscNumPat}" 
+                                                  maxlength="20" size="40"/>
+                                    <p:message for="txtDedBusPatente" display="icon"/>
 
-                                <p:commandButton value="#{txt.btn_aceptar}" 
-                                                 id="btnDedBusPatente" 
-                                                 action="#{gestionDetPatenteControlador.cagarPatenteActual()}" 
+                                    <p:commandButton value="#{txt.btn_aceptar}" 
+                                                     id="btnDedBusPatente" 
+                                                     action="#{gestionDetPatenteControlador.cagarPatenteActual()}" 
+                                                     icon="ui-icon-disk"  
+                                                     process="@this,DedPatBuscaPatente" 
+                                                     update=":frmPat:tabPrin:pnlPatDetNumero"
+                                                     async="true"
+                                                     global="false"
+                                                     />            
+                                </h:panelGrid>
+                            </p:panel>
+                            <h:panelGrid columns="2">
+                                <p:commandButton value="#{txt.btn_buscar}" 
+                                                 id="btnDedBusPat" 
+                                                 action="#{gestionDetPatenteControlador.buscarPatente()}" 
                                                  icon="ui-icon-disk"  
                                                  process="@this,DedPatBuscaPatente" 
-                                                 update=":frmPat:tabPrin:pnlPatDetNumero"
+                                                 update=":frmPat,DedPatBuscaPatente"
                                                  async="true"
                                                  global="false"
-                                                 />            
+                                                 />  
+                                <p:commandButton value="#{txt.btn_nuevo}" 
+                                                 id="btDetNuePat" 
+                                                 action="#{gestionDetPatenteControlador.inicializar()}" 
+                                                 icon="ui-icon-disk"  
+                                                 process="@this,DedPatBuscaPatente" 
+                                                 update=":frmPat,DedPatBuscaPatente"
+                                                 async="true"
+                                                 global="false"
+                                                 />    
                             </h:panelGrid>
-                        </p:panel>
-                    </h:panelGrid>
+                        </h:panelGrid>
+                    </center>
                 </p:panel>
                 <p:panel header="#{txt.lbl_header_det_pat}">
                     <h:panelGrid columns="1">
@@ -62,7 +64,7 @@
                                     <p:outputLabel style="font-size: #{txt.font_size};" value="#{txt.lbl_num_patente}"/>
                                     <p:inputText  disabled="true" id="numPatente1" value="#{gestionDetPatenteControlador.numPatente}"  
                                                   size="40"/>
-                                    <p:message for="numPatente1"/>  
+                                    <p:message for="numPatente1" display="icon"/>  
                                     <psirec:panelInformativo  rendered="#{gestionDetPatenteControlador.numPatente==null}" id="infPeriodo" background="#042B69" ancho="220" icono="fa-exclamation-triangle"
                                                               titulo="#{txt.lbl_head_error_patente}" tamanioTitulo="15" colorTitulo="white"
                                                               texto="#{txt.lbl_error_num_patente}" tamanioTexto="12" colorTexto="white"/>
@@ -85,23 +87,23 @@
                         <h:panelGrid rendered="#{gestionDetPatenteControlador.verPanelDetalleImp==1}">
                             <h:panelGrid columns="1">
                                 <h:outputLabel style="font-size: #{txt.font_size}" value="#{txt.lbl_anio}"/>
-                                <p:selectOneMenu id="cmbAnioPag3" value="#{gestionDetPatenteControlador.patenteValoracionActal.patvalAnio}" style="width:152px">
+                                <p:selectOneMenu requiredMessage="#{txt.lbl_anio} Se nesecita un valor" id="cmbAnioPag3" value="#{gestionDetPatenteControlador.patenteValoracionActal.patvalAnio}" style="width:152px">
                                     <f:selectItem itemLabel="Seleccione..." itemValue="" /> 
                                     <f:selectItem itemLabel="2015" itemValue="#{2015}" />
                                 </p:selectOneMenu>
-                                <p:message for="cmbAnioPag3"/>
+                                <p:message for="cmbAnioPag3" display="icon"/>
                             </h:panelGrid>
 
                             <h:panelGrid columns="6">
                                 <p:outputLabel  style="font-size: #{txt.font_size}" value="#{txt.lbl_total_activos}"/>
-                                <p:inputText  id="txtActivos"  value="#{gestionDetPatenteControlador.patenteValoracionActal.patvalActivos}" 
+                                <p:inputText requiredMessage="#{txt.lbl_total_activos} Se nesecita un valor" id="txtActivos"  value="#{gestionDetPatenteControlador.patenteValoracionActal.patvalActivos}" 
                                               maxlength="20" size="40"/>
-                                <p:message for="txtActivos"/>
+                                <p:message for="txtActivos" display="icon"/>
 
                                 <p:outputLabel  style="font-size: #{txt.font_size}" value="#{txt.lbl_total_pasivos}"/>
-                                <p:inputText   id="txtPasivos"  value="#{gestionDetPatenteControlador.patenteValoracionActal.patvalPasivos}" 
+                                <p:inputText  requiredMessage="#{txt.lbl_total_pasivos} Se nesecita un valor" id="txtPasivos"  value="#{gestionDetPatenteControlador.patenteValoracionActal.patvalPasivos}" 
                                                maxlength="20" size="40"/>
-                                <p:message for="txtPasivos"/>
+                                <p:message for="txtPasivos" display="icon"/>
                             </h:panelGrid>  
                             <h:panelGrid columns="2">
                                 <p:commandButton value="#{txt.btn_calcula}" 
@@ -119,38 +121,38 @@
                                 <p:outputLabel  style="font-size: #{txt.font_size}" value="#{txt.lbl_patrimonio}"/>
                                 <p:inputText  disabled="true" id="txtPatrimonio"  value="#{gestionDetPatenteControlador.patenteValoracionActal.patvalPatrimonio}" 
                                               maxlength="20" size="40"/>
-                                <p:message for="txtPatrimonio"/>
+                                <p:message for="txtPatrimonio" display="icon"/>
 
                                 <p:outputLabel  style="font-size: #{txt.font_size}" value="#{txt.lbl_bomberos}"/>
-                                <p:inputText  disabled="true" id="txtBomberos"  value="#{gestionDetPatenteControlador.valImpBomberos}" 
+                                <p:inputText  disabled="true" id="txtBomberos"  value="#{gestionDetPatenteControlador.patenteValoracionActal.patvalTasaBomb}" 
                                               maxlength="20" size="40"/>
-                                <p:message for="txtBomberos"/>
+                                <p:message for="txtBomberos" display="icon"/>
 
                                 <p:outputLabel  style="font-size: #{txt.font_size}" value="#{txt.lbl_impuesto}"/>
                                 <p:inputText  disabled="true" id="txtImpuesto"  value="#{gestionDetPatenteControlador.patenteValoracionActal.patvalImpuesto}" 
                                               maxlength="20" size="40"/>
-                                <p:message for="txtImpuesto"/>
+                                <p:message for="txtImpuesto" display="icon"/>
 
                                 <p:outputLabel  style="font-size: #{txt.font_size}" value="#{txt.lbl_subtotal}"/>
                                 <p:inputText  disabled="true" id="txtSubTotal"  value="#{gestionDetPatenteControlador.patenteValoracionActal.patvalSubtotal}" 
                                               maxlength="20" size="40"/>
-                                <p:message for="txtSubTotal"/>
+                                <p:message for="txtSubTotal" display="icon"/>
                             </h:panelGrid>
                             <h:panelGrid>
                                 <p:outputLabel  style="font-size: #{txt.font_size}" value="#{txt.lbl_deduc}"/>
                                 <p:inputText  disabled="true" id="txtDeduc"  value="#{gestionDetPatenteControlador.patenteValoracionActal.patvalDeducciones}" 
                                               maxlength="20" size="40"/>
-                                <p:message for="txtDeduc"/>
+                                <p:message for="txtDeduc" display="icon"/>
 
                                 <p:outputLabel  style="font-size: #{txt.font_size}" value="#{txt.lbl_tasa_procesamiento}"/>
                                 <p:inputText  disabled="true" id="txtProces"  value="#{gestionDetPatenteControlador.patenteValoracionActal.patvalTasaProc}" 
                                               maxlength="20" size="40"/>
-                                <p:message for="txtProces"/>
+                                <p:message for="txtProces" display="icon"/>
 
                                 <p:outputLabel  style="font-size: #{txt.font_size}" value="#{txt.lbl_total}"/>
                                 <p:inputText  disabled="true" id="txtTotal"  value="#{gestionDetPatenteControlador.patenteValoracionActal.patvalTotal}" 
                                               maxlength="20" size="40"/>
-                                <p:message for="txtTotal"/>                                   
+                                <p:message for="txtTotal" display="icon"/>                                   
                             </h:panelGrid>
                             <h:panelGrid columns="2">
                                 <p:commandButton value="#{txt.btn_guardar}" 
