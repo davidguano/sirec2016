@@ -473,8 +473,10 @@ public class GestionImpuestoPredialControlador extends BaseControlador {
           catastroPredialValoracionActual.setCatprevalAvaluoEdif(valorAvaluoConstruccion); 
           catastroPredialValoracionActual.setCatprevalAvaluoTerr(valorAvaluoTerrero); 
           catastroPredialValoracionActual.setCatprevalAvaluoTot(valorAvaluoConstruccion.add(valorAvaluoTerrero)); 
-          catastroPredialValoracionActual.setCatprevalValorPropieda(valorAvaluoConstruccion.add(valorAvaluoTerrero));           
-          catastroPredialValoracionActual.setCatprevalBaseImponible(valorAvaluoConstruccion.add(valorAvaluoTerrero));                            //                
+          catastroPredialValoracionActual.setCatprevalValorPropieda(valorAvaluoConstruccion.add(valorAvaluoTerrero));   
+          
+          
+          catastroPredialValoracionActual.setCatprevalBaseImponible(valorAvaluoConstruccion.add(valorAvaluoTerrero));                                        
           catastroPredialValoracionActual.setCatprevalImpuesto(valorAvaluoConstruccion.add(valorAvaluoTerrero).multiply(new BigDecimal(datoGlobalServicio.obtenerDatoGlobal("Banda_Impositiva_Urbana").getDatgloValor()).divide(new BigDecimal(100))));  
           catastroPredialValoracionActual.setCatprevalBomberos(valorAvaluoConstruccion.add(valorAvaluoTerrero).multiply(new BigDecimal(datoGlobalServicio.obtenerDatoGlobal("Bomberos").getDatgloValor()).divide(new BigDecimal(100))));  
           catastroPredialValoracionActual.setCatprevalSolarNoedificado(valorAvaluoConstruccion.add(valorAvaluoTerrero).multiply(new BigDecimal(datoGlobalServicio.obtenerDatoGlobal("Solar_No_Edif").getDatgloValor()).divide(new BigDecimal(100))));  
@@ -488,6 +490,38 @@ public class GestionImpuestoPredialControlador extends BaseControlador {
             LOGGER.log(Level.SEVERE, null, ex);
         }
     }
+     
+     public void calcularBaseImponible() {
+        
+        try {
+           List<CpValoracionExtras> adicDeduc = cpValoracionExtrasServicio.listarCpValoracionExtrasXCatPreVal(catastroPredialValoracionActual);
+           boolean terceraEdad=false;
+           for (int i = 0; i < adicDeduc.size(); i++) {                
+            CpValoracionExtras VE = adicDeduc.get(i);
+             if (VE.getAdidedCodigo().getAdidedNemonico().equals("D_R3E")){
+             terceraEdad=true;
+             i=adicDeduc.size();
+             }else{
+             terceraEdad=false;
+             }
+               System.out.println("ds>: "+VE.getAdidedCodigo().getAdidedNemonico());
+           }
+           if(terceraEdad=true){
+           
+               catastroPredialServicio.obtenerPropietarioPrincipalPredio(catastroPredialActual.getCatpreCodigo());
+           
+               
+               
+               
+           }else{
+           
+           }
+
+        } catch (Exception ex) {
+            LOGGER.log(Level.SEVERE, null, ex);
+        }
+    } 
+     
 
     public void guardarAdicionalesDeductivos() {
         try {
@@ -531,6 +565,13 @@ public class GestionImpuestoPredialControlador extends BaseControlador {
                             cpValoracionExtrasServicio.crearCpValoracionExtras(cpValoracionExtrasActual);
                         }
 
+                        
+                        
+                        
+                        calcularBaseImponible();
+                        
+                        
+                        
                         addSuccessMessage("Guardado Exitosamente!");
                     } else {
                         addSuccessMessage("No existen documentos cargados!");
