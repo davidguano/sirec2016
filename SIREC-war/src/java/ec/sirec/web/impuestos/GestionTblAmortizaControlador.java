@@ -121,26 +121,30 @@ public class GestionTblAmortizaControlador extends BaseControlador {
             LOGGER.log(Level.SEVERE, null, e);
         }
     }
-
-    public void activaPanelVerArchivos() {
+public void activaPanelVerArchivos() {
         try {
-            listarArchivosPatenteTA();
-            if (listadoArchivos.isEmpty()) {
-                verArchivos = 1;
+            if (patenteActual.getPatCodigo() == null) {
+                addWarningMessage("Debe activar NºPatente", "Debe activar NºPatente");
             } else {
-                verArchivos = 0;
+                listarArchivosPatenteTA();
+                if (listadoArchivos.isEmpty()) {
+                    verArchivos = 1;
+                } else {
+                    verArchivos = 0;
+                }
             }
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, null, e);
         }
     }
+   
 
     public void activPanelCargrArchivos() {
         cargarArchivos = 1;
     }
 
     public void listarArchivosPatenteTA() throws Exception {
-        listadoArchivos = patenteArchivoServicio.listarArchivoPatentePorTipo(patenteActual.getPatCodigo(), "TA");
+        listadoArchivos = patenteArchivoServicio.listarArchivoPatentePorTipo(patenteActual, "TA");
     }
 
     public void cargaObjetosBitacora() {
@@ -169,12 +173,13 @@ public class GestionTblAmortizaControlador extends BaseControlador {
                 patenteActual.setPatFechaAdjudicacion(fechaAdjudica);
                 patenteActual.setPatFechaVencimiento(fechaVencmiento);
                 patenteServicio.editarPatente(patenteActual);
-                addSuccessMessage("Tabla de Amortización Guardado");
-                patente15milValActual = new Patente15xmilValoracion();
+                addSuccessMessage("Guardado Exitosamente","Tabla de Amortización Guardado");
+                inicializar();
+//                patente15milValActual = new Patente15xmilValoracion();
 //                }
             } else {
 //                   patenteServicio.editarPatente15milValoracion(patente15milValActual);
-                addSuccessMessage("Patente Valoración  Actualizado");
+                addSuccessMessage("Actualizado Exitosamente","Patente Valoración  Actualizado");
                 patente15milValActual = new Patente15xmilValoracion();
                 habilitaEdicion = false;
             }
@@ -373,6 +378,14 @@ public class GestionTblAmortizaControlador extends BaseControlador {
 
     public void setNumPatente(String numPatente) {
         this.numPatente = numPatente;
+    }
+
+    public int getCargarArchivos() {
+        return cargarArchivos;
+    }
+
+    public void setCargarArchivos(int cargarArchivos) {
+        this.cargarArchivos = cargarArchivos;
     }
 
 }

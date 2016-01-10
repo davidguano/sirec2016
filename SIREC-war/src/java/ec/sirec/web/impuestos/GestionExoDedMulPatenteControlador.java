@@ -77,7 +77,6 @@ public class GestionExoDedMulPatenteControlador extends BaseControlador {
             patenteArchivoActual = new PatenteArchivo();
             adiDeductivoActual = new AdicionalesDeductivos();
             patenteActual = new Patente();
-            patenteValoracionActal = new PatenteValoracion();
             verArchivos = 0;
             cargarArchivos = 0;
             patValExActual = new PatenteValoracionExtras();
@@ -96,19 +95,25 @@ public class GestionExoDedMulPatenteControlador extends BaseControlador {
 
     public void guardaPatenteValExtra() {
         try {
-            if (habilitaEdicion == false) {
+            if (verificaArchivosCargados()) {
+                if (habilitaEdicion == false) {
 //                if (patenteServicio.existePatenteValoracionExtra(patValExActual.getPatvalextCodigo())) {
 //                    addWarningMessage("Existe Código");
 //                } else {
-                guardaPatenteValoracion();
-                patValExActual.setAdidedCodigo(adiDeductivoActual);
-                patValExActual.setPatvalCodigo(patenteValoracionActal);
-                patenteServicio.crearPatenteValoracionExtra(patValExActual);
-                addSuccessMessage("Patente Valoración Extra Guardado");
-                patValExActual = new PatenteValoracionExtras();
-                cargaObjetosBitacora();
-                guardarArchivos();
+                    guardaPatenteValoracion();
+                    patValExActual.setAdidedCodigo(adiDeductivoActual);
+                    patValExActual.setPatvalCodigo(patenteValoracionActal);
+                    patenteServicio.crearPatenteValoracionExtra(patValExActual);
+                    addSuccessMessage("Guardado Exitosamente", "Patente Valoración Extra Guardado");
+                    patValExActual = new PatenteValoracionExtras();
+                    cargaObjetosBitacora();
+                    guardarArchivos();
+                    inicializar();
+                }
+            } else {
+                addSuccessMessage("Debe Cargar Documentación", "Debe Cargar Documentación");
             }
+
 //            } else {
 //                patenteServicio.editarPatenteValoracionExtra(patValExActual);
 //                addSuccessMessage("Patente Valoración  Actualizado");
@@ -118,6 +123,15 @@ public class GestionExoDedMulPatenteControlador extends BaseControlador {
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, null, e);
         }
+    }
+
+    public boolean verificaArchivosCargados() {
+        if (listaFiles.isEmpty()) {
+            return false;
+        } else {
+            return true;
+        }
+
     }
 
     public void buscarPatente() {
@@ -134,27 +148,53 @@ public class GestionExoDedMulPatenteControlador extends BaseControlador {
             if (patenteActual == null) {
                 numPatente = null;
             } else {
-                numPatente = "AE-MPM-" + patenteActual.getPatCodigo();
+                if (cargarExistePatValExtra()) {
+                    patValExActual = patenteServicio.buscaPatValExtraPorPatValoracion(patenteValoracionActal.getPatvalCodigo());
+                    System.out.println("Si encontro el objeto");
+                    numPatente = "AE-MPM-" + patenteActual.getPatCodigo();
+                } else {
+                    System.out.println("No encontro el objeto");
+                    numPatente = "AE-MPM-" + patenteActual.getPatCodigo();
+                }
+
             }
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, null, e);
         }
     }
 
+    public boolean cargarExistePatValExtra() {
+        boolean patValExActualCargado = false;
+        try {
+            patenteValoracionActal = patenteServicio.buscaPatValoracion(patenteActual.getPatCodigo());
+            if (patenteValoracionActal == null) {
+                patValExActualCargado = false;
+            } else {
+                patValExActualCargado = true;
+            }
+
+        } catch (Exception ex) {
+            LOGGER.log(Level.SEVERE, null, ex);
+        }
+        return patValExActualCargado;
+    }
+
     public void guardaPatenteValoracion() {
         BigDecimal valTemporal;
         valTemporal = BigDecimal.valueOf(0.00);
         try {
+            patenteValoracionActal = new PatenteValoracion();
             patenteValoracionActal.setPatCodigo(patenteActual);
+            patenteValoracionActal.setPatvalAnio(0);
+            patenteValoracionActal.setPatvalActivos(valTemporal);
+            patenteValoracionActal.setPatvalPasivos(valTemporal);
             patenteValoracionActal.setPatvalPatrimonio(valTemporal);
             patenteValoracionActal.setPatvalImpuesto(valTemporal);
             patenteValoracionActal.setPatvalSubtotal(valTemporal);
-            patenteValoracionActal.setPatvalTasaProc(valTemporal);
             patenteValoracionActal.setPatvalDeducciones(valTemporal);
-            patenteValoracionActal.setPatvalPasivos(valTemporal);
-            patenteValoracionActal.setPatvalActivos(valTemporal);
+            patenteValoracionActal.setPatvalTasaProc(valTemporal);
             patenteValoracionActal.setPatvalTotal(valTemporal);
-            patenteValoracionActal.setPatvalAnio(0);
+            patenteValoracionActal.setPatvalTasaBomb(valTemporal);
             patenteServicio.crearPatenteValoracion(patenteValoracionActal);
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, null, e);
@@ -202,7 +242,7 @@ public class GestionExoDedMulPatenteControlador extends BaseControlador {
             archivo.setName(event.getFile().getFileName());
             archivo.setData(event.getFile().getContents());
             listaFiles.add(archivo);
-            addSuccessMessage(event.getFile().getFileName() + "Archivo Cargado");
+            addSuccessMessage("Archivo Cargado", "Archivo Cargado");
         } catch (Exception ex) {
             LOGGER.log(Level.SEVERE, null, ex);
         }
@@ -267,11 +307,15 @@ public class GestionExoDedMulPatenteControlador extends BaseControlador {
 
     public void activaPanelVerArchivos() {
         try {
-            listarArchivosPatente();
-            if (listadoArchivos.isEmpty()) {
-                verArchivos = 1;
+            if (patenteActual.getPatCodigo() == null) {
+                addWarningMessage("Debe activar NºPatente", "Debe activar NºPatente");
             } else {
-                verArchivos = 0;
+                listarArchivosPatente();
+                if (listadoArchivos.isEmpty()) {
+                    verArchivos = 1;
+                } else {
+                    verArchivos = 0;
+                }
             }
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, null, e);
@@ -358,4 +402,4 @@ public class GestionExoDedMulPatenteControlador extends BaseControlador {
         this.buscNumPat = buscNumPat;
     }
 
-    }
+}

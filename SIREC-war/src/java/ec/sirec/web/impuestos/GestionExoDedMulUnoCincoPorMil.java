@@ -57,7 +57,7 @@ public class GestionExoDedMulUnoCincoPorMil extends BaseControlador {
     private Patente patenteActual;
     private Patente15xmilValoracionExtras patValEx15xMilActual;
     private Patente15xmilValoracion patValo15xMilActal;
-    private String numPatente ;
+    private String numPatente;
     private boolean habilitaEdicion;
     private static final Logger LOGGER = Logger.getLogger(GestionExoDedMulUnoCincoPorMil.class.getName());
     private int verArchivos;
@@ -69,7 +69,7 @@ public class GestionExoDedMulUnoCincoPorMil extends BaseControlador {
     private DatoGlobal datoGlobalActual;
     private SegUsuario usuarioActual;
     private PatenteArchivo patenteArchivoActual;
-    private String  buscNumPat;
+    private String buscNumPat;
     private int verBuscaPatente;
     private int verResultado;
 
@@ -79,8 +79,8 @@ public class GestionExoDedMulUnoCincoPorMil extends BaseControlador {
     @PostConstruct
     public void inicializar() {
         try {
-            numPatente="";
-            buscNumPat="";
+            numPatente = "";
+            buscNumPat = "";
             verResultado = 0;
             verBuscaPatente = 0;
             adiDeductivoActual = new AdicionalesDeductivos();
@@ -121,15 +121,40 @@ public class GestionExoDedMulUnoCincoPorMil extends BaseControlador {
 
     public void cagarPatenteActual() {
         try {
+
             patenteActual = patenteServicio.cargarObjPatente(Integer.parseInt(buscNumPat));
             if (patenteActual == null) {
                 numPatente = null;
             } else {
-                numPatente = "AE-MPM-" + patenteActual.getPatCodigo();
+                if (cargarExistePatVal15PorMilExtra()) {
+                    patValEx15xMilActual = unoPCinoPorMilServicio.buscaPatVal15xMilExtraPorPatValoracion(patValo15xMilActal.getPat15valCodigo());
+                    System.out.println("Si encontro el objeto");
+                    numPatente = "AE-MPM-" + patenteActual.getPatCodigo();
+                } else {
+                    System.out.println("No encontro el objeto");
+                    numPatente = "AE-MPM-" + patenteActual.getPatCodigo();
+                }
+
             }
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, null, e);
         }
+    }
+
+    public boolean cargarExistePatVal15PorMilExtra() {
+        boolean pat15PorMilValoracion = false;
+        try {
+            patValo15xMilActal = unoPCinoPorMilServicio.buscaPatValoracion15xMil(patenteActual.getPatCodigo());
+            if (patValo15xMilActal == null) {
+                pat15PorMilValoracion = false;
+            } else {
+                pat15PorMilValoracion = true;
+            }
+
+        } catch (Exception ex) {
+            LOGGER.log(Level.SEVERE, null, ex);
+        }
+        return pat15PorMilValoracion;
     }
 
     public void guardaPatente15xMilValExtra() {
@@ -138,14 +163,15 @@ public class GestionExoDedMulUnoCincoPorMil extends BaseControlador {
 //                if (patenteServicio.existePatenteValoracionExtra(patValExActual.getPatvalextCodigo())) {
 //                    addWarningMessage("Existe Código");
 //                } else {
-                guardaPatenteValoracion();
+                guardaPatenteValoracion15PorMil();
                 patValEx15xMilActual.setAdidedCodigo(adiDeductivoActual);
                 patValEx15xMilActual.setPat15valCodigo(patValo15xMilActal);
                 unoPCinoPorMilServicio.crearPatenteValoracion15xMilExtra(patValEx15xMilActual);
-                addSuccessMessage("Patente Valoración Extra Guardado");
+                addSuccessMessage("Guardado Exitosamente", "Patente Valoración Extra Guardado");
                 patValEx15xMilActual = new Patente15xmilValoracionExtras();
                 cargaObjetosBitacora();
                 guardarArchivos();
+                inicializar();
             }
 //            } else {
 //                patenteServicio.editarPatenteValoracionExtra(patValExActual);
@@ -158,10 +184,11 @@ public class GestionExoDedMulUnoCincoPorMil extends BaseControlador {
         }
     }
 
-    public void guardaPatenteValoracion() {
+    public void guardaPatenteValoracion15PorMil() {
         BigDecimal valTemporal;
         valTemporal = BigDecimal.valueOf(0.00);
         try {
+            patValo15xMilActal=new Patente15xmilValoracion();
             patValo15xMilActal.setPatCodigo(patenteActual);
             patValo15xMilActal.setPat15valNumSucursales(0);
             patValo15xMilActal.setPat15valAnioBalance(0);
@@ -177,7 +204,6 @@ public class GestionExoDedMulUnoCincoPorMil extends BaseControlador {
             patValo15xMilActal.setPat15valSubtotal(valTemporal);
             patValo15xMilActal.setPat15valRecargos(valTemporal);
             patValo15xMilActal.setPat15valTotal(valTemporal);
-
             unoPCinoPorMilServicio.crearPatenteValoracion15xMil(patValo15xMilActal);
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, null, e);
@@ -291,8 +317,16 @@ public class GestionExoDedMulUnoCincoPorMil extends BaseControlador {
 
     public void activaPanerVerArchivos() {
         try {
-            verArchivos = 1;
-            listarArchivosPatente();
+            if (patenteActual.getPatCodigo() == null) {
+                addWarningMessage("Debe activar NºPatente", "Debe activar NºPatente");
+            } else {
+                listarArchivosPatente();
+                if (listadoArchivos.isEmpty()) {
+                    verArchivos = 1;
+                } else {
+                    verArchivos = 0;
+                }
+            }
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, null, e);
         }
@@ -371,7 +405,6 @@ public class GestionExoDedMulUnoCincoPorMil extends BaseControlador {
         this.buscNumPat = buscNumPat;
     }
 
-   
     public int getVerBuscaPatente() {
         return verBuscaPatente;
     }

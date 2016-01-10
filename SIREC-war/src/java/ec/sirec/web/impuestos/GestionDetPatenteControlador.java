@@ -99,9 +99,9 @@ public class GestionDetPatenteControlador extends BaseControlador {
 
     public void calculaValorDeduccion() {
         try {
-            BigDecimal valReduccion = null; //Valor Reduccion
-            BigDecimal valDatFalso = null; //Valor Falsedad Datos
-            BigDecimal valBaseImponible = null;
+            BigDecimal valReduccion = BigDecimal.ZERO; //Valor Reduccion
+            BigDecimal valDatFalso = BigDecimal.ZERO; //Valor Falsedad Datos
+            BigDecimal valBaseImponible = BigDecimal.ZERO;
             PatenteValoracion objPatValoracionAux = new PatenteValoracion();
             objPatValoracionAux = patenteServicio.buscaPatValoracion(patenteActual.getPatCodigo());
             PatenteValoracionExtras objPatValorExtAux = new PatenteValoracionExtras();
@@ -123,12 +123,12 @@ public class GestionDetPatenteControlador extends BaseControlador {
                 DatoGlobal objDatglobAux = new DatoGlobal();
                 objDatglobAux = patenteServicio.cargarObjPorNombre("Val_sueldo_basico");
                 double valSueldoBasico = Double.parseDouble(objDatglobAux.getDatgloValor());
-                valDatFalso = BigDecimal.valueOf((valSueldoBasico) * ((double)objPatValorExtAux.getPatentePorcDatosfalsos() / 100));
+                valDatFalso = BigDecimal.valueOf((valSueldoBasico) * ((double) objPatValorExtAux.getPatentePorcDatosfalsos() / 100));
                 objDatglobAux = new DatoGlobal();
             }
             //Evacion Tributaria-----------------------------------
             if (objPatValorExtAux.getPatentePorcIngreso() != 0) {
-                valBaseImponible = BigDecimal.valueOf(((double)objPatValorExtAux.getPatentePorcIngreso() / 100) * (valPatrimonio.doubleValue()));
+                valBaseImponible = BigDecimal.valueOf(((double) objPatValorExtAux.getPatentePorcIngreso() / 100) * (valPatrimonio.doubleValue()));
             }
             valDeduciones = BigDecimal.valueOf(valReduccion.doubleValue() + valImpPatente.doubleValue() + valDatFalso.doubleValue() + valBaseImponible.doubleValue());
             valDeduciones.setScale(2, RoundingMode.HALF_UP);
@@ -154,7 +154,7 @@ public class GestionDetPatenteControlador extends BaseControlador {
         }
         if (valPatrimonio.doubleValue() >= 100000.01 && valPatrimonio.doubleValue() <= 250000) {
             impFracBasica = 385;
-            impExcede = ((double)1 / 100);
+            impExcede = ((double) 1 / 100);
 
         }
         if (valPatrimonio.doubleValue() >= 250000.01) {
@@ -169,12 +169,13 @@ public class GestionDetPatenteControlador extends BaseControlador {
 
     public void calculaimpBomberos() {
         double valCuantia = 0.00;
-        System.out.println("valCuantia" +  valCuantia);
-        valCuantia = (double)10/100;
-         System.out.println("valCuantia Despues" +  valCuantia);
+        System.out.println("valCuantia" + valCuantia);
+        valCuantia = (double) 10 / 100;
+        System.out.println("valCuantia Despues" + valCuantia);
         valImpBomberos = BigDecimal.valueOf(valImpPatente.doubleValue() * valCuantia);
         valSubTotal = valImpPatente.add(valImpBomberos);
         valImpBomberos = valImpBomberos.setScale(2, RoundingMode.HALF_UP);
+        patenteValoracionActal.setPatvalTasaBomb(valImpBomberos);
         valSubTotal = valSubTotal.setScale(2, RoundingMode.HALF_UP);
         patenteValoracionActal.setPatvalSubtotal(valSubTotal);
         calculaValorDeduccion();
@@ -203,7 +204,7 @@ public class GestionDetPatenteControlador extends BaseControlador {
 //                } else {
                 patenteValoracionActal.setPatCodigo(patenteActual);
                 patenteServicio.editarPatenteValoracion(patenteValoracionActal);
-                addSuccessMessage("Patente Valoración Guardado");
+                addSuccessMessage("Guardado Exitosamente", "Patente Valoración Guardado");
                 patenteValoracionActal = new PatenteValoracion();
                 inicializarValores();
 //                }
@@ -232,13 +233,37 @@ public class GestionDetPatenteControlador extends BaseControlador {
             if (patenteActual == null) {
                 numPatente = null;
             } else {
-                numPatente = "AE-MPM-" + patenteActual.getPatCodigo();
+                if (cargarExistePatValoracion()) {
+                    patenteValoracionActal = patenteServicio.buscaPatValoracion(patenteActual.getPatCodigo());
+                    System.out.println("Si encontro el objeto");
+                    numPatente = "AE-MPM-" + patenteActual.getPatCodigo();
+                } else {
+                    System.out.println("No encontro el objeto");
+                    numPatente = "AE-MPM-" + patenteActual.getPatCodigo();
+                }
             }
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, null, e);
         }
     }
 
+    public boolean cargarExistePatValoracion() {
+        boolean patValoracion = false;
+        try {
+            PatenteValoracion objPatValoracion = new PatenteValoracion();
+            objPatValoracion = patenteServicio.buscaPatValoracion(patenteActual.getPatCodigo());
+            //  patenteValoracionActal = patenteServicio.buscaPatValoracion(patenteActual.getPatCodigo());
+            if (objPatValoracion == null) {
+                patValoracion = false;
+            } else {
+                patValoracion = true;
+            }
+
+        } catch (Exception ex) {
+            LOGGER.log(Level.SEVERE, null, ex);
+        }
+        return patValoracion;
+    }
 
     public void inicializarValores() {
         valImpBomberos = null;
@@ -247,7 +272,6 @@ public class GestionDetPatenteControlador extends BaseControlador {
         valDeduciones = null;
         valTotal = null;
         valTasaProc = null;
-
     }
 
     public int getVerPanelDetalleImp() {

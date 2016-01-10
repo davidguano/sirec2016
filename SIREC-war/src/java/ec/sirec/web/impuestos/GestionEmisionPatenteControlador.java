@@ -122,7 +122,7 @@ public class GestionEmisionPatenteControlador extends BaseControlador {
 //    }
     public void listarEmisionPatente() {
         try {
-            listaEmisionPatente = patenteServicio.listarEmisionPatente(patenteActual.getPatCodigo());
+            listaEmisionPatente = patenteServicio.listarEmisionPatente(patenteActual.getPatCodigo(),patValoracionActual.getPatvalAnio(),catDetParroquias.getCatdetCodigo());
             if (listaEmisionPatente!=null) {
                 numPatente = "Positivo";
             } else {
@@ -171,7 +171,7 @@ public class GestionEmisionPatenteControlador extends BaseControlador {
     }
 
     public void listarParroquias() throws Exception {
-        listDetParroquias = catalogoDetalleServicio.listarPorNemonicoCatalogo("CIUDADES");
+        listDetParroquias = catalogoDetalleServicio.listarPorNemonicoCatalogo("PARROQUIAS");
     }
 
 //    public void listarArchivosPatente() throws Exception {

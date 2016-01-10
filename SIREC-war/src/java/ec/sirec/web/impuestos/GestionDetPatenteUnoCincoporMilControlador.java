@@ -99,10 +99,40 @@ public class GestionDetPatenteUnoCincoporMilControlador extends BaseControlador 
     public void cagarPatenteActual() {
         try {
             patenteActual = patenteServicio.cargarObjPatente(Integer.parseInt(buscNumPat));
-            numPatente = "AE-MPM-" + patenteActual.getPatCodigo();
+            if (patenteActual == null) {
+                numPatente = null;
+            } else {
+                if (cargarExistePat15porMilValoracion()) {
+                    patente15milValActual = unoPCinoPorMilServicio.buscaPatValoracion15xMil(patenteActual.getPatCodigo());
+                    System.out.println("Si encontro el objeto");
+                    numPatente = "AE-MPM-" + patenteActual.getPatCodigo();
+                } else {
+                    System.out.println("No encontro el objeto");
+                    numPatente = "AE-MPM-" + patenteActual.getPatCodigo();
+                }
+            }
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, null, e);
         }
+    }
+
+    public boolean cargarExistePat15porMilValoracion() {
+        boolean pa15PorMilValoracion = false;
+        try {
+            Patente15xmilValoracion objPat15PorMilValoracion = new Patente15xmilValoracion();
+            objPat15PorMilValoracion = unoPCinoPorMilServicio.buscaPatValoracion15xMil(patenteActual.getPatCodigo());
+            patenteServicio.buscaPatValoracion(patenteActual.getPatCodigo());
+            //  patenteValoracionActal = patenteServicio.buscaPatValoracion(patenteActual.getPatCodigo());
+            if (objPat15PorMilValoracion == null) {
+                pa15PorMilValoracion = false;
+            } else {
+                pa15PorMilValoracion = true;
+            }
+
+        } catch (Exception ex) {
+            LOGGER.log(Level.SEVERE, null, ex);
+        }
+        return pa15PorMilValoracion;
     }
 
     public void activaPanelDetalleImpuestos() {
@@ -213,7 +243,7 @@ public class GestionDetPatenteUnoCincoporMilControlador extends BaseControlador 
                 //Numero de sucursales
                 //Año balance
                 unoPCinoPorMilServicio.editarPatenteValoracion15xMil(patente15milValActual);
-                addSuccessMessage("Patente 1.5 Mil Valoración Guardado");
+                addSuccessMessage("Guardado Exitosamente","Patente 1.5 Mil Valoración Guardado");
                 patente15milValActual = new Patente15xmilValoracion();
                 inicializarValores();
 //                }
@@ -291,8 +321,6 @@ public class GestionDetPatenteUnoCincoporMilControlador extends BaseControlador 
     public void setBuscNumPat(String buscNumPat) {
         this.buscNumPat = buscNumPat;
     }
-
-    
 
     public int getVerBuscaPatente() {
         return verBuscaPatente;

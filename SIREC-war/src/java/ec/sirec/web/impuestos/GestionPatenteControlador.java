@@ -196,7 +196,7 @@ public class GestionPatenteControlador extends BaseControlador {
                 patenteServicio.crearPatente(patenteActual);
                 guardarArchivos();
                 getSession().setAttribute("patente", patenteActual);
-                addSuccessMessage("Patente Registrado");
+                addSuccessMessage("Guardado Exitosamente","Patente Guardado");
                 patenteActual = new Patente();
                 limpiarObjetosBitacora();
                 objCatDetAux = null;
@@ -280,7 +280,7 @@ public class GestionPatenteControlador extends BaseControlador {
             propietarioActual.setCatdetCiudad(catDetParroquia);
             propietarioServicio.editarPropietario(propietarioActual);
             propietarioActual = propietarioServicio.buscarPropietarioPorCatastro(catastroPredialActual.getCatpreCodigo());
-            addSuccessMessage("Propietario Actualizado");
+            addSuccessMessage("Registro Actualizado","");
             habilitaCamposPropietario = true;
         } catch (Exception ex) {
             LOGGER.log(Level.SEVERE, null, ex);
@@ -342,7 +342,7 @@ public class GestionPatenteControlador extends BaseControlador {
             archivo.setName(event.getFile().getFileName());
             archivo.setData(event.getFile().getContents());
             listaFiles.add(archivo);
-            addSuccessMessage(event.getFile().getFileName() + "Archivo Cargado");
+            addSuccessMessage("Archivo Cargado" ,"" );
         } catch (Exception ex) {
             LOGGER.log(Level.SEVERE, null, ex);
         }
