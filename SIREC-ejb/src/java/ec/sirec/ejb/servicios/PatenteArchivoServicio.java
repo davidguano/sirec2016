@@ -32,7 +32,7 @@ public class PatenteArchivoServicio {
         return patenteArchivoDao.listarPorCampoOrdenada(ENTIDAD_PAT_ARCHIVO, "patCodigo", codigo, "patCodigo", "asc");
         //return archivoServicio.listarTodos();
     }
-    public List<PatenteArchivo> listarArchivoPatentePorTipo(int patCodigo,String codTipo) throws Exception {
+    public List<PatenteArchivo> listarArchivoPatentePorTipo(Patente patCodigo,String codTipo) throws Exception {
         return patenteArchivoDao.listarPor2CamposOrdenada(ENTIDAD_PAT_ARCHIVO, "patCodigo", patCodigo, "patarcTipo", codTipo, "patCodigo", "asc");
         //return archivoServicio.listarTodos();
     }

@@ -88,8 +88,8 @@ public class PatenteServicio {
         return datoGlobalDao.buscarPorCampo(ENTIDAD_DATO_GLOBAL, "datgloNombre", nombre);
     }
 
-    public List<Object[]> listarEmisionPatente(int codPatente) {
-        return patenteDao.listaDatosEmisionPat(codPatente);
+    public List<Object[]> listarEmisionPatente(int codPatente,int anio,int parroquia) {
+        return patenteDao.listaDatosEmisionPat(codPatente,anio,parroquia);
     }
 
     public Patente buscaParPrRucActEco(String cedula, int actEcon) throws Exception {
