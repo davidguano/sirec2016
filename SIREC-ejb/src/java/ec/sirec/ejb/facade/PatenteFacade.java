@@ -38,25 +38,30 @@ public class PatenteFacade extends AbstractFacade<Patente> {
         return (Patente) q.getResultList().get(0);
     }
 
-    public List<Object[]> listaDatosEmisionPat(int codPatente) {
+    public List<Object[]> listaDatosEmisionPat(int codPatente,int anio,int parroquia) {
         List<Object[]> lista = new ArrayList<Object[]>();
-        String sql = " select distinct(pa.pat_codigo) as clavePatente,p.pro_apellidos||' '||p.pro_nombres as nomContribuente , " +
-" p.pro_ci as identificacion,p.pro_direccion as direccion,'parroquia' as parroquia,pv.patval_anio as año,pv.patval_patrimonio as patrimonio, " +
-" pv.patval_impuesto as impuestoPatente,'bomberos' as tasaBomberos,pv.patval_tasa_proc as tasaProcesamiento, " +
-" pv.patval_total as totalPatente,'baseImp' as baseImponible,pvmil.pat15val_impuesto as impuestoxMil,pvmil.pat15val_tasa_proc as tasaProxMil, " +
-" pvmil.pat15val_total as totalValxMil " +
-" from " +
-" sirec.propietario  p,sirec.propietario_predio pp,sirec.catastro_predial cp, " +
-" sirec.patente pa,sirec.patente_valoracion pv,sirec.patente_15xmil_valoracion pvmil,sirec.patente_valoracion_extras pve " +
-" where p.pro_ci=pp.pro_ci " +
-" and pp.catpre_codigo=cp.catpre_codigo " +
-" and cp.catpre_codigo=pa.catpre_codigo " +
-" and pa.pat_codigo=pv.pat_codigo " +
-" and pa.pat_codigo=pvmil.pat_codigo " +
-" and pv.patval_codigo=pve.patval_codigo " +
-" and pa.pat_codigo=:codPatente ";
-               Query q = getEntityManager().createNativeQuery(sql);
-        q.setParameter("codPatente", codPatente);
+        String sql = " select distinct( pa.pat_codigo) as clavePatente,p.pro_apellidos||' '||p.pro_nombres as nomContribuente ,"
+                + " p.pro_ci as identificacion,p.pro_direccion as direccion,cdp.catdet_texto as parroquia,pv.patval_anio as año,pv.patval_patrimonio as patrimonio, "
+                + " pv.patval_impuesto as impuestoPatente,pv.patval_tasa_bomb as tasaBomberos,pv.patval_tasa_proc as tasaProcesamiento,"
+                + " pv.patval_total as totalPatente,pvmil.pat15val_base_imponible as baseImponible,pvmil.pat15val_impuesto as impuestoxMil,pvmil.pat15val_tasa_proc as tasaProxMil,"
+                + " pvmil.pat15val_total as totalValxMil "
+                + " from "
+                + " sirec.propietario  p,sirec.propietario_predio pp,sirec.catastro_predial cp,"
+                + " sirec.patente pa,sirec.patente_valoracion pv,sirec.patente_15xmil_valoracion pvmil,"
+                + " sirec.patente_valoracion_extras pve,sirec.catalogo_detalle cdp"
+                + " where p.pro_ci=pp.pro_ci"
+                + " and pp.catpre_codigo=cp.catpre_codigo"
+                + " and cp.catpre_codigo=pa.catpre_codigo"
+                + " and pa.pat_codigo=pv.pat_codigo"
+                + " and pa.pat_codigo=pvmil.pat_codigo"
+                + " and pv.patval_codigo=pve.patval_codigo"
+                + " and cp.catdet_parroquia=cdp.catdet_codigo "
+                + " and pa.pat_codigo=:codPatente "
+         + " and cp.catdet_parroquia=:parroquia "
++ " and pv.patval_anio=:anio";
+        
+        Query q = getEntityManager().createNativeQuery(sql);
+        q.setParameter("codPatente", codPatente).setParameter("parroquia", parroquia).setParameter("anio",anio);
         if (q.getResultList().isEmpty()) {
             return null;
         } else {
@@ -65,8 +70,8 @@ public class PatenteFacade extends AbstractFacade<Patente> {
             return lista;
         }
     }
-    
-    public Patente buscaPatentePorRucActEcon(String cedula,int actEconomica) throws Exception {
+
+    public Patente buscaPatentePorRucActEcon(String cedula, int actEconomica) throws Exception {
         String sql = "select p from Patente p ,CatalogoDetalle cd,Propietario pr, "
                 + " PropietarioPredio pp ,CatastroPredial cp"
                 + " where pr.proCi=pp.proCi"
@@ -80,7 +85,7 @@ public class PatenteFacade extends AbstractFacade<Patente> {
         if (q.getResultList().isEmpty()) {
             return null;
         } else {
-           return (Patente) q.getResultList().get(0);
+            return (Patente) q.getResultList().get(0);
         }
     }
 }
