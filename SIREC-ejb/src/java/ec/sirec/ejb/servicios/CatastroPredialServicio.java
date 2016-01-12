@@ -15,6 +15,8 @@ import ec.sirec.ejb.entidades.CatastroPredialInfraestructura;
 import ec.sirec.ejb.entidades.CatastroPredialPlusvaliaValoracion;
 import ec.sirec.ejb.entidades.CatastroPredialUsosuelo;
 import ec.sirec.ejb.entidades.CatastroPredialValoracion;
+import ec.sirec.ejb.entidades.Mejora;
+import ec.sirec.ejb.entidades.ObraProyecto;
 import ec.sirec.ejb.entidades.Propietario;
 import ec.sirec.ejb.entidades.PropietarioPredio;
 import ec.sirec.ejb.facade.CatastroPredialAlcabalaValoracionFacade;
@@ -25,6 +27,8 @@ import ec.sirec.ejb.facade.CatastroPredialInfAntFacade;
 import ec.sirec.ejb.facade.CatastroPredialInfraestructuraFacade;
 import ec.sirec.ejb.facade.CatastroPredialPlusvaliaValoracionFacade;
 import ec.sirec.ejb.facade.CatastroPredialUsosueloFacade;
+import ec.sirec.ejb.facade.MejoraFacade;
+import ec.sirec.ejb.facade.ObraProyectoFacade;
 import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.EJB;
@@ -61,6 +65,10 @@ public class CatastroPredialServicio {
     private CatastroPredialAlcabalaValoracionFacade catastroPredialAlcabalaValoracionDao;
     @EJB
     private CatastroPredialPlusvaliaValoracionFacade catastroPredialPlusvaliaValoracionDao;
+    @EJB
+    private MejoraFacade mejoraDao;
+    @EJB
+    private ObraProyectoFacade obraProyectoDao;
 
     private final String ENTIDAD_CATASTRO = "CatastroPredial";
 
@@ -687,4 +695,13 @@ public class CatastroPredialServicio {
       public CatastroPredialPlusvaliaValoracion buscarPlusvaliaPorCatastroPredial(CatastroPredial catastroPredial) throws Exception {
         return catastroPredialPlusvaliaValoracionDao.buscarPorCampo("CatastroPredialPlusvaliaValoracion", "catpreCodigo", catastroPredial);
     }
+          
+    public ObraProyecto buscarMejoraXCatastro(CatastroPredial catastroPredial) throws Exception {
+        ObraProyecto obraProyecto = obraProyectoDao.buscarValorMejora(catastroPredial);
+        if (obraProyecto == null) {
+            return new ObraProyecto();
+        } else {
+            return obraProyecto;
+        }
+    }          
 }
