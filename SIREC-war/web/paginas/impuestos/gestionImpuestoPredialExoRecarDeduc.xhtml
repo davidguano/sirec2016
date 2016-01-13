@@ -9,7 +9,7 @@
                                               
                 <center>
                     <h:panelGrid id="panelContieneAplicacion1" width="1000" columns="1" >
-                        <p:panel header="#{txt.impuesto_predial}">
+                        <p:panel header="#{txt.impuesto_predial}" style="background: #B9AED9;">
                             
                             
                             <h:panelGrid id="pnlCC" columns="2">
@@ -40,7 +40,22 @@
                                         </p:selectOneMenu>
                                                                           
                                 </h:panelGrid> 
-                            <p:panel id="pnlRec" header="#{txt.RECARGOS}">
+                            
+                             
+                            <p:panel id="pnlDec" header="#{txt.DEDUCCIONES}" style="background: #c98b9b;" >
+                                <p:selectManyCheckbox id="cmbDed" value="#{gestionImpuestoPredialControlador.listaAdicionalesDeductivosDeduccionesSeleccion}"
+                                                  layout="grid" columns="1"
+                                                  style="width:500px" 
+                                                  > 
+                                <f:selectItems var="tipo" 
+                                               value="#{gestionImpuestoPredialControlador.listaAdicionalesDeductivosDeducciones}" 
+                                                itemLabel="#{tipo.adidedDescripcion}" 
+                                               itemValue="#{tipo.adidedCodigo}"/>  
+                            </p:selectManyCheckbox>
+                                
+                                </p:panel>
+                            
+                            <p:panel id="pnlRec" header="#{txt.RECARGOS}" style="background: #9BC98B;">
                                 <p:selectManyCheckbox id="cmbRec" value="#{gestionImpuestoPredialControlador.listaAdicionalesDeductivosRecargosSeleccion}"
                                                   layout="grid" columns="1"
                                                   style="width:500px" 
@@ -53,10 +68,10 @@
                                 
                                 </p:panel>
                             
-                            <p:panel id="pnlExo" header="#{txt.EXONERACIONES}">
+                            <p:panel id="pnlExo" header="#{txt.EXONERACIONES}" style="background: #8BBAC9;">
                                 <p:selectManyCheckbox id="cmbExo" value="#{gestionImpuestoPredialControlador.listaAdicionalesDeductivosExoneracionesSeleccion}"
                                                   layout="grid" columns="1"
-                                                  style="width:500px" 
+                                                  style="width:1000px" 
                                                   > 
                                 <f:selectItems var="tipo" 
                                                value="#{gestionImpuestoPredialControlador.listaAdicionalesDeductivosExoneraciones}" 
@@ -65,21 +80,9 @@
                             </p:selectManyCheckbox>
                                 
                                 </p:panel>
-                            
-                            <p:panel id="pnlDec" header="#{txt.DEDUCCIONES}">
-                                <p:selectManyCheckbox id="cmbDed" value="#{gestionImpuestoPredialControlador.listaAdicionalesDeductivosDeduccionesSeleccion}"
-                                                  layout="grid" columns="1"
-                                                  style="width:500px" 
-                                                  > 
-                                <f:selectItems var="tipo" 
-                                               value="#{gestionImpuestoPredialControlador.listaAdicionalesDeductivosDeducciones}" 
-                                                itemLabel="#{tipo.adidedDescripcion}" 
-                                               itemValue="#{tipo.adidedCodigo}"/>  
-                            </p:selectManyCheckbox>
-                                
-                                </p:panel>
                            
-                            <p:panel id="pnlDoc" header="#{txt.DOCUMENTOS}">
+                           
+                            <p:panel id="pnlDoc" header="#{txt.DOCUMENTOS}" style="background: #8797C7;">
                             <p:fileUpload fileUploadListener="#{gestionImpuestoPredialControlador.handleFileUpload}"  
                                                       mode="advanced"
                                                       dragDropSupport="false"
@@ -150,6 +153,9 @@
                                 
                                 
                             </p:panel>
+                            <br/>
+                                
+                            <center>
                              <p:commandButton value="#{txt.guardar_btn}" 
                                                      id="btnGuardar" 
                                                      action="#{gestionImpuestoPredialControlador.guardarAdicionalesDeductivos()}" 
@@ -159,6 +165,7 @@
                                                      async="true"
                                                      global="false"
                                                      />
+                             </center>
                         </p:panel>
                         
                         
