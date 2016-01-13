@@ -195,6 +195,7 @@ public class GestionAlcabalasControlador extends BaseControlador {
             propietario = catastroPredialServicio.obtenerPropietarioPrincipalPredio(catastroPredialActual.getCatpreCodigo());
             System.out.println("s: " + propietario.getProCi());
             System.out.println("m: " + propietario.getProNombres());
+            System.out.println("obtener: " + catastroPredialActual.getCatpreCodigo());
 
             catastroPredialValoracionActual = new CatastroPredialValoracion();
             catastroPredialValoracionActual = catastroPredialValoracionServicio.buscarPorCatastroPredial(catastroPredialActual);
@@ -241,6 +242,7 @@ public class GestionAlcabalasControlador extends BaseControlador {
             catastroPredialAlcabalaValoracion.setCatprealcvalTasaProc(new BigDecimal(2));
             catastroPredialAlcabalaValoracion.setCatprealcvalTotal(impuesto.add(conProv).add(catastroPredialAlcabalaValoracion.getCatprealcvalTasaProc()).setScale(2, RoundingMode.CEILING));
 
+            obtenerCamposCatPredial();
         } catch (Exception ex) {
             LOGGER.log(Level.SEVERE, null, ex);
         }
@@ -249,8 +251,13 @@ public class GestionAlcabalasControlador extends BaseControlador {
     public void guardarAlcabala() {
         try {
             catastroPredialAlcabalaValoracion.setCatpreCodigo(catastroPredialActual);
+            if(catastroPredialAlcabalaValoracion.getCatprealcvalTotal()!=null){
             catastroPredialAlcabalaValoracionServicio.crearCatastroPredialAlcabalaValoracion(catastroPredialAlcabalaValoracion);
-            addSuccessMessage("Guardado Exitosamente!");
+            addSuccessMessage("Guardado Exitosamente!","Guardado Exitosamente!");            
+            }else{
+                addErrorMessage("Se nesecita un valor: TOTAL!","Se nesecita un valor: TOTAL!"); 
+            }
+            
         } catch (Exception ex) {
             LOGGER.log(Level.SEVERE, null, ex);
         }
@@ -391,24 +398,24 @@ public class GestionAlcabalasControlador extends BaseControlador {
                                 cpAlcabalaValoracionExtrasServicio.crearCpAlcabalaValoracionExtras(cpAlcabalaValoracionExtrasActual);
                             }
 
-                            addSuccessMessage("Guardado Exitosamente!");
+                            addSuccessMessage("Guardado Exitosamente!","Guardado Exitosamente!");
 
                         } else {
-                            addErrorMessage("No existe Determinacion del Alcabala");
+                            addErrorMessage("No existe Determinacion del Alcabala","No existe Determinacion del Alcabala");
 
                         }
 
                     } else {
-                        addSuccessMessage("No se han cargado documentos!");
+                        addSuccessMessage("No se han cargado documentos!","No se han cargado documentos!");
                     }
                 } catch (NullPointerException exNull) {
                     // LOGGER.log(Level.SEVERE, null, exNull);
-                    addSuccessMessage("No se han cargado documentos!");
+                    addSuccessMessage("No se han cargado documentos!","No se han cargado documentos!");
 //              FacesMessage msg = new FacesMessage("No se han cargado documentos!");
 //        FacesContext.getCurrentInstance().addMessage(null, msg);
                 }
             } else {
-                addErrorMessage("No existe Clave Catastral");
+                addErrorMessage("No existe Clave Catastral","No existe Clave Catastral");
             }
         } catch (Exception ex) {
             LOGGER.log(Level.SEVERE, null, ex);
@@ -487,7 +494,7 @@ public void calularRebajaDesvalorizacionBaseImpImpuesto() {
             catastroPredialPlusvaliaValoracion.setCatpreCodigo(catastroPredialActual);             
             catastroPredialPlusvaliaValoracionServicio.crearCatastroPredialPlusvaliaValoracion(catastroPredialPlusvaliaValoracion); 
             
-            addSuccessMessage("Guardado Exitosamente!");
+            addSuccessMessage("Guardado Exitosamente!","Guardado Exitosamente!");
         } catch (Exception ex) {
             LOGGER.log(Level.SEVERE, null, ex);
         }
