@@ -9,9 +9,10 @@
                 
                 <center>
                     <h:panelGrid id="panelContieneAplicacion1" width="1000" columns="1" >                                                 
-                            <p:panel header="#{txt.INGRESO}">                                
+                            <p:panel  style="background: #8BC9B9;" header="#{txt.INGRESO}" >   
+                                <center>
                                 <h:panelGrid id="panelIngreso" columns="3">                                                                                                       
-                                <p:outputLabel value="#{txt.clave_catastral}"/>
+                                <p:outputLabel value="#{txt.clave_catastral}" style="font-size:14px"/>
                                 
                                 <p:selectOneMenu id="alPred" value="#{gestionAlcabalasControlador.catastroPredialActual}" style="width:180px;font-weight: bold;background: green;"
                                                  converter="#{catastroPredialConverter}" var="t" required="true" requiredMessage="Se nesecita un valor: #{txt.clave_catastral}"                                                 >
@@ -60,13 +61,14 @@
                                  <p:outputLabel value="#{txt.vendedor}"/>
                                  <p:inputText id="alVen" value="#{gestionAlcabalasControlador.propietario.proNombres} #{gestionAlcabalasControlador.propietario.proApellidos}"
                                             readonly="true" required="true" requiredMessage="Se nesecita un valor: #{txt.vendedor}"
-                                            style="color:white ; font-family: Arial; font-size: 15px; background: #2C8C19;"/>
+                                            style="width:250px ; color:white ; font-family: Arial; font-size: 15px; background: #2C8C19;"/>
                                   <p:message  for="alVen" display="icon"/>
                                  
                                 <p:outputLabel value="#{txt.comprador}"/>
                                 <p:inputText id="alCom" value="#{gestionAlcabalasControlador.catastroPredialAlcabalaValoracion.catprealcvalComprador}"   
                                           required="true" requiredMessage="Se nesecita un valor: #{txt.comprador}"
-                                          />
+                                          onkeyup="value = value.toUpperCase();"
+                                          style="width:250px ; font-family: Arial; font-size: 15px;"/>
                                  <p:message  for="alCom" display="icon"/>
                                  
                                 <p:outputLabel value="#{txt.area_de_terreno}"/>
@@ -96,16 +98,16 @@
                                 <p:outputLabel value="#{txt.precio_de_venta}"/>
                                 <p:inputText id="alPrec" value="#{gestionAlcabalasControlador.catastroPredialAlcabalaValoracion.catprealcvalPrecioventa}"
                                              onkeypress="return isDecimalKey(event)" required="true" requiredMessage="Se nesecita un valor: #{txt.precio_de_venta}"
-                                             >
+                                             style="font-family: Arial; font-size: 15px;">
                                     <p:ajax event="keyup" listener="#{gestionAlcabalasControlador.valorMayorBaseImponible}"  update=":frmAlcabalas:tabAlca:panelPlusvalia"
                                          process="@this" async="true" global="false"/>  
                                 </p:inputText>
                                 <p:message  for="alPrec" display="icon"/>
                                 
                                 <p:outputLabel value="#{txt.concepto}"/>
-                                <p:selectOneMenu id="alConc" value="#{gestionAlcabalasControlador.catastroPredialAlcabalaValoracion.catdetConcepto}" style="width:180px; font-weight: bold;background: green;"
+                                <p:selectOneMenu id="alConc" value="#{gestionAlcabalasControlador.catastroPredialAlcabalaValoracion.catdetConcepto}"
                                                          converter="#{catalogoDetalleConverter}" var="t" required="true" requiredMessage="Se nesecita un valor: #{txt.concepto}"
-                                                         >
+                                                         style="width:250px; font-family: Arial; font-size: 15px; background: green;">
                                             <f:selectItem itemLabel="Seleccione..." itemValue="" /> 
                                             <f:selectItems var="tipo" 
                                                            value="#{gestionAlcabalasControlador.listaCatalogoDetalleConcepto}" 
@@ -117,10 +119,12 @@
                                         </p:selectOneMenu>      
                                  <p:message  for="alConc" display="icon"/>
                                  </h:panelGrid>
+                                    </center>
                                 </p:panel>
                             
-                            <p:panel header="#{txt.DETERMINACION}">
+                            <p:panel style="background: #CBDD90;" header="#{txt.DETERMINACION}">
                               <!--  alAva,alPrec, -->
+                              <center>
                                 <h:panelGrid id="pnlCalcular" columns="3">                                                                                                       
                                 <p:commandButton value="#{txt.CALCULAR_btn}" 
                                                      id="btnCalcular" 
@@ -167,10 +171,12 @@
                                 <p:outputLabel value="#{txt.observaciones}"/>
                                 <p:inputTextarea id="alObs" value="#{gestionAlcabalasControlador.catastroPredialAlcabalaValoracion.catprealcvalObservaciones}"
                                                  rows="3" required="true" requiredMessage="Se nesecita un valor: #{txt.observaciones}"
-                                                 style="color:white ; font-family: Arial; font-size: 15px; background: #2C8C19;"/>
+                                                 onkeyup="value = value.toUpperCase();"
+                                                 style="width:300px ; font-family: Arial; font-size: 15px;"/>
                                 <p:message  for="alObs" display="icon"/>
                                  </h:panelGrid>  
                                 
+                                  <br></br>
                                   <p:commandButton value="#{txt.guardar_btn}" 
                                                      id="btnGuardar" 
                                                      action="#{gestionAlcabalasControlador.guardarAlcabala()}" 
@@ -179,7 +185,8 @@
                                                      update=":frmAlcabalas:msgs, :frmAlcabalas:tabAlca:pnlCalcular"
                                                      async="true"
                                                      global="false"
-                                                     />                                
+                                                     />    
+                                  </center>
                                 </p:panel>                                                                                                                                                 
                   </h:panelGrid>
                 </center>
