@@ -101,6 +101,8 @@ public class GestionDetPatenteUnoCincoporMilControlador extends BaseControlador 
             patenteActual = patenteServicio.cargarObjPatente(Integer.parseInt(buscNumPat));
             if (patenteActual == null) {
                 numPatente = null;
+                  patente15milValActual = new Patente15xmilValoracion();
+                  verPanelDetalleImp=0;
             } else {
                 if (cargarExistePat15porMilValoracion()) {
                     patente15milValActual = unoPCinoPorMilServicio.buscaPatValoracion15xMil(patenteActual.getPatCodigo());
@@ -115,7 +117,22 @@ public class GestionDetPatenteUnoCincoporMilControlador extends BaseControlador 
             LOGGER.log(Level.SEVERE, null, e);
         }
     }
-
+    
+ public void limpiaPanelDetalleImpuestos() {
+        patente15milValActual.setPat15valIngresoAnual(null);
+        patente15milValActual.setPat15valNumSucursales(null);
+        patente15milValActual.setPat15valActivo(null);
+        patente15milValActual.setPat15valActivos(null);
+        patente15milValActual.setPat15valPasivosCorriente(null);
+        patente15milValActual.setPat15valPasivosConting(null);
+        patente15milValActual.setPat15valOtrasDeducciones(null);
+        patente15milValActual.setPat15valBaseImponible(null);
+        patente15milValActual.setPat15valImpuesto(null);
+        patente15milValActual.setPat15valRecargos(null);
+        patente15milValActual.setPat15valTasaProc(null);
+        patente15milValActual.setPat15valSubtotal(null);
+        patente15milValActual.setPat15valTotal(null);
+    }
     public boolean cargarExistePat15porMilValoracion() {
         boolean pa15PorMilValoracion = false;
         try {
@@ -245,7 +262,7 @@ public class GestionDetPatenteUnoCincoporMilControlador extends BaseControlador 
                 unoPCinoPorMilServicio.editarPatenteValoracion15xMil(patente15milValActual);
                 addSuccessMessage("Guardado Exitosamente","Patente 1.5 Mil Valoración Guardado");
                 patente15milValActual = new Patente15xmilValoracion();
-                inicializarValores();
+             inicializar();
 //                }
 //            } else {
 //                patenteServicio.editarPatenteValoracion(patenteValoracionActal);

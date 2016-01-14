@@ -57,7 +57,7 @@ public class GestionDetPatenteControlador extends BaseControlador {
     public void inicializar() {
         try {
             verBuscaPatente = 0;
-            inicializarValores();
+            inicializarValCalcula();
             datoGlobalActual = new DatoGlobal();
             patenteActual = new Patente();
             patenteValoracionActal = new PatenteValoracion();
@@ -75,6 +75,18 @@ public class GestionDetPatenteControlador extends BaseControlador {
 
     public void activaPanelDetalleImpuestos() {
         verPanelDetalleImp = 1;
+    }
+
+    public void limpiaPanelDetalleImpuestos() {
+        patenteValoracionActal.setPatvalActivos(null);
+        patenteValoracionActal.setPatvalPasivos(null);
+        patenteValoracionActal.setPatvalPatrimonio(null);
+        patenteValoracionActal.setPatvalImpuesto(null);
+        patenteValoracionActal.setPatvalDeducciones(null);
+        patenteValoracionActal.setPatvalTasaBomb(null);
+        patenteValoracionActal.setPatvalSubtotal(null);
+        patenteValoracionActal.setPatvalTasaProc(null);
+        patenteValoracionActal.setPatvalTotal(null);
     }
 
     public void cargarNumPatente() {
@@ -206,7 +218,7 @@ public class GestionDetPatenteControlador extends BaseControlador {
                 patenteServicio.editarPatenteValoracion(patenteValoracionActal);
                 addSuccessMessage("Guardado Exitosamente", "Patente Valoración Guardado");
                 patenteValoracionActal = new PatenteValoracion();
-                inicializarValores();
+                inicializar();
 //                }
 //            } else {
 //                patenteServicio.editarPatenteValoracion(patenteValoracionActal);
@@ -232,6 +244,8 @@ public class GestionDetPatenteControlador extends BaseControlador {
             patenteActual = patenteServicio.cargarObjPatente(Integer.parseInt(buscNumPat));
             if (patenteActual == null) {
                 numPatente = null;
+                patenteValoracionActal = new PatenteValoracion();
+                verPanelDetalleImp=0;
             } else {
                 if (cargarExistePatValoracion()) {
                     patenteValoracionActal = patenteServicio.buscaPatValoracion(patenteActual.getPatCodigo());
@@ -265,7 +279,7 @@ public class GestionDetPatenteControlador extends BaseControlador {
         return patValoracion;
     }
 
-    public void inicializarValores() {
+    public void inicializarValCalcula() {
         valImpBomberos = null;
         valImpPatente = null;
         valSubTotal = null;

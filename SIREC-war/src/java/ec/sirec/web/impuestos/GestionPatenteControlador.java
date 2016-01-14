@@ -93,6 +93,7 @@ public class GestionPatenteControlador extends BaseControlador {
     private List<PatenteArchivo> listadoArchivos;
     private List<CatalogoDetalle> listaHorarioFunciona;
     private boolean habilitaCamposPropietario;
+    private int verIngresaPlaca;
 
     /**
      * Creates a new instance of GestionPatenteControlador
@@ -136,6 +137,7 @@ public class GestionPatenteControlador extends BaseControlador {
             listarClaveCatastral();
             listarHorarioFuncionamiento();
             listarParroquias();
+            verIngresaPlaca = 0;
         } catch (Exception ex) {
             LOGGER.log(Level.SEVERE, null, ex);
         }
@@ -196,7 +198,7 @@ public class GestionPatenteControlador extends BaseControlador {
                 patenteServicio.crearPatente(patenteActual);
                 guardarArchivos();
                 getSession().setAttribute("patente", patenteActual);
-                addSuccessMessage("Guardado Exitosamente","Patente Guardado");
+                addSuccessMessage("Guardado Exitosamente", "Patente Guardado");
                 patenteActual = new Patente();
                 limpiarObjetosBitacora();
                 objCatDetAux = null;
@@ -257,7 +259,14 @@ public class GestionPatenteControlador extends BaseControlador {
             LOGGER.log(Level.SEVERE, null, ex);
         }
         return identificacion;
+    }
 
+    public void activaIngresarPlaca() {
+        if (catDetTipActEcoActual.getCatdetCodigo() == 464) {
+            verIngresaPlaca = 1;
+        } else {
+            verIngresaPlaca = 0;
+        }
     }
 
     public void cargarInformacionPropietario() throws Exception {
@@ -280,7 +289,7 @@ public class GestionPatenteControlador extends BaseControlador {
             propietarioActual.setCatdetCiudad(catDetParroquia);
             propietarioServicio.editarPropietario(propietarioActual);
             propietarioActual = propietarioServicio.buscarPropietarioPorCatastro(catastroPredialActual.getCatpreCodigo());
-            addSuccessMessage("Registro Actualizado","");
+            addSuccessMessage("Registro Actualizado", "");
             habilitaCamposPropietario = true;
         } catch (Exception ex) {
             LOGGER.log(Level.SEVERE, null, ex);
@@ -342,7 +351,7 @@ public class GestionPatenteControlador extends BaseControlador {
             archivo.setName(event.getFile().getFileName());
             archivo.setData(event.getFile().getContents());
             listaFiles.add(archivo);
-            addSuccessMessage("Archivo Cargado" ,"" );
+            addSuccessMessage("Archivo Cargado", "");
         } catch (Exception ex) {
             LOGGER.log(Level.SEVERE, null, ex);
         }
@@ -664,6 +673,14 @@ public class GestionPatenteControlador extends BaseControlador {
 
     public void setListaCatDetParroquias(List<CatalogoDetalle> listaCatDetParroquias) {
         this.listaCatDetParroquias = listaCatDetParroquias;
+    }
+
+    public int getVerIngresaPlaca() {
+        return verIngresaPlaca;
+    }
+
+    public void setVerIngresaPlaca(int verIngresaPlaca) {
+        this.verIngresaPlaca = verIngresaPlaca;
     }
 
 }

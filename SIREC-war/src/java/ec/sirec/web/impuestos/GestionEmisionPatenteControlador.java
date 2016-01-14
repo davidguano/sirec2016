@@ -77,7 +77,7 @@ public class GestionEmisionPatenteControlador extends BaseControlador {
         try {
             numPatente = "";
             patenteActual = new Patente();
-            patValoracionActual= new PatenteValoracion();
+            patValoracionActual = new PatenteValoracion();
             listaEmisionPatente = new ArrayList<Object[]>();
             listarParroquias();
         } catch (Exception ex) {
@@ -122,8 +122,8 @@ public class GestionEmisionPatenteControlador extends BaseControlador {
 //    }
     public void listarEmisionPatente() {
         try {
-            listaEmisionPatente = patenteServicio.listarEmisionPatente(patenteActual.getPatCodigo(),patValoracionActual.getPatvalAnio(),catDetParroquias.getCatdetCodigo());
-            if (listaEmisionPatente!=null) {
+            listaEmisionPatente = patenteServicio.listarEmisionPatente(patenteActual.getPatCodigo(), patValoracionActual.getPatvalAnio(), catDetParroquias.getCatdetCodigo());
+            if (listaEmisionPatente != null) {
                 numPatente = "Positivo";
             } else {
                 numPatente = null;

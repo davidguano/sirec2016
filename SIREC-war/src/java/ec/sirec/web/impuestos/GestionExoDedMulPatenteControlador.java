@@ -147,14 +147,19 @@ public class GestionExoDedMulPatenteControlador extends BaseControlador {
             patenteActual = patenteServicio.cargarObjPatente(Integer.parseInt(buscNumPat));
             if (patenteActual == null) {
                 numPatente = null;
+                patValExActual = new PatenteValoracionExtras();
+                adiDeductivoActual = new AdicionalesDeductivos();
             } else {
                 if (cargarExistePatValExtra()) {
                     patValExActual = patenteServicio.buscaPatValExtraPorPatValoracion(patenteValoracionActal.getPatvalCodigo());
+                    adiDeductivoActual.setAdidedCodigo(patValExActual.getAdidedCodigo().getAdidedCodigo());
                     System.out.println("Si encontro el objeto");
                     numPatente = "AE-MPM-" + patenteActual.getPatCodigo();
                 } else {
                     System.out.println("No encontro el objeto");
                     numPatente = "AE-MPM-" + patenteActual.getPatCodigo();
+                    patValExActual = new PatenteValoracionExtras();
+                    adiDeductivoActual = new AdicionalesDeductivos();
                 }
 
             }
@@ -302,7 +307,12 @@ public class GestionExoDedMulPatenteControlador extends BaseControlador {
     }
 
     public void activPanelCargrArchivos() {
-        cargarArchivos = 1;
+        if (patenteActual.getPatCodigo() == null) {
+            addWarningMessage("Debe activar NºPatente", "Debe activar NºPatente");
+            cargarArchivos = 0;
+        } else {
+            cargarArchivos = 1;
+        }
     }
 
     public void activaPanelVerArchivos() {

@@ -121,7 +121,8 @@ public class GestionTblAmortizaControlador extends BaseControlador {
             LOGGER.log(Level.SEVERE, null, e);
         }
     }
-public void activaPanelVerArchivos() {
+
+    public void activaPanelVerArchivos() {
         try {
             if (patenteActual.getPatCodigo() == null) {
                 addWarningMessage("Debe activar NºPatente", "Debe activar NºPatente");
@@ -137,10 +138,14 @@ public void activaPanelVerArchivos() {
             LOGGER.log(Level.SEVERE, null, e);
         }
     }
-   
 
     public void activPanelCargrArchivos() {
-        cargarArchivos = 1;
+        if (patenteActual.getPatCodigo() == null) {
+            addWarningMessage("Debe activar NºPatente", "Debe activar NºPatente");
+            cargarArchivos = 0;
+        } else {
+            cargarArchivos = 1;
+        }
     }
 
     public void listarArchivosPatenteTA() throws Exception {
@@ -173,13 +178,13 @@ public void activaPanelVerArchivos() {
                 patenteActual.setPatFechaAdjudicacion(fechaAdjudica);
                 patenteActual.setPatFechaVencimiento(fechaVencmiento);
                 patenteServicio.editarPatente(patenteActual);
-                addSuccessMessage("Guardado Exitosamente","Tabla de Amortización Guardado");
+                addSuccessMessage("Guardado Exitosamente", "Tabla de Amortización Guardado");
                 inicializar();
 //                patente15milValActual = new Patente15xmilValoracion();
 //                }
             } else {
 //                   patenteServicio.editarPatente15milValoracion(patente15milValActual);
-                addSuccessMessage("Actualizado Exitosamente","Patente Valoración  Actualizado");
+                addSuccessMessage("Actualizado Exitosamente", "Patente Valoración  Actualizado");
                 patente15milValActual = new Patente15xmilValoracion();
                 habilitaEdicion = false;
             }

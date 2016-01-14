@@ -125,14 +125,19 @@ public class GestionExoDedMulUnoCincoPorMil extends BaseControlador {
             patenteActual = patenteServicio.cargarObjPatente(Integer.parseInt(buscNumPat));
             if (patenteActual == null) {
                 numPatente = null;
+                patValEx15xMilActual = new Patente15xmilValoracionExtras();
+                adiDeductivoActual = new AdicionalesDeductivos();
             } else {
                 if (cargarExistePatVal15PorMilExtra()) {
                     patValEx15xMilActual = unoPCinoPorMilServicio.buscaPatVal15xMilExtraPorPatValoracion(patValo15xMilActal.getPat15valCodigo());
+                    adiDeductivoActual.setAdidedCodigo(patValEx15xMilActual.getAdidedCodigo().getAdidedCodigo());
                     System.out.println("Si encontro el objeto");
                     numPatente = "AE-MPM-" + patenteActual.getPatCodigo();
                 } else {
                     System.out.println("No encontro el objeto");
                     numPatente = "AE-MPM-" + patenteActual.getPatCodigo();
+                    patValEx15xMilActual = new Patente15xmilValoracionExtras();
+                    adiDeductivoActual = new AdicionalesDeductivos();
                 }
 
             }
@@ -188,7 +193,7 @@ public class GestionExoDedMulUnoCincoPorMil extends BaseControlador {
         BigDecimal valTemporal;
         valTemporal = BigDecimal.valueOf(0.00);
         try {
-            patValo15xMilActal=new Patente15xmilValoracion();
+            patValo15xMilActal = new Patente15xmilValoracion();
             patValo15xMilActal.setPatCodigo(patenteActual);
             patValo15xMilActal.setPat15valNumSucursales(0);
             patValo15xMilActal.setPat15valAnioBalance(0);
@@ -311,7 +316,12 @@ public class GestionExoDedMulUnoCincoPorMil extends BaseControlador {
     }
 
     public void activPanelCargrArchivos() {
-        cargarArchivos = 1;
+        if (patenteActual.getPatCodigo() == null) {
+            addWarningMessage("Debe activar NºPatente", "Debe activar NºPatente");
+            cargarArchivos = 0;
+        } else {
+            cargarArchivos = 1;
+        }
 
     }
 
