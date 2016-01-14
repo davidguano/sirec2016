@@ -60,7 +60,7 @@
                     <p:panel>
                         <h:panelGrid columns="4" id="pnlPatTblNumero">
                             <p:outputLabel style="font-size: #{txt.font_size};" value="#{txt.lbl_num_patente}"/>
-                            <p:inputText  disabled="true" id="numTblPatente1" value="#{gestionTblAmortizaControlador.numPatente}"  
+                            <p:inputText style="background: lightgreen;color:black;font-weight: bold"  disabled="true" id="numTblPatente1" value="#{gestionTblAmortizaControlador.numPatente}"  
                                           size="40"/>
                             <p:message for="numTblPatente1" display="icon"/>  
                             <psirec:panelInformativo  rendered="#{gestionTblAmortizaControlador.numPatente==null}" id="infTblPeriodo" background="#042B69" ancho="220" icono="fa-exclamation-triangle"

@@ -16,7 +16,7 @@
                     <h:panelGrid id="pnl15xMilExoBuscaPatente" columns="1">
                                                <p:panel rendered="#{gestionExoDedMulUnoCincoPorMil.verBuscaPatente==1}" header="Búsqueda de Patente:">
                             <h:panelGrid columns="4">
-                                <p:outputLabel  style="font-size: #{txt.font_size}" value="#{txt.lbl_ingre_valor_busca}: AE-MPM-"/>
+                                <p:outputLabel  style="font-size: #{txt.font_size}" value="#{txt.lbl_ingre_valor_busca} AE-MPM-"/>
                                 <p:inputText  id="txtExo15xMilBusPatente"  value="#{gestionExoDedMulUnoCincoPorMil.buscNumPat}" 
                                               maxlength="20" size="40"/>
                                 <p:message for="txtExo15xMilBusPatente" display="icon"/>
@@ -60,7 +60,7 @@
                         <p:panel>
                             <h:panelGrid columns="4" id="pnlCon15xMilExoDedMulNumPat">
                                 <p:outputLabel style="font-size: #{txt.font_size};" value="#{txt.lbl_num_patente}"/>
-                                <p:inputText  disabled="true" id="numPatente15xMilExoDedMul" value="#{gestionExoDedMulUnoCincoPorMil.numPatente}"  
+                                <p:inputText style="background: lightgreen;color:black;font-weight: bold" disabled="true" id="numPatente15xMilExoDedMul" value="#{gestionExoDedMulUnoCincoPorMil.numPatente}"  
                                               size="40"/>
                                 <p:message for="numPatente15xMilExoDedMul" display="icon"/>  
                                 <psirec:panelInformativo  rendered="#{gestionExoDedMulUnoCincoPorMil.numPatente==null}" id="inf15xMilExoDedMulResult" background="#042B69" ancho="220" icono="fa-exclamation-triangle"

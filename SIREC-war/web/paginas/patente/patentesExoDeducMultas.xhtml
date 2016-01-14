@@ -59,7 +59,7 @@
                         <p:panel>
                             <h:panelGrid columns="4" id="pnlConExoDedMulNumPat">
                                 <p:outputLabel style="font-size: #{txt.font_size};" value="#{txt.lbl_num_patente}"/>
-                                <p:inputText  disabled="true" id="numPatenteExoDedMul" value="#{gestionExoDedMulPatenteControlador.numPatente}"  
+                                <p:inputText style="background: lightgreen;color:black;font-weight: bold" disabled="true" id="numPatenteExoDedMul" value="#{gestionExoDedMulPatenteControlador.numPatente}"  
                                               size="40"/>
                                 <p:message for="numPatenteExoDedMul" display="icon"/>  
                                 <psirec:panelInformativo  rendered="#{gestionExoDedMulPatenteControlador.numPatente==null}" id="infExoDedMulNumPat" background="#042B69" ancho="220" icono="fa-exclamation-triangle"
@@ -153,7 +153,7 @@
                                          action="#{gestionExoDedMulPatenteControlador.activPanelCargrArchivos()}" 
                                          icon="ui-icon-disk"  
                                          process="@this,pnlConBotExoDeducMul" 
-                                         update=":frmPat:tabPrin:pnlConCargarFile"
+                                         update=":frmPat:tabPrin:pnlConCargarFile,:frmPat:msgs"
                                          async="true"
                                          global="false"
                                          />
