@@ -58,7 +58,7 @@ public class GestionDetPatenteUnoCincoporMilControlador extends BaseControlador 
     private static final Logger LOGGER = Logger.getLogger(GestionDetPatenteUnoCincoporMilControlador.class.getName());
 
     /**
-     * Creates a new instance of GestionDetPatenteControlador
+     * Determinacion de patante 1.5 por mil
      */
     @PostConstruct
     public void inicializar() {

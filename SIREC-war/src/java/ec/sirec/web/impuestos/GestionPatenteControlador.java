@@ -96,7 +96,7 @@ public class GestionPatenteControlador extends BaseControlador {
     private int verIngresaPlaca;
 
     /**
-     * Creates a new instance of GestionPatenteControlador
+     * Patentes
      */
     private String numPatente;
     private static final Logger LOGGER = Logger.getLogger(GestionPatenteControlador.class.getName());

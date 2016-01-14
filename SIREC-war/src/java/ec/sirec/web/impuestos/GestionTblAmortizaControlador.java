@@ -76,7 +76,7 @@ public class GestionTblAmortizaControlador extends BaseControlador {
     private int cargarArchivos;
 
     /**
-     * Creates a new instance of GestionDetPatenteControlador
+     * Tabla de amortización
      */
     @PostConstruct
     public void inicializar() {

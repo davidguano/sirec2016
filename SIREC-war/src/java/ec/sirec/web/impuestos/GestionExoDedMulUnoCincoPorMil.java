@@ -74,7 +74,7 @@ public class GestionExoDedMulUnoCincoPorMil extends BaseControlador {
     private int verResultado;
 
     /**
-     * Creates a new instance of GestionDetPatenteControlador
+     * Exoneración deducciones y multas de patentes
      */
     @PostConstruct
     public void inicializar() {

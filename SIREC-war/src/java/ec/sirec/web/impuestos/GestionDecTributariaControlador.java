@@ -82,7 +82,7 @@ public class GestionDecTributariaControlador extends BaseControlador {
     private static final Logger LOGGER = Logger.getLogger(GestionDecTributariaControlador.class.getName());
 
     /**
-     * Creates a new instance of GestionDetPatenteControlador
+     * Declaración Tributaria
      */
     @PostConstruct
     public void inicializar() {

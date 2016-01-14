@@ -67,7 +67,7 @@ public class GestionExoDedMulPatenteControlador extends BaseControlador {
     private String buscNumPat;
 
     /**
-     * Creates a new instance of GestionDetPatenteControlador
+     * Exoneración deducciones y multas de patentes
      */
     @PostConstruct
     public void inicializar() {

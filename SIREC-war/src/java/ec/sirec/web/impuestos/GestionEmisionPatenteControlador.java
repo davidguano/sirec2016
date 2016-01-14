@@ -70,7 +70,7 @@ public class GestionEmisionPatenteControlador extends BaseControlador {
     private String numPatente;
 
     /**
-     * Creates a new instance of GestionDetPatenteControlador
+     * Emision de patentes
      */
     @PostConstruct
     public void inicializar() {

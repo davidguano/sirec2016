@@ -45,7 +45,7 @@ public class GestionEmiPatenteUnoCincoporMilControlador extends BaseControlador 
     private static final Logger LOGGER = Logger.getLogger(GestionEmiPatenteUnoCincoporMilControlador.class.getName());
 
     /**
-     * Creates a new instance of GestionDetPatenteControlador
+     * Emision de Patente 1.5 por mil
      */
     @PostConstruct
     public void inicializar() {

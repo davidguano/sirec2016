@@ -51,7 +51,7 @@ public class GestionDetPatenteControlador extends BaseControlador {
     private static final Logger LOGGER = Logger.getLogger(GestionDetPatenteControlador.class.getName());
 
     /**
-     * Creates a new instance of GestionDetPatenteControlador
+     * Determinación de patentes
      */
     @PostConstruct
     public void inicializar() {
