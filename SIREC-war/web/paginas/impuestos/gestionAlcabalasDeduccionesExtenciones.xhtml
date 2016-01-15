@@ -9,7 +9,7 @@
                 
                 <center>
                     <h:panelGrid id="panelContieneAplicacion2" width="1000" columns="1" >                                                 
-                        <p:panel id="pnlDed" header="#{txt.DEDUCCIONES}">                                
+                        <p:panel id="pnlDed" header="#{txt.DEDUCCIONES}" style="background: #8BBAC9;">                                
                                 <h:panelGrid columns="2">
                                     <p:selectManyCheckbox id="cmbDec" value="#{gestionAlcabalasControlador.listaAdicionalesDeductivosDeduccionesSeleccion}"
                                                   layout="grid" columns="1"
@@ -24,7 +24,7 @@
                                 
                                 </p:panel>
                             
-                        <p:panel id="pnlEx" header="#{txt.EXENCIONES}">                                
+                        <p:panel id="pnlEx" header="#{txt.EXENCIONES}" style="background: #A2AFD3;">                                
                                 <h:panelGrid columns="2">
                                     <p:selectManyCheckbox id="cmbExc" value="#{gestionAlcabalasControlador.listaAdicionalesDeductivosExcencionesSeleccion}"
                                                   layout="grid" columns="1"
@@ -39,7 +39,7 @@
                                 
                                 </p:panel>
                        
-                        <p:panel id="pnlDoc" header="#{txt.DOCUMENTOS}">
+                        <p:panel id="pnlDoc" header="#{txt.DOCUMENTOS}" style="background: #EED290;">    
                         
                                <p:fileUpload fileUploadListener="#{gestionAlcabalasControlador.handleFileUpload}"  
                                                       mode="advanced"

@@ -9,13 +9,13 @@
                 
                 <center>
                     <h:panelGrid id="panelContieneAplicacion1" width="1000" columns="1" >                                                 
-                            <p:panel  style="background: #8BC9B9;" header="#{txt.INGRESO}" >   
+                            <p:panel  style="background: #C4D770;" header="#{txt.INGRESO}" >   
                                 <center>
                                 <h:panelGrid id="panelIngreso" columns="3">                                                                                                       
                                 <p:outputLabel value="#{txt.clave_catastral}" style="font-size:14px"/>
                                 
                                 <p:selectOneMenu id="alPred" value="#{gestionAlcabalasControlador.catastroPredialActual}" style="width:180px;font-weight: bold;background: green;"
-                                                 converter="#{catastroPredialConverter}" var="t" required="true" requiredMessage="Se nesecita un valor: #{txt.clave_catastral}"                                                 >
+                                                 converter="#{catastroPredialConverter}" var="t" required="true" requiredMessage="Se nesecita un valor: #{txt.clave_catastral}">
                                             <f:selectItem itemLabel="Seleccione..." itemValue="" /> 
                                             <f:selectItems var="tipo" 
                                                            value="#{gestionAlcabalasControlador.listaCatastroPredial}" 

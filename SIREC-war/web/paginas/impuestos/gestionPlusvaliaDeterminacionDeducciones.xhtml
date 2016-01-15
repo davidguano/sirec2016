@@ -9,13 +9,13 @@
                 
                 <center>
                     <h:panelGrid id="panelPlusvalia" width="1000" columns="1" >                                                 
-                        <p:panel id="pnlDet" header="#{txt.DETERMINACION}">                                
+                        <p:panel id="pnlDet" header="#{txt.DETERMINACION}" style="background: #B9AED9;">                                
                                 <h:panelGrid columns="2">
                                     
-                                     <p:outputLabel value="TIPO DE TARIFA"/>
+                                    <p:outputLabel value="#{txt.TIPO_TARIFA}"/>
                                     
-                                     <p:selectOneMenu id="pComTT" value="#{gestionAlcabalasControlador.catastroPredialPlusvaliaValoracion.catdetTipoTarifa}" style="width:154px"
-                                                         converter="#{catalogoDetalleConverter}" var="t">
+                                     <p:selectOneMenu id="pComTT" value="#{gestionAlcabalasControlador.catastroPredialPlusvaliaValoracion.catdetTipoTarifa}" style="width:180px;font-weight: bold;background: green;"
+                                                         converter="#{catalogoDetalleConverter}" var="t" required="true" requiredMessage="Se nesecita un valor: #{txt.TIPO_TARIFA}">
                                             <f:selectItem itemLabel="Seleccione..." itemValue="" /> 
                                             <f:selectItems var="tipo" 
                                                            value="#{gestionAlcabalasControlador.listaTipoDeTarifa}" 
@@ -26,30 +26,40 @@
                                             </p:column>                                                                             
                                         </p:selectOneMenu> 
                                      
-                                     <p:outputLabel value="FECHA DE ÚLTIMA ESCRITURA" style="font-size: #{txt.font_size}"/>                                                                                                  
-                                     <p:calendar id="fecUlEsc" value="#{gestionAlcabalasControlador.catastroPredialPlusvaliaValoracion.catprepluvalFechaUltescr}" />
+                                     <p:outputLabel value="#{txt.FECHA_ÚLTIMA_ESCRITURA}" style="font-size: #{txt.font_size}"/>                                                                                                  
+                                     <p:calendar id="fecUlEsc" value="#{gestionAlcabalasControlador.catastroPredialPlusvaliaValoracion.catprepluvalFechaUltescr}" pattern="dd-MM-yyyy" 
+                                                 required="true" requiredMessage="Se nesecita un valor: #{txt.FECHA_ÚLTIMA_ESCRITURA}"
+                                                 style="font-family: Arial; font-size: 15px;"/>
                                      
-                                     <p:outputLabel value="PRECIO DE VENTA ACTUAL"/>
+                                     <p:outputLabel value="#{txt.PRECIO_VENTA_ACTUAL}"/>
                                      <p:inputText id="pPrecAct" value="#{gestionAlcabalasControlador.catastroPredialPlusvaliaValoracion.catprepluvalPrecioventa}"
-                                                  disabled="true"/>
+                                                   readonly="true" required="true" requiredMessage="Se nesecita un valor: #{txt.PRECIO_VENTA_ACTUAL}"
+                                            style="color:white ; font-family: Arial; font-size: 15px; background: #2C8C19;"/>
+                                     
                                      <p:outputLabel value="PRECIO DE VENTA ANTERIOR"/>
                                      <p:inputText  id="pPrecAnt" value="#{gestionAlcabalasControlador.catastroPredialPlusvaliaValoracion.catprepluvalPrecioventaAnt}"
-                                                   onkeypress="return isDecimalKey(event)" >
+                                                   onkeypress="return isDecimalKey(event)" 
+                                                   required="true" requiredMessage="Se nesecita un valor: #{txt.sector}"
+                                                    style="font-family: Arial; font-size: 15px;"                                                   
+                                                   >
                                                    <p:ajax event="blur" listener="#{gestionAlcabalasControlador.calularDiferenciaBruta}"  update=":frmAlcabalas:tabAlca:pDifBruta,pMej,pDifNeta"
                                          process="@this,pPrecAnt,pPrecAct" async="true" global="false"/>  
                                      </p:inputText>
                                      
                                       <p:outputLabel value="DIFERENCIA BRUTA"/>
                                       <p:inputText id="pDifBruta" value="#{gestionAlcabalasControlador.catastroPredialPlusvaliaValoracion.catprepluvalDifBruta}"
-                                                  disabled="true"/>
+                                                   readonly="true" required="true" requiredMessage="Se nesecita un valor: #{txt.sector}"
+                                            style="color:white ; font-family: Arial; font-size: 15px; background: #2C8C19;"/>
                                       
                                        <p:outputLabel value="MENOS VALORES DE CONTRIBUCIÓN POR MEJORAS"/>
                                        <p:inputText id="pMej" value="#{gestionAlcabalasControlador.catastroPredialPlusvaliaValoracion.catprepluvalValorContrmej}"
-                                                  disabled="true"/>
+                                                  readonly="true" required="true" requiredMessage="Se nesecita un valor: #{txt.sector}"
+                                            style="color:white ; font-family: Arial; font-size: 15px; background: #2C8C19;"/>
                                       
                                           <p:outputLabel value="DIFERENCIA NETA"/>
                                         <p:inputText id="pDifNeta" value="#{gestionAlcabalasControlador.catastroPredialPlusvaliaValoracion.catprepluvalDifNeta}"
-                                                  disabled="true"/>
+                                                   readonly="true" required="true" requiredMessage="Se nesecita un valor: #{txt.sector}"
+                                            style="color:white ; font-family: Arial; font-size: 15px; background: #2C8C19;"/>
                                         
                                 </h:panelGrid>                                                                                                       
                                 
