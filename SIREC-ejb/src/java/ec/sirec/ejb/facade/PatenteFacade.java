@@ -38,7 +38,7 @@ public class PatenteFacade extends AbstractFacade<Patente> {
         return (Patente) q.getResultList().get(0);
     }
 
-    public List<Object[]> listaDatosEmisionPat(int codPatente,int anio,int parroquia) {
+    public List<Object[]> listaDatosEmisionPat(int codPatente, int anio, int parroquia) {
         List<Object[]> lista = new ArrayList<Object[]>();
         String sql = " select distinct( pa.pat_codigo) as clavePatente,p.pro_apellidos||' '||p.pro_nombres as nomContribuente ,"
                 + " p.pro_ci as identificacion,p.pro_direccion as direccion,cdp.catdet_texto as parroquia,pv.patval_anio as año,pv.patval_patrimonio as patrimonio, "
@@ -57,11 +57,11 @@ public class PatenteFacade extends AbstractFacade<Patente> {
                 + " and pv.patval_codigo=pve.patval_codigo"
                 + " and cp.catdet_parroquia=cdp.catdet_codigo "
                 + " and pa.pat_codigo=:codPatente "
-         + " and cp.catdet_parroquia=:parroquia "
-+ " and pv.patval_anio=:anio";
-        
+                + " and cp.catdet_parroquia=:parroquia "
+                + " and pv.patval_anio=:anio";
+
         Query q = getEntityManager().createNativeQuery(sql);
-        q.setParameter("codPatente", codPatente).setParameter("parroquia", parroquia).setParameter("anio",anio);
+        q.setParameter("codPatente", codPatente).setParameter("parroquia", parroquia).setParameter("anio", anio);
         if (q.getResultList().isEmpty()) {
             return null;
         } else {
@@ -72,14 +72,13 @@ public class PatenteFacade extends AbstractFacade<Patente> {
     }
 
     public Patente buscaPatentePorRucActEcon(String cedula, int actEconomica) throws Exception {
-        String sql = "select p from Patente p ,CatalogoDetalle cd,Propietario pr, "
+        String sql = "select p from Patente p ,Propietario pr, "
                 + " PropietarioPredio pp ,CatastroPredial cp"
                 + " where pr.proCi=pp.proCi"
                 + " and pp.catpreCodigo=cp.catpreCodigo"
                 + " and cp.catpreCodigo=cp.catpreCodigo"
-                + " and p.catdetTipoActEco=cd.catdetCodigo"
                 + " and pr.proCi=:cedula "
-                + " and  cd.catdetCodigo =:actEco";
+                + " and  p.catdetTipoActEco.catdetCodigo=:actEco";
         Query q = em.createQuery(sql);
         q.setParameter("cedula", cedula).setParameter("actEco", actEconomica);
         if (q.getResultList().isEmpty()) {
