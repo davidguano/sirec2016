@@ -33,7 +33,7 @@ public class CatalogoDetalleFacade extends AbstractFacade<CatalogoDetalle> {
     }
  
     public List <CatalogoDetalle> buscaCatDetPorRuc(String cedula) throws Exception {
-        String sql = "select cd from CatalogoDetalle cd,Patente p,Propietario pr, "
+        String sql = "select distinct(cd) from CatalogoDetalle cd,Patente p,Propietario pr, "
                 + " PropietarioPredio pp ,CatastroPredial cp"
                 + " where pr.proCi=pp.proCi"
                 + " and pp.catpreCodigo=cp.catpreCodigo"
