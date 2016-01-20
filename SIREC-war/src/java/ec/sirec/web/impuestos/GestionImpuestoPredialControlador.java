@@ -581,9 +581,7 @@ public class GestionImpuestoPredialControlador extends BaseControlador {
 
     public void guardarAdicionalesDeductivos() {
         try {
-
-           
-            
+                       
             adicionalesDeductivosActual = new AdicionalesDeductivos();
             //catastroPredialValoracionActual = new CatastroPredialValoracion();
 
@@ -743,11 +741,33 @@ public class GestionImpuestoPredialControlador extends BaseControlador {
                       eVal.setCatastroPredialValoracion(CPV);                
                 }
 
-                if (adicionalesDeductivosServicio.obteneValorXAdicional(CP.getCatpreCodigo(), "PR", "R") != null) {
-                    eVal.setTotalRecargos(adicionalesDeductivosServicio.obteneValorXAdicional(CP.getCatpreCodigo(), "PR", "R"));
+                CpValoracionExtras cpR1 = cpValoracionExtrasServicio.buscarValoresRecargos(CPV, "R_INZ"); 
+                if(cpR1!=null){                                                                                                 
+                   cpR1.setCpvalextBase(CPV.getCatprevalBaseImponible());
+                   cpR1.setCpvalextValor(CPV.getCatprevalBaseImponible().multiply(new BigDecimal(adicionalesDeductivosServicio.buscarAdicionesDeductivosXCodigo(cpR1.getAdidedCodigo().getAdidedCodigo()).getAdidedPorcentaje())));                    
+                   cpValoracionExtrasServicio.editarCpValoracionExtras(cpR1);
+                }
+                
+                CpValoracionExtras cpR2 = cpValoracionExtrasServicio.buscarValoresRecargos(CPV, "R_IOB"); 
+                if(cpR2!=null){                                                                                                 
+                   cpR2.setCpvalextBase(CPV.getCatprevalBaseImponible());
+                   cpR2.setCpvalextValor(CPV.getCatprevalBaseImponible().multiply(new BigDecimal(adicionalesDeductivosServicio.buscarAdicionesDeductivosXCodigo(cpR2.getAdidedCodigo().getAdidedCodigo()).getAdidedPorcentaje())));                    
+                   cpValoracionExtrasServicio.editarCpValoracionExtras(cpR1);
+                }
+                
+                if (cpValoracionExtrasServicio.obteneValorTipoAdicional(CP.getCatpreCodigo(), "PR", "R") != null) {
+                    eVal.setTotalRecargos(cpValoracionExtrasServicio.obteneValorTipoAdicional(CP.getCatpreCodigo(), "PR", "R"));
                 } else {
                     eVal.setTotalRecargos(BigDecimal.ZERO);
                 }
+                
+//                if (adicionalesDeductivosServicio.obteneValorXAdicional(CP.getCatpreCodigo(), "PR", "R") != null) {
+//                    eVal.setTotalRecargos(adicionalesDeductivosServicio.obteneValorXAdicional(CP.getCatpreCodigo(), "PR", "R"));
+//                } else {
+//                    eVal.setTotalRecargos(BigDecimal.ZERO);
+//                }
+                           
+                
                 if (adicionalesDeductivosServicio.obteneValorXAdicional(CP.getCatpreCodigo(), "PR", "D") != null) {
                     eVal.setTotalDeduciones(adicionalesDeductivosServicio.obteneValorXAdicional(CP.getCatpreCodigo(), "PR", "D"));
                 } else {
