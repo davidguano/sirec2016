@@ -8,6 +8,7 @@ package ec.sirec.ejb.facade;
 
 import ec.sirec.ejb.entidades.AdicionalesDeductivos;
 import java.math.BigDecimal;
+import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -44,9 +45,7 @@ public class AdicionalesDeductivosFacade extends AbstractFacade<AdicionalesDeduc
         q.setParameter("vvalor2", vvalor2);
         q.setParameter("vvalor3", vvalor3);
         return (BigDecimal)q.getSingleResult();
-    }
-    
-    
+    }        
 //    SELECT  sum(d.adided_valorfijo)
 //  FROM sirec.catastro_predial c, sirec.catastro_predial_valoracion v, sirec.cp_valoracion_extras e, sirec.adicionales_deductivos d
 //  where c.catpre_codigo=1 and 
@@ -56,4 +55,29 @@ public class AdicionalesDeductivosFacade extends AbstractFacade<AdicionalesDeduc
 //  d.adided_tipo_impuesto='PA' and
 //  d.adided_tipo='E';
     
+    public List<AdicionalesDeductivos> recuperarAdicionalesDeductivos(Object vvalor1, Object vvalor2, Object vvalor3) throws Exception {
+
+      String sql = " select d from CpValoracionExtras e, AdicionalesDeductivos d "
+                + " where e.adidedCodigo=d.adidedCodigo and "
+                + " e.catprevalCodigo=:vvalor1 and "
+                + " d.adidedTipo=:vvalor2 and "
+                + " d.adidedTipoImpuesto=:vvalor3";             
+                                                
+        Query q = getEntityManager().createQuery(sql);
+        q.setParameter("vvalor1", vvalor1 ); // tipo        
+        q.setParameter("vvalor2", vvalor2 ); // tipo        
+        q.setParameter("vvalor3", vvalor3 ); // 
+       
+        return q.getResultList();
+    } 
+//    SELECT * from sirec.cp_valoracion_extras e, sirec.adicionales_deductivos d
+//  where e.adided_codigo=d.adided_codigo and 
+//  e.catpreval_codigo=17 and
+//  d.adided_tipo_impuesto='PR' and
+//  adided_tipo='D'
 }
+
+
+
+
+
