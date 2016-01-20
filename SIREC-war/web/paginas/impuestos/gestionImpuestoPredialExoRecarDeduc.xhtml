@@ -36,9 +36,11 @@
                                             <f:selectItem itemLabel="Seleccione..." itemValue="" /> 
                                             <f:selectItem itemLabel="2015" itemValue="2015" />
                                             <f:selectItem itemLabel="2016" itemValue="2016" />          
-                                            <f:selectItem itemLabel="2017" itemValue="2017" />          
+                                            <f:selectItem itemLabel="2017" itemValue="2017" />    
+                                            <p:ajax listener="#{gestionImpuestoPredialControlador.buscarValoracion()}"
+                                                    process="@this,alPred" async="true" global="false" update=":frmImpPredial:tabImpPred:pnlDec, :frmImpPredial:tabImpPred:pnlRec, :frmImpPredial:tabImpPred:pnlExo "/>  
                                         </p:selectOneMenu>
-                                                                          
+                                                                       
                                 </h:panelGrid> 
                             
                              
