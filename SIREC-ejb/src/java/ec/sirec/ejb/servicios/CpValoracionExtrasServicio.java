@@ -7,6 +7,7 @@ package ec.sirec.ejb.servicios;
 
 import ec.sirec.ejb.entidades.AdicionalesDeductivos;
 import ec.sirec.ejb.entidades.CatalogoDetalle;
+import ec.sirec.ejb.entidades.CatastroPredial;
 import ec.sirec.ejb.entidades.CatastroPredialValoracion;
 import ec.sirec.ejb.entidades.CpValoracionExtras;
 import ec.sirec.ejb.entidades.SegPermiso;
@@ -14,6 +15,7 @@ import ec.sirec.ejb.facade.AdicionalesDeductivosFacade;
 import ec.sirec.ejb.facade.CatalogoDetalleFacade;
 import ec.sirec.ejb.facade.CpValoracionExtrasFacade;
 import ec.sirec.ejb.facade.SegPermisoFacade;
+import java.math.BigDecimal;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -58,10 +60,18 @@ public class CpValoracionExtrasServicio {
           }                
         return "se han eliminado los CpVal";
     }
-//
-//    public List<AdicionalesDeductivos> listarCatalogosPorNemonico(String nemonico) throws Exception {
-//     return adicionalesDeductivosDao.listarCatalogosPorNemonico(nemonico, "catdetOrden", "asc");
-//    }
+    
+    public CpValoracionExtras buscarValoresRecargos(CatastroPredialValoracion catastroPredialValoracion, String Nemonico) throws Exception {
+        return cpValoracionExtrasDao.buscarXNemonico(Nemonico, catastroPredialValoracion);
+    } 
+    
+    public CpValoracionExtras buscarXCodigo(Integer CpValoracionExtras) throws Exception {
+        return cpValoracionExtrasDao.buscarPorCampo(ENTIDAD_VALORACION_EXTRAS, "cpvalextCodigo", CpValoracionExtras);
+    } 
+    
+public BigDecimal obteneValorTipoAdicional(Integer codigo, String TipoImp, String tipo) throws Exception {
+     return cpValoracionExtrasDao.obteneValorTipoAdicional(codigo, TipoImp, tipo);
+    }
     
  
     
