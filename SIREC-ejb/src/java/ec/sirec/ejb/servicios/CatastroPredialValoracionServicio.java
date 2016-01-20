@@ -42,4 +42,7 @@ public class CatastroPredialValoracionServicio {
         return catastroPredialValoracionDao.buscarPorCampo(ENTIDAD_CATASTRO_PREDIAL_VALORACION, "catpreCodigo", catastroPredial);
     }
     
+     public CatastroPredialValoracion existeCatastroValoracion(CatastroPredial catastroPredial, Integer anio) throws Exception {
+        return catastroPredialValoracionDao.buscarPor2Campos(ENTIDAD_CATASTRO_PREDIAL_VALORACION, "catpreCodigo", catastroPredial, "catprevalAnio", anio);
+    }
 }

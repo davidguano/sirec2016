@@ -50,11 +50,14 @@ public class CpValoracionExtrasServicio {
     public List<CpValoracionExtras> listarCpValoracionExtrasXCatPreVal(CatastroPredialValoracion catPreValCodigo) throws Exception {
      return cpValoracionExtrasDao.listarPorCampoOrdenada(ENTIDAD_VALORACION_EXTRAS,"catprevalCodigo", catPreValCodigo,"cpvalextCodigo", "asc");
     }
-    
-    
-//    public List<AdicionalesDeductivos> listarAdicionalesDeducibles() throws Exception {
-//        return adicionalesDeductivosDao.listarTodos();
-//    }
+        
+    public String eliminarCpValoracionExtrar(CatastroPredialValoracion catPreValCodigo) throws Exception {
+        List<CpValoracionExtras> listarCp = listarCpValoracionExtrasXCatPreVal(catPreValCodigo);
+          for (int i = 0; i < listarCp.size(); i++) {  
+              cpValoracionExtrasDao.eliminarGenerico(ENTIDAD_VALORACION_EXTRAS, "cpvalextCodigo", listarCp.get(i).getCpvalextCodigo());
+          }                
+        return "se han eliminado los CpVal";
+    }
 //
 //    public List<AdicionalesDeductivos> listarCatalogosPorNemonico(String nemonico) throws Exception {
 //     return adicionalesDeductivosDao.listarCatalogosPorNemonico(nemonico, "catdetOrden", "asc");

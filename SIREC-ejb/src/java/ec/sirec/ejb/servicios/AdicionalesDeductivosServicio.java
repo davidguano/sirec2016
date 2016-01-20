@@ -7,6 +7,7 @@ package ec.sirec.ejb.servicios;
 
 import ec.sirec.ejb.entidades.AdicionalesDeductivos;
 import ec.sirec.ejb.entidades.CatalogoDetalle;
+import ec.sirec.ejb.entidades.CatastroPredialValoracion;
 import ec.sirec.ejb.entidades.SegPermiso;
 import ec.sirec.ejb.facade.AdicionalesDeductivosFacade;
 import ec.sirec.ejb.facade.CatalogoDetalleFacade;
@@ -55,6 +56,12 @@ public class AdicionalesDeductivosServicio {
      public AdicionalesDeductivos buscarAdicionesDeductivosXCodigo(Integer codigo) throws Exception {
      return adicionalesDeductivosDao.buscarPorCampo(ENTIDAD_ADICIONALES_DEDUCIBLES, "adidedCodigo", codigo);
     }
+     
+     public List<AdicionalesDeductivos> recuperarAdicionesDeductivos(CatastroPredialValoracion catastroPredialValoracion, String tipo ,String tipoImpuesto) throws Exception {
+     return adicionalesDeductivosDao.recuperarAdicionalesDeductivos(catastroPredialValoracion, tipo, tipoImpuesto);
+    }
+         
+     
     // Add business logic below. (Right-click in editor and choose
     // "Insert Code > Add Business Method")
 }
