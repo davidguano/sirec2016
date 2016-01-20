@@ -30,6 +30,7 @@ import ec.sirec.ejb.servicios.RecaudacionDetServicio;
 import ec.sirec.web.base.BaseControlador;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -135,7 +136,7 @@ public class GestionImpuestoPredialControlador extends BaseControlador {
             listarTodasComboClaves();
             listarCatastroPredialERD();
             criterio = "";
-           
+            anio = 0;
             listarParroquias();
             listarSectores();
 
@@ -144,6 +145,49 @@ public class GestionImpuestoPredialControlador extends BaseControlador {
         }
     }
 
+    public void buscarValoracion() {
+        try {
+
+             listaAdicionalesDeductivosRecargosSeleccion = new ArrayList<String>();
+                 listaAdicionalesDeductivosDeduccionesSeleccion = new ArrayList<String>();
+                  listaAdicionalesDeductivosExoneracionesSeleccion = new ArrayList<String>();
+            
+            catastroPredialValoracionActual = new CatastroPredialValoracion();
+            catastroPredialValoracionActual = catastroPredialValoracionServicio.existeCatastroValoracion(catastroPredialActual, anio);                      
+            if(catastroPredialValoracionActual==null){
+               
+                 
+                catastroPredialValoracionActual = new CatastroPredialValoracion();
+                catastroPredialValoracionActual.setCatpreCodigo(catastroPredialActual);
+                catastroPredialValoracionActual.setCatprevalAnio(anio);                 
+                catastroPredialValoracionServicio.crearAplicacion(catastroPredialValoracionActual);            
+            }else{
+              //listaAdicionalesDeductivosRecargosSeleccion = new ArrayList<String>();
+              List<AdicionalesDeductivos> listaR_PR = adicionalesDeductivosServicio.recuperarAdicionesDeductivos(catastroPredialValoracionActual, "R", "PR");
+                for (int i = 0; i < listaR_PR.size(); i++) {                     
+                     listaAdicionalesDeductivosRecargosSeleccion.add(listaR_PR.get(i).getAdidedCodigo()+"");
+                }
+                
+             //listaAdicionalesDeductivosDeduccionesSeleccion = new ArrayList<String>();
+              List<AdicionalesDeductivos> listaD_PR = adicionalesDeductivosServicio.recuperarAdicionesDeductivos(catastroPredialValoracionActual, "D", "PR");
+                for (int i = 0; i < listaR_PR.size(); i++) {                     
+                     listaAdicionalesDeductivosDeduccionesSeleccion.add(listaD_PR.get(i).getAdidedCodigo()+"");
+                }
+                
+              //listaAdicionalesDeductivosExoneracionesSeleccion = new ArrayList<String>();
+              List<AdicionalesDeductivos> listaE_PR = adicionalesDeductivosServicio.recuperarAdicionesDeductivos(catastroPredialValoracionActual, "E", "PR");
+                for (int i = 0; i < listaE_PR.size(); i++) {                     
+                     listaAdicionalesDeductivosExoneracionesSeleccion.add(listaE_PR.get(i).getAdidedCodigo()+"");
+                }  
+            
+            }
+            System.out.println("xsss:  " + catastroPredialValoracionActual.getCatprevalCodigo());
+                                                           
+        } catch (Exception ex) {
+            LOGGER.log(Level.SEVERE, null, ex);
+        }
+    }
+        
     public void listarCatastroPredialERD() {
         try {
             listaCatastroPredialExoRecarDeduc = catastroPredialServicio.listarClaveCatastral();
@@ -281,21 +325,6 @@ public class GestionImpuestoPredialControlador extends BaseControlador {
         }
         return null;
     }
-    
-//    public void startDownload(PredioArchivo archivo) {
-//        HttpServletResponse response = (HttpServletResponse) FacesContext.getCurrentInstance()
-//                .getExternalContext().getResponse();
-//        try {
-//            response.setContentType("application/pdf");
-//            response.setHeader("Content-Disposition", "attachment;filename=" + archivo.getPrearcNombre());
-//            response.getOutputStream().write(archivo.getPrearcData());
-//            response.getOutputStream().flush();
-//            response.getOutputStream().close();
-//            FacesContext.getCurrentInstance().responseComplete();
-//        } catch (IOException ioex) {
-//            LOGGER.log(Level.SEVERE, null, ioex);
-//        }
-//    }
     
      public void valoracionConstruccion() {
          try {                           
@@ -459,7 +488,7 @@ public class GestionImpuestoPredialControlador extends BaseControlador {
           }
           
           BigDecimal valorAvaluoConstruccion = BigDecimal.ZERO;
-          BigDecimal valorAvaluoTerrero = new BigDecimal(1000);
+          BigDecimal valorAvaluoTerrero = new BigDecimal(10000);
           
           for (int i = 0; i < vidaUtil.size(); i++) {                
              double d = (VN.get(i)-(VN.get(i)*FD.get(i)))*catastroPredialActual.getCatpreAreaTotalCons();   
@@ -468,22 +497,34 @@ public class GestionImpuestoPredialControlador extends BaseControlador {
           valorAvaluoConstruccion = valorAvaluoConstruccion.add(new BigDecimal((VN.get(i)-(VN.get(i)*FD.get(i)))*catastroPredialActual.getCatpreAreaTotalCons())) ;                                                    
           }
           
-          catastroPredialValoracionActual = new CatastroPredialValoracion();          
+          
+          
+          
           catastroPredialValoracionActual.setCatpreCodigo(catastroPredialActual);
           catastroPredialValoracionActual.setCatprevalAvaluoEdif(valorAvaluoConstruccion); 
           catastroPredialValoracionActual.setCatprevalAvaluoTerr(valorAvaluoTerrero); 
           catastroPredialValoracionActual.setCatprevalAvaluoTot(valorAvaluoConstruccion.add(valorAvaluoTerrero)); 
           catastroPredialValoracionActual.setCatprevalValorPropieda(valorAvaluoConstruccion.add(valorAvaluoTerrero));   
           
+          calcularBaseImponible();
           
-          catastroPredialValoracionActual.setCatprevalBaseImponible(valorAvaluoConstruccion.add(valorAvaluoTerrero));                                        
-          catastroPredialValoracionActual.setCatprevalImpuesto(valorAvaluoConstruccion.add(valorAvaluoTerrero).multiply(new BigDecimal(datoGlobalServicio.obtenerDatoGlobal("Banda_Impositiva_Urbana").getDatgloValor()).divide(new BigDecimal(100))));  
-          catastroPredialValoracionActual.setCatprevalBomberos(valorAvaluoConstruccion.add(valorAvaluoTerrero).multiply(new BigDecimal(datoGlobalServicio.obtenerDatoGlobal("Bomberos").getDatgloValor()).divide(new BigDecimal(100))));  
-          catastroPredialValoracionActual.setCatprevalSolarNoedificado(valorAvaluoConstruccion.add(valorAvaluoTerrero).multiply(new BigDecimal(datoGlobalServicio.obtenerDatoGlobal("Solar_No_Edif").getDatgloValor()).divide(new BigDecimal(100))));  
+          catastroPredialValoracionActual.setCatprevalImpuesto(catastroPredialValoracionActual.getCatprevalBaseImponible().multiply(new BigDecimal(datoGlobalServicio.obtenerDatoGlobal("Banda_Impositiva_Urbana").getDatgloValor()).divide(new BigDecimal(100))));  
+          catastroPredialValoracionActual.setCatprevalBomberos(catastroPredialValoracionActual.getCatprevalBaseImponible().multiply(new BigDecimal(datoGlobalServicio.obtenerDatoGlobal("Bomberos").getDatgloValor()).divide(new BigDecimal(100))));  
+          catastroPredialValoracionActual.setCatprevalSolarNoedificado(catastroPredialValoracionActual.getCatprevalBaseImponible().multiply(new BigDecimal(datoGlobalServicio.obtenerDatoGlobal("Solar_No_Edif").getDatgloValor()).divide(new BigDecimal(100))));  
           catastroPredialValoracionActual.setCatprevalTasaAdm(new BigDecimal(datoGlobalServicio.obtenerDatoGlobal("Tasa_Administrativa").getDatgloValor()));  
           catastroPredialValoracionActual.setCatprevalAnio(anio);
           
-          catastroPredialValoracionServicio.crearAplicacion(catastroPredialValoracionActual);
+          catastroPredialValoracionServicio.editarAplicacion(catastroPredialValoracionActual);
+          
+          
+//          catastroPredialValoracionActual.setCatprevalBaseImponible(valorAvaluoConstruccion.add(valorAvaluoTerrero));                                        
+//          catastroPredialValoracionActual.setCatprevalImpuesto(valorAvaluoConstruccion.add(valorAvaluoTerrero).multiply(new BigDecimal(datoGlobalServicio.obtenerDatoGlobal("Banda_Impositiva_Urbana").getDatgloValor()).divide(new BigDecimal(100))));  
+//          catastroPredialValoracionActual.setCatprevalBomberos(valorAvaluoConstruccion.add(valorAvaluoTerrero).multiply(new BigDecimal(datoGlobalServicio.obtenerDatoGlobal("Bomberos").getDatgloValor()).divide(new BigDecimal(100))));  
+//          catastroPredialValoracionActual.setCatprevalSolarNoedificado(valorAvaluoConstruccion.add(valorAvaluoTerrero).multiply(new BigDecimal(datoGlobalServicio.obtenerDatoGlobal("Solar_No_Edif").getDatgloValor()).divide(new BigDecimal(100))));  
+//          catastroPredialValoracionActual.setCatprevalTasaAdm(new BigDecimal(datoGlobalServicio.obtenerDatoGlobal("Tasa_Administrativa").getDatgloValor()));  
+//          catastroPredialValoracionActual.setCatprevalAnio(anio);
+          
+        //  catastroPredialValoracionServicio.crearAplicacion(catastroPredialValoracionActual);
           
           System.out.println("valorConstruccionT: "+ valorAvaluoConstruccion);
         } catch (Exception ex) {
@@ -508,13 +549,28 @@ public class GestionImpuestoPredialControlador extends BaseControlador {
            }
            if(terceraEdad=true){
            
-               catastroPredialServicio.obtenerPropietarioPrincipalPredio(catastroPredialActual.getCatpreCodigo());
-           
+               //catastroPredialServicio.obtenerPropietarioPrincipalPredio(catastroPredialActual.getCatpreCodigo()).getProCi();
+               BigDecimal totalAvaluoxPro = BigDecimal.ZERO;
+               List<CatastroPredial> catastroPropietario = catastroPredialServicio.listarCatastroPorCedulaPropietario(catastroPredialServicio.obtenerPropietarioPrincipalPredio(catastroPredialActual.getCatpreCodigo()).getProCi());
+               for (int i = 0; i < catastroPropietario.size(); i++) {
+                   CatastroPredialValoracion CPVxPro = catastroPredialServicio.obtenerValoracionPredio(catastroPropietario.get(i));
+                   System.out.println("ko: " + CPVxPro.getCatprevalAvaluoTot());
+                   if (CPVxPro.getCatprevalAvaluoTot() != null) {
+                       totalAvaluoxPro = totalAvaluoxPro.add(CPVxPro.getCatprevalAvaluoTot());
+                   }
+               }
+               if(totalAvaluoxPro.compareTo(new BigDecimal(datoGlobalServicio.obtenerDatoGlobal("500RBU").getDatgloValor()))==1){
+                     catastroPredialValoracionActual.setCatprevalBaseImponible(totalAvaluoxPro.subtract(new BigDecimal(datoGlobalServicio.obtenerDatoGlobal("500RBU").getDatgloValor())));               
+               }else{
+                   if(totalAvaluoxPro.compareTo(new BigDecimal(datoGlobalServicio.obtenerDatoGlobal("500RBU").getDatgloValor()))==-1){                   
+                       catastroPredialValoracionActual.setCatprevalBaseImponible(totalAvaluoxPro);                               
+               }               
+               }
                
-               
+               System.out.println("total: " + totalAvaluoxPro);
                
            }else{
-           
+               catastroPredialValoracionActual.setCatprevalBaseImponible(catastroPredialValoracionActual.getCatprevalAvaluoTot());                
            }
 
         } catch (Exception ex) {
@@ -526,20 +582,20 @@ public class GestionImpuestoPredialControlador extends BaseControlador {
     public void guardarAdicionalesDeductivos() {
         try {
 
-           valoracionConstruccion();
+           
             
             adicionalesDeductivosActual = new AdicionalesDeductivos();
-            catastroPredialValoracionActual = new CatastroPredialValoracion();
+            //catastroPredialValoracionActual = new CatastroPredialValoracion();
 
             if (catastroPredialActual.getCatpreCodigo() != null || catastroPredialActual != null) {
 
                 try {
                     if (listaPredioArchivo.size() > 0) {
-
-                        for (int i = 0; i < listaAdicionalesDeductivosRecargosSeleccion.size(); i++) {
+                        cpValoracionExtrasServicio.eliminarCpValoracionExtrar(catastroPredialValoracionActual);                                                
+                        for (int i = 0; i < listaAdicionalesDeductivosRecargosSeleccion.size(); i++) {                                                        
                             cpValoracionExtrasActual = new CpValoracionExtras();
                             adicionalesDeductivosActual = adicionalesDeductivosServicio.buscarAdicionesDeductivosXCodigo(Integer.parseInt(listaAdicionalesDeductivosRecargosSeleccion.get(i)));
-                            catastroPredialValoracionActual = catastroPredialValoracionServicio.buscarPorCatastroPredial(catastroPredialActual);
+                            //catastroPredialValoracionActual = catastroPredialValoracionServicio.buscarPorCatastroPredial(catastroPredialActual);
                             cpValoracionExtrasActual.setCatprevalCodigo(catastroPredialValoracionActual);
                             cpValoracionExtrasActual.setAdidedCodigo(adicionalesDeductivosActual);
                             cpValoracionExtrasServicio.crearCpValoracionExtras(cpValoracionExtrasActual);
@@ -548,7 +604,7 @@ public class GestionImpuestoPredialControlador extends BaseControlador {
                         for (int i = 0; i < listaAdicionalesDeductivosExoneracionesSeleccion.size(); i++) {
                             cpValoracionExtrasActual = new CpValoracionExtras();
                             adicionalesDeductivosActual = adicionalesDeductivosServicio.buscarAdicionesDeductivosXCodigo(Integer.parseInt(listaAdicionalesDeductivosExoneracionesSeleccion.get(i)));
-                            catastroPredialValoracionActual = catastroPredialValoracionServicio.buscarPorCatastroPredial(catastroPredialActual);
+                            //catastroPredialValoracionActual = catastroPredialValoracionServicio.buscarPorCatastroPredial(catastroPredialActual);
                             cpValoracionExtrasActual.setCatprevalCodigo(catastroPredialValoracionActual);
                             cpValoracionExtrasActual.setAdidedCodigo(adicionalesDeductivosActual);
                             cpValoracionExtrasServicio.crearCpValoracionExtras(cpValoracionExtrasActual);
@@ -557,7 +613,7 @@ public class GestionImpuestoPredialControlador extends BaseControlador {
                         for (int i = 0; i < listaAdicionalesDeductivosDeduccionesSeleccion.size(); i++) {
                             cpValoracionExtrasActual = new CpValoracionExtras();
                             adicionalesDeductivosActual = adicionalesDeductivosServicio.buscarAdicionesDeductivosXCodigo(Integer.parseInt(listaAdicionalesDeductivosDeduccionesSeleccion.get(i)));
-                            catastroPredialValoracionActual = catastroPredialValoracionServicio.buscarPorCatastroPredial(catastroPredialActual);
+                            //catastroPredialValoracionActual = catastroPredialValoracionServicio.buscarPorCatastroPredial(catastroPredialActual);
                             cpValoracionExtrasActual.setCatprevalCodigo(catastroPredialValoracionActual);
                             cpValoracionExtrasActual.setAdidedCodigo(adicionalesDeductivosActual);
 //            cpValoracionExtrasActual.setCpvalextBase(BigDecimal.ONE); 
@@ -566,11 +622,12 @@ public class GestionImpuestoPredialControlador extends BaseControlador {
                         }
 
                         
-                        
+                       valoracionConstruccion(); 
                         
                         calcularBaseImponible();
                         
-                        
+                        //catastroPredialValoracionActual.setCatprevalBaseImponible(valorAvaluoConstruccion.add(valorAvaluoTerrero));                                        
+          
                         
                         addSuccessMessage("Guardado Exitosamente!");
                     } else {
