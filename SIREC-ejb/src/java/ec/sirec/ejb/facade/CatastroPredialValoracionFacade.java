@@ -28,5 +28,5 @@ public class CatastroPredialValoracionFacade extends AbstractFacade<CatastroPred
     public CatastroPredialValoracionFacade() {
         super(CatastroPredialValoracion.class);
     }
-    
+        
 }
