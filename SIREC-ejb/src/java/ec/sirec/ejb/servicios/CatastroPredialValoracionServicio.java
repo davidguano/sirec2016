@@ -6,6 +6,7 @@
 
 package ec.sirec.ejb.servicios;
 
+import ec.sirec.ejb.entidades.CatalogoDetalle;
 import ec.sirec.ejb.entidades.CatastroPredial;
 import ec.sirec.ejb.entidades.CatastroPredialValoracion;
 import ec.sirec.ejb.facade.CatastroPredialValoracionFacade;
@@ -45,4 +46,17 @@ public class CatastroPredialValoracionServicio {
      public CatastroPredialValoracion existeCatastroValoracion(CatastroPredial catastroPredial, Integer anio) throws Exception {
         return catastroPredialValoracionDao.buscarPor2Campos(ENTIDAD_CATASTRO_PREDIAL_VALORACION, "catpreCodigo", catastroPredial, "catprevalAnio", anio);
     }
+     
+    public List<CatastroPredialValoracion> buscarValoracionXClaveCatastral(CatastroPredial catastroPredial, Integer anio) throws Exception {
+        return catastroPredialValoracionDao.listarPor2CamposOrdenadaGenerico(ENTIDAD_CATASTRO_PREDIAL_VALORACION, "CatastroPredial", "catpreCodigo", catastroPredial.getCatpreCodigo(), "catprevalAnio", anio, "catprevalAnio", "asc");
+    }
+    
+    public List<CatastroPredialValoracion> listarCatastroXParroquia(CatalogoDetalle codParroquia,Integer anio) throws Exception {       
+       return catastroPredialValoracionDao.listarPor2CamposOrdenadaGenerico(ENTIDAD_CATASTRO_PREDIAL_VALORACION, "CatastroPredial", "catdetParroquia", codParroquia, "catprevalAnio", anio, "catprevalAnio", "asc");
+    }
+    
+    public List<CatastroPredialValoracion> listarCatastroAnioTodo(Integer anio) throws Exception {       
+       return catastroPredialValoracionDao.listarPor1CamposOrdenadaGenerico(ENTIDAD_CATASTRO_PREDIAL_VALORACION, "CatastroPredial", "catprevalAnio", anio, "catprevalAnio", "asc");
+    }
+      
 }

@@ -67,10 +67,10 @@ public class CpValoracionExtrasServicio {
     
     public CpValoracionExtras buscarXCodigo(Integer CpValoracionExtras) throws Exception {
         return cpValoracionExtrasDao.buscarPorCampo(ENTIDAD_VALORACION_EXTRAS, "cpvalextCodigo", CpValoracionExtras);
-    } 
-    
-public BigDecimal obteneValorTipoAdicional(Integer codigo, String TipoImp, String tipo) throws Exception {
-     return cpValoracionExtrasDao.obteneValorTipoAdicional(codigo, TipoImp, tipo);
+    }
+
+    public BigDecimal obteneValorTipoAdicional(Integer codigoC, Integer codigoCPV, String TipoImp, String tipo) throws Exception {
+        return cpValoracionExtrasDao.obteneValorTipoAdicional(codigoC, codigoCPV, TipoImp, tipo);
     }
     
  
