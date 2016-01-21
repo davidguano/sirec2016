@@ -16,8 +16,7 @@
 
                     <p:outputLabel value="Criterio de busqueda:"/>  
                     <p:selectOneMenu id="cmbCriterio" value="#{gestionImpuestoPredialControlador.criterio}" style="width:152px">
-                        <f:selectItem itemLabel="Seleccione..." itemValue="" /> 
-                        <f:selectItem itemLabel="#{txt.anio}" itemValue="A" />
+                        <f:selectItem itemLabel="Seleccione..." itemValue="" />                        
                         <f:selectItem itemLabel="#{txt.clave_catastral}" itemValue="C" />
                         <f:selectItem itemLabel="#{txt.parroquia}" itemValue="P" />
                         <f:selectItem itemLabel="#{txt.sector}" itemValue="S" />
@@ -26,6 +25,7 @@
                         <p:ajax event="change" process="@this" update="frmImpPredial:tabImpPred:panelIngreso" async="true" global="false"/>  
                     </p:selectOneMenu>
 
+                    
                     <br></br>
                     <br></br>
 
@@ -69,13 +69,25 @@
                                             </p:column>                         
                     </p:selectOneMenu>
                     
-                </h:panelGrid>                                                                                                       
+                </h:panelGrid>   
+                
+                 <h:panelGrid id="pnlProAnio" columns="3">                                                       
+                                <p:outputLabel value="#{txt.anio}"/>
+                                <p:selectOneMenu id="porAnio" style="width:152px" value="#{gestionImpuestoPredialControlador.anioPr}"
+                                                 required="true"> 
+                                            <f:selectItem itemLabel="Seleccione..." itemValue="" /> 
+                                            <f:selectItem itemLabel="2015" itemValue="2015" />
+                                            <f:selectItem itemLabel="2016" itemValue="2016" />          
+                                            <f:selectItem itemLabel="2017" itemValue="2017" />                                               
+                                        </p:selectOneMenu>                                                                       
+                                </h:panelGrid> 
+                
                 <h:panelGrid id="pnlEjeVal" >
                     <p:commandButton value="#{txt.EJECUTAR_VALORACION_btn}" 
                                      id="btnEjeVal" 
                                      action="#{gestionImpuestoPredialControlador.ejecutarValoracion()}" 
                                      icon="ui-icon-disk"  
-                                     process="@this, panelIngreso" 
+                                     process="@this, panelIngreso, pnlProAnio" 
                                      update=":frmImpPredial:tabImpPred:pnllstVal"
                                      async="true"
                                      global="false"                                     
