@@ -342,15 +342,15 @@ public class GestionImpuestoPredialControlador extends BaseControlador {
           listaCatastroPredialEdificacion1_1 = new ArrayList<CatastroPredialEdificacion>();                      
           listaCatastroPredialEdificacion1_1 = catastroPredialServicio.listarEdificacionesGrupo1_1(catastroPredialActual,"1","1");
            
-          List <Integer>  vidaUtil = new ArrayList<Integer>();
+          List <Double>  vidaUtil = new ArrayList<Double>();
           
              for (int i = 0; i < listaCatastroPredialEdificacion1_1.size(); i++) {
                  CatastroPredialEdificacion CPEdif = listaCatastroPredialEdificacion1_1.get(i);
                  try {
                    //  System.out.println("valor: " + CPEdif.getCatdetCodigo().getCatdetValor());
-                     vidaUtil.add(CPEdif.getCatdetCodigo().getCatdetValor());
+                     vidaUtil.add(CPEdif.getCatdetCodigo().getCatdetValorDecimal());
                  } catch (NullPointerException nex) {
-                     vidaUtil.add(0);
+                     vidaUtil.add(Double.valueOf("0"));
                      // LOGGER.log(Level.SEVERE, null, nex);
                  }
              }
@@ -411,8 +411,8 @@ public class GestionImpuestoPredialControlador extends BaseControlador {
           // GRUPO 2
           listaCatastroPredialEdificacion2 = new ArrayList<CatastroPredialEdificacion>();                      
           listaCatastroPredialEdificacion2 = catastroPredialServicio.listarEdificacionesGrupo2(catastroPredialActual);          
-          List <Integer> Grupo2 = new ArrayList<Integer>();
-          List <Integer> Grupo2AUX = new ArrayList<Integer>();
+          List <Double> Grupo2 = new ArrayList<Double>();
+          List <Double> Grupo2AUX = new ArrayList<Double>();
           int inicio2 = 0;
           int fin2 = vidaUtil.size();
           for (int i = 0; i < listaCatastroPredialEdificacion2.size(); i++) {
@@ -422,11 +422,11 @@ public class GestionImpuestoPredialControlador extends BaseControlador {
                  }                 
                  if(inicio2<fin2){                     
                      if(i<fin2){
-                          Grupo2.add(inicio2, CPEdif.getCatdetCodigo().getCatdetValor()); 
-                          Grupo2AUX.add(inicio2, CPEdif.getCatdetCodigo().getCatdetValor());                           
+                          Grupo2.add(inicio2, CPEdif.getCatdetCodigo().getCatdetValorDecimal()); 
+                          Grupo2AUX.add(inicio2, CPEdif.getCatdetCodigo().getCatdetValorDecimal());                           
                           // System.out.println("Grupo2.get(inicio2): "+ Grupo2.get(inicio2));                          
                      }else{                                                                                                    
-                         Grupo2.set(inicio2, CPEdif.getCatdetCodigo().getCatdetValor() + Grupo2AUX.get(inicio2));                          
+                         Grupo2.set(inicio2, CPEdif.getCatdetCodigo().getCatdetValorDecimal()+ Grupo2AUX.get(inicio2));                          
                          //System.out.println(Grupo2.get(inicio2)+" = "+ CPEdif.getCatdetCodigo().getCatdetValor() +" + "+ Grupo2AUX.get(inicio2));                             
                          Grupo2AUX.set(inicio2, Grupo2.get(inicio2));                                                                           
                          //System.out.println("total: "+ Grupo2AUX.get(inicio2));                         
@@ -437,8 +437,8 @@ public class GestionImpuestoPredialControlador extends BaseControlador {
           // GRUPO 3          
           listaCatastroPredialEdificacion3 = new ArrayList<CatastroPredialEdificacion>();                      
           listaCatastroPredialEdificacion3 = catastroPredialServicio.listarEdificacionesGrupo3(catastroPredialActual);          
-          List <Integer> Grupo3 = new ArrayList<Integer>();
-          List <Integer> Grupo3AUX = new ArrayList<Integer>();
+          List <Double> Grupo3 = new ArrayList<Double>();
+          List <Double> Grupo3AUX = new ArrayList<Double>();
           int inicio3 = 0;
           int fin3 = vidaUtil.size();
           for (int i = 0; i < listaCatastroPredialEdificacion3.size(); i++) {
@@ -448,10 +448,10 @@ public class GestionImpuestoPredialControlador extends BaseControlador {
                  }                 
                  if(inicio3<fin3){                     
                      if(i<fin3){
-                          Grupo3.add(inicio3, CPEdif.getCatdetCodigo().getCatdetValor()); 
-                          Grupo3AUX.add(inicio3, CPEdif.getCatdetCodigo().getCatdetValor());                                                                           
+                          Grupo3.add(inicio3, CPEdif.getCatdetCodigo().getCatdetValorDecimal()); 
+                          Grupo3AUX.add(inicio3, CPEdif.getCatdetCodigo().getCatdetValorDecimal());                                                                           
                      }else{                                                                                                    
-                         Grupo3.set(inicio3, CPEdif.getCatdetCodigo().getCatdetValor() + Grupo3AUX.get(inicio3));                                               
+                         Grupo3.set(inicio3, CPEdif.getCatdetCodigo().getCatdetValorDecimal()+ Grupo3AUX.get(inicio3));                                               
                          Grupo3AUX.set(inicio3, Grupo3.get(inicio3));                                                                                                             
                      }                     
                      inicio3++;
@@ -460,8 +460,8 @@ public class GestionImpuestoPredialControlador extends BaseControlador {
           
           listaCatastroPredialEdificacion4 = new ArrayList<CatastroPredialEdificacion>();                      
           listaCatastroPredialEdificacion4 = catastroPredialServicio.listarEdificacionesGrupo4(catastroPredialActual);          
-          List <Integer> Grupo4 = new ArrayList<Integer>();
-          List <Integer> Grupo4AUX = new ArrayList<Integer>();
+          List <Double> Grupo4 = new ArrayList<Double>();
+          List <Double> Grupo4AUX = new ArrayList<Double>();
           int inicio4 = 0;
           int fin4 = vidaUtil.size();
           for (int i = 0; i < listaCatastroPredialEdificacion4.size(); i++) {
@@ -472,15 +472,15 @@ public class GestionImpuestoPredialControlador extends BaseControlador {
                  if(inicio4<fin4){                     
                      if (i < fin4) {
                          try {
-                             Grupo4.add(inicio4, CPEdif.getCatdetCodigo().getCatdetValor());
-                             Grupo4AUX.add(inicio4, CPEdif.getCatdetCodigo().getCatdetValor());
+                             Grupo4.add(inicio4, CPEdif.getCatdetCodigo().getCatdetValorDecimal());
+                             Grupo4AUX.add(inicio4, CPEdif.getCatdetCodigo().getCatdetValorDecimal());
                          } catch (NullPointerException ex) {
-                             Grupo4.add(inicio4, 0);
-                             Grupo4AUX.add(inicio4, 0);
+                             Grupo4.add(inicio4, Double.valueOf("0"));
+                             Grupo4AUX.add(inicio4, Double.valueOf("0"));
                          }
                      }else{
                          try{
-                         Grupo4.set(inicio4, CPEdif.getCatdetCodigo().getCatdetValor() + Grupo4AUX.get(inicio4));                                               
+                         Grupo4.set(inicio4, CPEdif.getCatdetCodigo().getCatdetValorDecimal()+ Grupo4AUX.get(inicio4));                                               
                          Grupo4AUX.set(inicio4, Grupo4.get(inicio4));  
                          } catch (NullPointerException ex) {
                              Grupo4.set(inicio4, 0 + Grupo4AUX.get(inicio4));                                               
@@ -491,7 +491,7 @@ public class GestionImpuestoPredialControlador extends BaseControlador {
                  }                
           }
           
-          List <Integer> VN = new ArrayList<Integer>();                                         
+          List <Double> VN = new ArrayList<Double>();                                         
           for (int i = 0; i < Grupo2.size(); i++) {   
               VN.add(Grupo2.get(i)+Grupo3.get(i)+Grupo4.get(i));                                   
           }
