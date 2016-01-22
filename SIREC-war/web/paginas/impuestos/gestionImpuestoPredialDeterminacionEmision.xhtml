@@ -9,7 +9,7 @@
 
     <center>
         <h:panelGrid id="panelContieneAplicacion2" width="1000" columns="1" >                                                 
-            <p:panel>                                
+            <p:panel style="background: #8BBAC9;">                                
 
                 <h:panelGrid id="panelIngreso" columns="2">
 
@@ -106,10 +106,10 @@
                             <f:facet name="header">
                                 <p:outputLabel value="Lista de Valoraciones" style="font-size:10px;"/>
                             </f:facet>
-                            <p:column headerText="#{txt.clave_catastral}" width="60" style="font-size:10px;"> 
+                            <p:column headerText="#{txt.clave_catastral}" width="80" style="font-size:10px;"> 
                                 <h:outputText value="#{catastroP.catpreClaveCatastal}" style="font-size:10px;" />
                             </p:column>
-                            <p:column headerText="#{txt.nombre_razón_social}" width="50" style="font-size:10px;"> 
+                            <p:column headerText="#{txt.nombre_razón_social}" width="80" style="font-size:10px;"> 
                                 <h:outputText value="#{catastroP.proCi.proRazonSocial}"  style="font-size:10px;" />
                             </p:column>    
                             <p:column headerText="#{txt.ruc_ci}" width="50" style="font-size:10px;"> 
