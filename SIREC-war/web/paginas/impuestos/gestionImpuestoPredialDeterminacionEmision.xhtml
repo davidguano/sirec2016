@@ -30,7 +30,7 @@
                     <br></br>
 
                     <p:selectOneMenu id="PorCalve" value="#{gestionImpuestoPredialControlador.catastroPredialActual}" converter="#{catastroPredialConverter}" panelStyle="width:200px"
-                                     effect="fade" var="t" style="width:200px" filter="true" filterMatchMode="startsWith"
+                                     effect="fade" var="t" style="width:220px" filter="true" filterMatchMode="startsWith"
                                      rendered="#{gestionImpuestoPredialControlador.criterio=='C'}"
                                      >
                         <f:selectItem itemLabel="Seleccione..." itemValue="" /> 
@@ -43,23 +43,28 @@
                         </p:column>                       
                     </p:selectOneMenu>
                     
+                    
                      <p:selectOneMenu id="PorParroq" value="#{gestionImpuestoPredialControlador.catalogoParroquia}" panelStyle="width:180px"
-                                  converter="#{catalogoDetalleConverter}" var="t" style="width:200px"
-                                  rendered="#{gestionImpuestoPredialControlador.criterio=='P'}">
-                                            <f:selectItem itemLabel="Seleccione..." itemValue="" /> 
+                                  converter="#{catalogoDetalleConverter}" var="t" style="width:220px"
+                                  rendered="#{gestionImpuestoPredialControlador.criterio=='P' or gestionImpuestoPredialControlador.criterio=='S'}">
+                                            <f:selectItem itemLabel="Seleccione Parroquia..." itemValue="" /> 
                                             <f:selectItems var="tipo" 
                                                            value="#{gestionImpuestoPredialControlador.listaParroquias}" 
                                                            itemLabel="#{tipo.catdetTexto}" 
                                                            itemValue="#{tipo}"/> 
                                             <p:column width="200" style="white-space: normal">  
                                                 <h:outputText escape="false" value="#{t.catdetTexto}" style="font-size: 10px"/> 
-                                            </p:column>                         
+                                            </p:column>
+                                             <p:ajax listener="#{gestionImpuestoPredialControlador.listarSectores()}"
+                                                     process="@this" update=":frmImpPredial:tabImpPred:PorSec" async="true" global="false" />  
                     </p:selectOneMenu>
                     
+                     <br></br>
+                    
                     <p:selectOneMenu id="PorSec" value="#{gestionImpuestoPredialControlador.catalogoSector}" panelStyle="width:180px"
-                                  converter="#{catalogoDetalleConverter}" var="t" style="width:200px"
+                                  converter="#{catalogoDetalleConverter}" var="t" style="width:220px"
                                   rendered="#{gestionImpuestoPredialControlador.criterio=='S'}">
-                                            <f:selectItem itemLabel="Seleccione..." itemValue="" /> 
+                                            <f:selectItem itemLabel="Seleccione Sector..." itemValue="" /> 
                                             <f:selectItems var="tipo" 
                                                            value="#{gestionImpuestoPredialControlador.listaSectores}" 
                                                            itemLabel="#{tipo.catdetTexto}" 
