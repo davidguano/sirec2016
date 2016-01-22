@@ -143,7 +143,7 @@ public class GestionImpuestoPredialControlador extends BaseControlador {
             anio = 0;
             anioPr = 0;
             listarParroquias();
-            listarSectores();
+            //listarSectores();
 
         } catch (Exception ex) {
             LOGGER.log(Level.SEVERE, null, ex);
@@ -219,7 +219,11 @@ public class GestionImpuestoPredialControlador extends BaseControlador {
     }
     public void listarSectores() {
         try {
-            listaSectores = catastroPredialServicio.listaCatSectores();
+            
+           CatalogoDetalle parroquia = catastroPredialServicio.cargarObjetoCatalogoDetalle(catalogoParroquia.getCatdetCodigo());                     
+            listaSectores = catastroPredialServicio.listaCatSectores(parroquia.getCatdetCod());
+                        
+            
         } catch (Exception ex) {
             LOGGER.log(Level.SEVERE, null, ex);
         }
@@ -686,6 +690,7 @@ public class GestionImpuestoPredialControlador extends BaseControlador {
                     //listaCatastroPredialAValoracion = catastroPredialServicio.listarCatastroXParroquia(catalogoParroquia); 
                 }else{
                         if (criterio.equals("S")) {                                                                        
+                            catastroPredialValoracionActualEje = catastroPredialValoracionServicio.listarCatastroXSector(catalogoSector, anioPr);
                  //   listaCatastroPredialAValoracion = catastroPredialServicio.listarCatastroXSector(catalogoSector); 
                 }
                                         
