@@ -55,6 +55,10 @@ public class CatastroPredialValoracionServicio {
        return catastroPredialValoracionDao.listarPor2CamposOrdenadaGenerico(ENTIDAD_CATASTRO_PREDIAL_VALORACION, "CatastroPredial", "catdetParroquia", codParroquia, "catprevalAnio", anio, "catprevalAnio", "asc");
     }
     
+    public List<CatastroPredialValoracion> listarCatastroXSector(CatalogoDetalle codSector,Integer anio) throws Exception {       
+       return catastroPredialValoracionDao.listarPor2CamposOrdenadaGenerico(ENTIDAD_CATASTRO_PREDIAL_VALORACION, "CatastroPredial", "catdetSector", codSector, "catprevalAnio", anio, "catprevalAnio", "asc");
+    }
+    
     public List<CatastroPredialValoracion> listarCatastroAnioTodo(Integer anio) throws Exception {       
        return catastroPredialValoracionDao.listarPor1CamposOrdenadaGenerico(ENTIDAD_CATASTRO_PREDIAL_VALORACION, "CatastroPredial", "catprevalAnio", anio, "catprevalAnio", "asc");
     }
