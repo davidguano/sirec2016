@@ -58,6 +58,8 @@ public class PredioArchivo implements Serializable {
     @Column(name = "ultacc_marcatiempo")
     @Temporal(TemporalType.TIMESTAMP)
     private Date ultaccMarcatiempo;
+     @Column(name = "prearc_anio")
+    private Integer prearcAnio;
     @JoinColumn(name = "usu_identificacion", referencedColumnName = "usu_identificacion")
     @ManyToOne(optional = false)
     private SegUsuario usuIdentificacion;
@@ -141,6 +143,15 @@ public class PredioArchivo implements Serializable {
     public void setCatpreCodigo(CatastroPredial catpreCodigo) {
         this.catpreCodigo = catpreCodigo;
     }
+
+    public Integer getPrearcAnio() {
+        return prearcAnio;
+    }
+
+    public void setPrearcAnio(Integer prearcAnio) {
+        this.prearcAnio = prearcAnio;
+    }
+    
 
     @Override
     public int hashCode() {
