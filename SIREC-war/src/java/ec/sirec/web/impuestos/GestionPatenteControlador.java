@@ -69,7 +69,6 @@ public class GestionPatenteControlador extends BaseControlador {
     private CatalogoDetalle catDetEspTurisActual;
     private CatalogoDetalle catDetIdentEstadoActual;
     private CatastroPredial catastroPredialActual;
-    private CatastroPredial catastroPredialSelec;
     private CatalogoDetalle catDetHorFuncionaActual;
     private CatalogoDetalle catDetParroquia;
     private boolean habilitaEditar;
@@ -94,9 +93,9 @@ public class GestionPatenteControlador extends BaseControlador {
     private List<CatalogoDetalle> listaHorarioFunciona;
     private boolean habilitaCamposPropietario;
     private int verIngresaPlaca;
-
+    private String catastroPredBusca;
     /**
-     * Patentes
+     * Creates a new instance of GestionPatenteControlador
      */
     private String numPatente;
     private static final Logger LOGGER = Logger.getLogger(GestionPatenteControlador.class.getName());
@@ -104,6 +103,7 @@ public class GestionPatenteControlador extends BaseControlador {
     @PostConstruct
     public void inicializar() {
         try {
+            catastroPredBusca = null;
             patenteActual = new Patente();
             propietarioActual = new Propietario();
             numPatente = generaNumPatente();
@@ -113,7 +113,6 @@ public class GestionPatenteControlador extends BaseControlador {
             catDetTipActEcoActual = new CatalogoDetalle();
             propietarioActual = new Propietario();
             catastroPredialActual = new CatastroPredial();
-            catastroPredialSelec = new CatastroPredial();
             catDetIdentEstadoActual = new CatalogoDetalle();
             catDetHorFuncionaActual = new CatalogoDetalle();
             catDetEspTurisActual = new CatalogoDetalle();
@@ -150,7 +149,7 @@ public class GestionPatenteControlador extends BaseControlador {
         try {
             datoGlobalActual = new DatoGlobal();
             usuarioActual = new SegUsuario();
-            datoGlobalActual = patenteServicio.cargarObjPorNombre("Msj_Pat_In");
+            datoGlobalActual = patenteServicio.cargarObjDatGloPorNombre("Msj_Pat_In");
             usuarioActual = (SegUsuario) this.getSession().getAttribute("usuario");
         } catch (Exception ex) {
             LOGGER.log(Level.SEVERE, null, ex);
@@ -165,9 +164,6 @@ public class GestionPatenteControlador extends BaseControlador {
     public void guardarPatente() {
         try {
             if (habilitaEditar == false) {
-//                if (patenteServicio.existeCodigoPatente(patenteActual.getPatCodigo())) {
-//                    addWarningMessage("Existe Código");
-//                } else {
                 CatalogoDetalle objCatDetAux = new CatalogoDetalle();
                 objCatDetAux = catalogoDetalleServicio.buscarPorCodigoCatDet(catDetIdentEstadoActual.getCatdetCodigo());
                 patenteActual.setPatEstado(objCatDetAux.getCatdetCod());
@@ -203,13 +199,7 @@ public class GestionPatenteControlador extends BaseControlador {
                 limpiarObjetosBitacora();
                 objCatDetAux = null;
                 inicializar();
-//                }
             } else {
-//                agenciaServicio.editarAgencia(agenciaAcual);
-//                addSuccessMessage("Agencia Actualizado");
-//                listarAgencias();
-//                agenciaAcual = new SgmAgencia();
-//                habilitaEdicion = false;
             }
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, null, e);
@@ -249,16 +239,24 @@ public class GestionPatenteControlador extends BaseControlador {
     }
 
     public String generaNumPatente() { //Genera numero de patente aleatorio
-        String identificacion = "";
+        String numeroPatente = "";
         try {
             Patente objPatente = new Patente();
             objPatente = patenteServicio.cargarMaxObjPatente();
             int valorRetornado = objPatente.getPatCodigo() + 1;
-            identificacion = "AE-MPM-" + valorRetornado;
+            StringBuffer numSecuencial = new StringBuffer(valorRetornado + "");
+            int valRequerido = 6;
+            int valRetorno = numSecuencial.length();
+            int valNecesita = valRequerido - valRetorno;
+            StringBuffer sb = new StringBuffer(valNecesita);
+            for (int i = 0; i < valNecesita; i++) {
+                sb.append("0");
+            }
+            numeroPatente = "AE-MPM-" + sb.toString() + valorRetornado;
         } catch (Exception ex) {
             LOGGER.log(Level.SEVERE, null, ex);
         }
-        return identificacion;
+        return numeroPatente;
     }
 
     public void activaIngresarPlaca() {
@@ -271,12 +269,27 @@ public class GestionPatenteControlador extends BaseControlador {
 
     public void cargarInformacionPropietario() throws Exception {
         try {
-            catastroPredialActual = catastroPredialServicio.cargarObjetoCatastro(catastroPredialSelec.getCatpreCodigo());
-            propietarioActual = propietarioServicio.buscarPropietarioPorCatastro(catastroPredialActual.getCatpreCodigo());
-            if (propietarioActual == null) {
-                addWarningMessage("No se encontraron resultados");
+            StringBuffer catastroPredial = new StringBuffer(catastroPredBusca);
+            if (catastroPredial.length() >= 19) {
+                String codNac = catastroPredBusca.substring(0, 7);
+                String codLoc = catastroPredBusca.substring(7, 19);
+                if (codNac != null && codLoc != null) {
+                    catastroPredialActual = catastroPredialServicio.buscarCatastroPorCodigosClave(codNac, codLoc);
+                    if (catastroPredialActual == null) {
+                        addWarningMessage("No se encontraron resultados", "No se encontraron resultados");
+                        propietarioActual = new Propietario();
+                    } else {
+                        propietarioActual = propietarioServicio.buscarPropietarioPorCatastro(catastroPredialActual.getCatpreCodigo());
+                        if (propietarioActual == null) {
+                            addWarningMessage("No se encontraron propietarios", "No se encontraron propietarios");
+                        } else {
+                            catDetParroquia = catalogoDetalleServicio.buscarPorCodigoCatDet(propietarioActual.getCatdetCiudad().getCatdetCodigo());
+                        }
+                    }
+                }
             } else {
-                catDetParroquia = catalogoDetalleServicio.buscarPorCodigoCatDet(propietarioActual.getCatdetCiudad().getCatdetCodigo());
+                propietarioActual = new Propietario();
+                addWarningMessage("Clave Catastral:Faltan Caracteres ", "Clave Catastral:Faltan Caracteres ");
             }
         } catch (Exception ex) {
             LOGGER.log(Level.SEVERE, null, ex);
@@ -507,14 +520,6 @@ public class GestionPatenteControlador extends BaseControlador {
         this.listaCatastroPredial = listaCatastroPredial;
     }
 
-    public CatastroPredial getCatastroPredialSelec() {
-        return catastroPredialSelec;
-    }
-
-    public void setCatastroPredialSelec(CatastroPredial catastroPredialSelec) {
-        this.catastroPredialSelec = catastroPredialSelec;
-    }
-
     public Patente getPatenteActual() {
         return patenteActual;
     }
@@ -681,6 +686,14 @@ public class GestionPatenteControlador extends BaseControlador {
 
     public void setVerIngresaPlaca(int verIngresaPlaca) {
         this.verIngresaPlaca = verIngresaPlaca;
+    }
+
+    public String getCatastroPredBusca() {
+        return catastroPredBusca;
+    }
+
+    public void setCatastroPredBusca(String catastroPredBusca) {
+        this.catastroPredBusca = catastroPredBusca;
     }
 
 }

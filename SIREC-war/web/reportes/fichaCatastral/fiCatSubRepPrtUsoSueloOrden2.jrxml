@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="fiCatSubRepPrtUsoSueloOrden2" language="groovy" pageWidth="595" pageHeight="842" columnWidth="595" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="eb9e9d78-3242-4c4b-9187-b79e72c52609">
 	<property name="ireport.zoom" value="1.5"/>
-	<property name="ireport.x" value="81"/>
-	<property name="ireport.y" value="212"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="354"/>
 	<parameter name="codigoCatPredial" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
@@ -27,7 +27,7 @@ distinct  catdet_ocupacion as ocupacion,catdet_no_edificado as noEdificado,catde
 catpre_tiene_legalizacion as legalConstruccion,catdet_caracteristicas_suelo as caracSuelo,catdet_forma as forma,catdet_topografia as topografia,catdet_localizacion as localizacion,
 ---------------Infraestructura y servicios----------------------
 cp.catpre_num_medidores_luz as numMedLuz,catpre_num_medidores_agua as numMedAgua,cp.catpre_num_carriles_acceso as numCarriles,
-cp.catpre_negocio_vivienda as manNegViv,cp.catdet_tipo_negocio as tipoNegocio,cp.catdet_tipo_func_negocio as tiempoFuncioNeg
+cp.catpre_negocio_vivienda as manNegViv,cp.catdet_tipo_negocio as tipoNegocio,cp.catdet_tipo_func_negocio as tiempoFuncioNeg, catpre_num_fam_bloque as numFamBloque
 from
 sirec.propietario p,sirec.propietario_predio pp
 ,sirec.catastro_predial cp,sirec.catalogo_detalle cdciu
@@ -50,6 +50,7 @@ and cp.catpre_codigo=$P{codigoCatPredial}]]>
 	<field name="mannegviv" class="java.lang.Boolean"/>
 	<field name="tiponegocio" class="java.lang.Integer"/>
 	<field name="tiempofuncioneg" class="java.lang.Integer"/>
+	<field name="numfambloque" class="java.lang.Integer"/>
 	<group name="header Rep2">
 		<groupExpression><![CDATA[$F{ocupacion}]]></groupExpression>
 		<groupHeader>
@@ -905,6 +906,17 @@ and cp.catpre_codigo=$P{codigoCatPredial}]]>
 				<line>
 					<reportElement stretchType="RelativeToBandHeight" x="7" y="0" width="1" height="300" uuid="54f30f57-815e-4603-87b5-5db26bb8a98b"/>
 				</line>
+				<textField isBlankWhenNull="true">
+					<reportElement x="481" y="58" width="100" height="20" uuid="a1a79557-fd85-45dd-a6e7-f67e9d6436cd"/>
+					<textElement textAlignment="Center"/>
+					<textFieldExpression><![CDATA[$F{numfambloque}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="494" y="25" width="76" height="32" uuid="9b04d0cc-fe4e-4ec1-972d-940f5aa5c852"/>
+					<textElement textAlignment="Center"/>
+					<text><![CDATA[Num. Familias
+por bloque.]]></text>
+				</staticText>
 			</band>
 		</groupHeader>
 	</group>

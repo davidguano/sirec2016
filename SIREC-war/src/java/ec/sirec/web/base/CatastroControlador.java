@@ -20,6 +20,7 @@ import ec.sirec.ejb.servicios.CatastroPredialServicio;
 import ec.sirec.ejb.servicios.PredioArchivoServicio;
 import ec.sirec.web.util.OpcionesUsoSuelo;
 import ec.sirec.web.util.UtilitariosCod;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.sql.Connection;
 import java.util.ArrayList;
@@ -46,6 +47,9 @@ import net.sf.jasperreports.engine.util.JRLoader;
 import org.primefaces.event.CellEditEvent;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.RowEditEvent;
+import org.primefaces.event.SelectEvent;
+import org.primefaces.model.DefaultStreamedContent;
+import org.primefaces.model.StreamedContent;
 
 /**
  *
@@ -65,6 +69,8 @@ public class CatastroControlador extends BaseControlador {
     private String cedulaPropietarioBusqueda;
     private String claveCatastralBusqueda;
     private List<CatastroPredial> listaCatastrosDePropietario;
+    private PropietarioPredio propietarioPredioBusqueda;
+
     private Propietario propietarioActual;
     private CatastroPredialValoracion valoracionActual;
     private CatastroPredialAreas catastroAreaActual;
@@ -168,6 +174,7 @@ public class CatastroControlador extends BaseControlador {
     private List<PredioArchivo> listaPredioArchivo;
     private PredioArchivo predioArchivoActual;
     private List<PredioArchivo> listaPredioFoto;
+    private StreamedContent fotoActual;
 
     private boolean flagNuevo;
     private boolean flagMedidoresAgua;
@@ -185,6 +192,7 @@ public class CatastroControlador extends BaseControlador {
             flagNuevo = true;
             catastroPredialActual = new CatastroPredial();
             claveCatastralBusqueda = null;
+            propietarioPredioBusqueda = new PropietarioPredio();
             tipoInfAnt = null;
             valorInfAnt = null;
             propietarioActual = new Propietario();
@@ -229,13 +237,38 @@ public class CatastroControlador extends BaseControlador {
         }
     }
 
+    public List<PropietarioPredio> obtenerPropietarioPredioPorApellidoProp(String vapellido) {
+        List<PropietarioPredio> lstPP = new ArrayList<PropietarioPredio>();
+        try {
+            lstPP = catastroServicio.listarPropietariosPredioPorApellidoPropContiene(vapellido);
+        } catch (Exception ex) {
+            LOGGER.log(Level.SEVERE, null, ex);
+        }
+        return lstPP;
+    }
+
+    public void onItemSelect(SelectEvent event) {
+        try {
+            PropietarioPredio pp = (PropietarioPredio) event.getObject();
+            pp = catastroServicio.buscarPropietarioPredioPorCodigo(pp.getPropreCodigo());
+            iraCatastroDesdeBusqueda(pp.getCatpreCodigo());
+        } catch (Exception ex) {
+            LOGGER.log(Level.SEVERE, null, ex);
+        }
+    }
+
     public void iraCatastroDesdeBusqueda(CatastroPredial vcatastro) {
         try {
             catastroPredialActual.setClaveCatastral(vcatastro.getCatpreCodNacional() + vcatastro.getCatpreCodLocal());
             claveCatastralBusqueda = catastroPredialActual.getClaveCatastral();
-            recuperarDatosDeCatastro();
-            listaCatastrosDePropietario = new ArrayList<CatastroPredial>();
-            cedulaPropietarioBusqueda = "";
+            if (claveCatastralBusqueda.length() == 19) {
+                recuperarDatosDeCatastro();
+                listaCatastrosDePropietario = new ArrayList<CatastroPredial>();
+                cedulaPropietarioBusqueda = "";
+            } else {
+                addErrorMessage("La clave de este predio esta incorrecta.");
+                inicializar();
+            }
         } catch (Exception ex) {
             LOGGER.log(Level.SEVERE, null, ex);
         }
@@ -309,11 +342,51 @@ public class CatastroControlador extends BaseControlador {
         }
     }
 
+    public void guardarRegistroPrincipalyPropietario() {
+        try {
+
+            catastroPredialActual.setUsuIdentificacion(obtenerUsuarioAutenticado());
+            catastroPredialActual.setUltaccMarcatiempo(java.util.Calendar.getInstance().getTime());
+            if (catastroPredialActual.getCatpreCodigo() == null) {
+                catastroPredialActual.setCatpreCodNacional(catastroPredialActual.getClaveCatastral().substring(0, 7));
+                catastroPredialActual.setCatpreCodLocal(catastroPredialActual.getClaveCatastral().substring(7, 19));
+
+                String codNac = catastroPredialActual.getCatpreCodNacional();
+                String codLoc = catastroPredialActual.getCatpreCodLocal();
+                boolean b = false;
+                if (codNac != null && codLoc != null) {
+                    b = catastroServicio.existeCatastroPorCodigosClave(codNac, codLoc);
+                }
+                if (!b) {
+                    catastroPredialActual.setUltaccDetalle("Se ha creado el registro");
+                    catastroServicio.guardarCatastroPredial(catastroPredialActual);
+                    guardarPropietario();
+                    crearRegistrosUsoSuelo();
+                    listaUsuSuelo = catastroServicio.listarRegistrosUsuSueloPorCatastro(catastroPredialActual);
+                    addSuccessMessage("Correcto", "Ficha creada exitosamente");
+                    flagNuevo = false;
+                } else {
+                    addErrorMessage("Clave ya existe, presione Buscar.");
+                }
+            } else {
+                catastroPredialActual.setUltaccDetalle("Se ha editado el registro");
+                catastroServicio.editarCatastroPredial(catastroPredialActual);
+                addSuccessMessage("Correcto", "Ficha editada exitosamente");
+                guardarPropietario();
+            }
+
+        } catch (Exception ex) {
+            LOGGER.log(Level.SEVERE, null, ex);
+        }
+    }
+
     public void guardarInformacionAnterior() {
         try {
             if (valorInfAnt != null && valorInfAnt.length() > 0) {
-                catastroServicio.guardarInformacionAnterior(catastroPredialActual, tipoInfAnt, valorInfAnt);
-                listaInformacionAnterior = catastroServicio.listarInformacionAnteriorCatastro(catastroPredialActual);
+                if (catastroPredialActual.getCatpreCodigo() != null) {
+                    catastroServicio.guardarInformacionAnterior(catastroPredialActual, tipoInfAnt, valorInfAnt);
+                    listaInformacionAnterior = catastroServicio.listarInformacionAnteriorCatastro(catastroPredialActual);
+                }
             }
             valorInfAnt = null;
         } catch (Exception ex) {
@@ -374,9 +447,9 @@ public class CatastroControlador extends BaseControlador {
                 PropietarioPredio pp = new PropietarioPredio();
                 pp.setProCi(propietarioActual);
                 pp.setCatpreCodigo(catastroPredialActual);
-                catastroServicio.guardarPropietarioPredio(pp);
+                addSuccessMessage(catastroServicio.guardarPropietarioPredio(pp));
                 catastroServicio.cargarListaPropietariosPredio(catastroPredialActual);
-                addSuccessMessage("Se ha guardado un propietario.");
+
             } else {
                 addErrorMessage("No se pudo guardar propietario. Registrelo Nuevamente.");
             }
@@ -423,10 +496,12 @@ public class CatastroControlador extends BaseControlador {
                 catastroPredialActual.setCatpreAreaTotalCons(Double.valueOf("0"));
                 catastroServicio.editarCatastroPredial(catastroPredialActual);
                 listaCatastroPredialAreasBloque = new ArrayList<CatastroPredialAreas>();
+
             }
             if (!listaEdifGrupo1_1.isEmpty()) {
                 catastroServicio.eliminarCatastroPredEdificacionPorCatastro(catastroPredialActual);
                 addSuccessMessage("Registros de edificacion eliminados correctamente");
+                inicializarDatosEdificaciones();
                 listarInformacionEdificaciones();
             }
         } catch (Exception ex) {
@@ -454,7 +529,7 @@ public class CatastroControlador extends BaseControlador {
     public void crearRegistrosEdificaciones() {
         try {
             if (!listaCatastroPredialAreasBloque.isEmpty()) {
-                if (listaEdifGrupo1_1.isEmpty()) {
+                if (!catastroServicio.existenRegistrosEdificacionesPorPredio(catastroPredialActual)) {
                     catastroServicio.crearRegistrosEdificacionesPorNumBloquesYPisos(catastroPredialActual, listaCatastroPredialAreasBloque);
                     recuperarDatosdeEdificaciones();
                 } else {
@@ -489,9 +564,12 @@ public class CatastroControlador extends BaseControlador {
 
     public void recuperarDatosDeCatastro() {
         try {
-
-            String codNac = claveCatastralBusqueda.substring(0, 7);
-            String codLoc = claveCatastralBusqueda.substring(7, 19);
+            String codNac = null;
+            String codLoc = null;
+            if (claveCatastralBusqueda.length() == 19) {
+                codNac = claveCatastralBusqueda.substring(0, 7);
+                codLoc = claveCatastralBusqueda.substring(7, 19);
+            }
             if (codNac != null && codLoc != null) {
                 catastroPredialActual = catastroServicio.buscarCatastroPorCodigosClave(codNac, codLoc);
                 if (catastroPredialActual != null) {
@@ -617,6 +695,25 @@ public class CatastroControlador extends BaseControlador {
         }
     }
 
+    public void inicializarDatosEdificaciones() {
+        try {
+            listaEdifGrupo1_1 = new ArrayList<CatastroPredialEdificacion>();
+            listaEdifGrupo1_2 = new ArrayList<CatastroPredialEdificacion>();
+            listaEdifGrupo1_3 = new ArrayList<CatastroPredialEdificacion>();
+            listaEdifGrupo1_4 = new ArrayList<CatastroPredialEdificacion>();
+            listaEdifGrupo234 = new ArrayList<CatastroPredialEdificacion>();
+            listaEdifGrupo5_14 = new ArrayList<CatastroPredialEdificacion>();
+            listaEdifGrupo5_5 = new ArrayList<CatastroPredialEdificacion>();
+            listaEdifGrupo5_6 = new ArrayList<CatastroPredialEdificacion>();
+            listaEdifGrupo5_7 = new ArrayList<CatastroPredialEdificacion>();
+            listaEdifGrupo5_8 = new ArrayList<CatastroPredialEdificacion>();
+            listaEdifGrupo5_9 = new ArrayList<CatastroPredialEdificacion>();
+
+        } catch (Exception ex) {
+            LOGGER.log(Level.SEVERE, null, ex);
+        }
+    }
+
     public void listarInformacionEdificaciones() {
         try {
             listaEdifGrupo1_1 = catastroServicio.listarEdificacionesGrupo1_1(catastroPredialActual, edifBloque, edifPiso);
@@ -630,6 +727,10 @@ public class CatastroControlador extends BaseControlador {
             listaEdifGrupo5_7 = catastroServicio.listarEdificacionesGrupo5_7(catastroPredialActual, "0", "0");
             listaEdifGrupo5_8 = catastroServicio.listarEdificacionesGrupo5_8(catastroPredialActual, "0", "0");
             listaEdifGrupo5_9 = catastroServicio.listarEdificacionesGrupo5_9(catastroPredialActual, "0", "0");
+
+            if (listaEdifGrupo1_1.isEmpty()) {
+                addErrorMessage("No existen areas para este bloque y piso.");
+            }
         } catch (Exception ex) {
             LOGGER.log(Level.SEVERE, null, ex);
         }
@@ -690,12 +791,16 @@ public class CatastroControlador extends BaseControlador {
             LOGGER.log(Level.SEVERE, null, ex);
         }
     }
+
     public void listarArchivosFoto() {
         try {
             if (catastroPredialActual != null) {
                 listaPredioFoto = new ArrayList<PredioArchivo>();
                 // listaPredioArchivo = predioArchivoServicio.listarArchivos(usuarioActual);
-                listaPredioFoto= predioArchivoServicio.listarArchivosXImpuesto(catastroPredialActual, "F");
+                listaPredioFoto = predioArchivoServicio.listarArchivosXImpuesto(catastroPredialActual, "F");
+                //if(!listaPredioFoto.isEmpty()){
+                //   fotoActual=new DefaultStreamedContent(new ByteArrayInputStream(listaPredioFoto.get(0).getPrearcData()));
+                //}
             } else {
                 listaPredioFoto = new ArrayList<PredioArchivo>();
                 addWarningMessage("Eliga la clave Catastral!");
@@ -747,7 +852,7 @@ public class CatastroControlador extends BaseControlador {
             LOGGER.log(Level.SEVERE, null, ex);
         }
     }
-    
+
     public void handleFileUploadFoto(FileUploadEvent event) {
 
         try {
@@ -792,7 +897,7 @@ public class CatastroControlador extends BaseControlador {
         }
     }
 
-   public String generarReporteFichaCatastral() throws Exception {
+    public String generarReporteFichaCatastral() throws Exception {
         //Conexion con local datasource
         UtilitariosCod util = new UtilitariosCod();
         Connection conexion = util.getConexion();
@@ -844,9 +949,9 @@ public class CatastroControlador extends BaseControlador {
             parameters.put("SUBREPORT_DIR2_1_f", subrep2_1_f);
             String subrep2_1_g = servletContext.getRealPath("/reportes/fichaCatastral");
             parameters.put("SUBREPORT_DIR2_1_g", subrep2_1_g);
-              String subrep2_1_h = servletContext.getRealPath("/reportes/fichaCatastral");
+            String subrep2_1_h = servletContext.getRealPath("/reportes/fichaCatastral");
             parameters.put("SUBREPORT_DIR2_1_h", subrep2_1_h);
-              String subrep2_1_i = servletContext.getRealPath("/reportes/fichaCatastral");
+            String subrep2_1_i = servletContext.getRealPath("/reportes/fichaCatastral");
             parameters.put("SUBREPORT_DIR2_1_i", subrep2_1_i);
 
             //---------Sub sub reportes pagina 3
@@ -869,8 +974,6 @@ public class CatastroControlador extends BaseControlador {
         }
         return null;
     }
-
-
 
     //GETTER AND SETTERS
     public CatastroPredial getCatastroPredialActual() {
@@ -1680,7 +1783,21 @@ public class CatastroControlador extends BaseControlador {
     public void setListaPredioFoto(List<PredioArchivo> listaPredioFoto) {
         this.listaPredioFoto = listaPredioFoto;
     }
-    
-    
+
+    public PropietarioPredio getPropietarioPredioBusqueda() {
+        return propietarioPredioBusqueda;
+    }
+
+    public void setPropietarioPredioBusqueda(PropietarioPredio propietarioPredioBusqueda) {
+        this.propietarioPredioBusqueda = propietarioPredioBusqueda;
+    }
+
+    public StreamedContent getFotoActual() {
+        return fotoActual;
+    }
+
+    public void setFotoActual(StreamedContent fotoActual) {
+        this.fotoActual = fotoActual;
+    }
 
 }

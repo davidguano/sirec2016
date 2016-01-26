@@ -8,18 +8,21 @@
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
 	<queryString>
-		<![CDATA[select catpreare_bloque as bloque, catpreare_area as area
+		<![CDATA[select catpreare_bloque as bloque, catpreare_area as area,catpreare_piso as piso
 from sirec.catastro_predial_areas
 where catpre_codigo=$P{catpreCodigo}]]>
 	</queryString>
 	<field name="bloque" class="java.lang.Integer"/>
 	<field name="area" class="java.lang.Double"/>
+	<field name="piso" class="java.lang.Integer"/>
 	<columnHeader>
 		<band height="15">
 			<staticText>
 				<reportElement x="5" y="1" width="47" height="13" uuid="4db922dd-4562-49cb-a80b-52c10b3d3f8d"/>
-				<textElement textAlignment="Center"/>
-				<text><![CDATA[Nº Bloque]]></text>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Bloque/Piso]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="56" y="1" width="85" height="13" uuid="b8592101-e576-4548-8584-ad4ac4d296c3"/>
@@ -27,7 +30,7 @@ where catpre_codigo=$P{catpreCodigo}]]>
 				<text><![CDATA[Area]]></text>
 			</staticText>
 			<rectangle>
-				<reportElement mode="Transparent" x="0" y="1" width="53" height="14" uuid="3b74bcb7-5087-4659-996c-c8b4634b3c8f"/>
+				<reportElement mode="Transparent" x="0" y="1" width="52" height="13" uuid="3b74bcb7-5087-4659-996c-c8b4634b3c8f"/>
 			</rectangle>
 			<rectangle>
 				<reportElement mode="Transparent" x="53" y="1" width="88" height="14" uuid="60691e7f-e291-453a-a142-508b4cdbf32a"/>
@@ -37,7 +40,7 @@ where catpre_codigo=$P{catpreCodigo}]]>
 	<detail>
 		<band height="14" splitType="Stretch">
 			<textField>
-				<reportElement x="0" y="0" width="52" height="13" uuid="d1297612-be50-4335-a3a2-a33cd05ca243"/>
+				<reportElement x="0" y="0" width="24" height="13" uuid="d1297612-be50-4335-a3a2-a33cd05ca243"/>
 				<textElement textAlignment="Center"/>
 				<textFieldExpression><![CDATA[$F{bloque}]]></textFieldExpression>
 			</textField>
@@ -50,10 +53,18 @@ where catpre_codigo=$P{catpreCodigo}]]>
 				<text><![CDATA[(m2)]]></text>
 			</staticText>
 			<rectangle>
-				<reportElement mode="Transparent" x="0" y="0" width="53" height="14" uuid="04c545c9-5cd8-420c-bb35-1e95a8a19fb8"/>
+				<reportElement mode="Transparent" x="0" y="0" width="28" height="14" uuid="04c545c9-5cd8-420c-bb35-1e95a8a19fb8"/>
 			</rectangle>
 			<rectangle>
 				<reportElement mode="Transparent" x="53" y="0" width="88" height="14" uuid="5534c8fa-07dd-425a-bf56-f20b292ee037"/>
+			</rectangle>
+			<textField>
+				<reportElement x="28" y="0" width="24" height="14" uuid="7cdaa528-3a76-436a-a385-513141cf1896"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{piso}]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement mode="Transparent" x="28" y="0" width="24" height="14" uuid="a32c85a1-c8bc-4227-bad1-1a6fda5d6e40"/>
 			</rectangle>
 		</band>
 	</detail>

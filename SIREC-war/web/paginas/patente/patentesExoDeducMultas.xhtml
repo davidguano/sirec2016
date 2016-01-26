@@ -60,7 +60,7 @@
                             <h:panelGrid columns="4" id="pnlConExoDedMulNumPat">
                                 <p:outputLabel style="font-size: #{txt.font_size};" value="#{txt.lbl_num_patente}"/>
                                 <p:inputText style="background: lightgreen;color:black;font-weight: bold" disabled="true" id="numPatenteExoDedMul" value="#{gestionExoDedMulPatenteControlador.numPatente}"  
-                                              size="40"/>
+                                             size="40"/>
                                 <p:message for="numPatenteExoDedMul" display="icon"/>  
                                 <psirec:panelInformativo  rendered="#{gestionExoDedMulPatenteControlador.numPatente==null}" id="infExoDedMulNumPat" background="#042B69" ancho="220" icono="fa-exclamation-triangle"
                                                           titulo="#{txt.lbl_head_error_patente}" tamanioTitulo="15" colorTitulo="white"
@@ -88,7 +88,7 @@
 
                         <p:outputLabel  style="font-size: #{txt.font_size}" value="#{txt.lbl_mes_incumplimiento}"/>
                         <p:inputText requiredMessage="#{txt.lbl_mes_incumplimiento} Se nesecita un valor"  id="txtMesIncumplimiento"  value="#{gestionExoDedMulPatenteControlador.patValExActual.patvalextNumMesesIncum}" 
-                                     maxlength="20" size="40"/>
+                                     maxlength="2" size="10"/>
                         <p:message for="txtMesIncumplimiento" display="icon"/>
 
                         <h:outputLabel style="font-size: #{txt.font_size}" value="#{txt.lbl_notif_incumpliemento}"/>
@@ -114,29 +114,29 @@
                         <p:selectBooleanButton id="patPasivos" value="#{gestionExoDedMulPatenteControlador.patValExActual.patvalextIncumPlazoDecla}" onLabel="Si" offLabel="No" style="width:60px" />
                         <p:message for="patPasivos" display="icon"/>
 
-                        <p:outputLabel  style="font-size: #{txt.font_size}" value="#{txt.lbl_falsedad_datos}"/>
+                        <p:outputLabel  style="font-size: #{txt.font_size}" value="#{txt.lbl_falsedad_datos} Ingrese el valor entre  10 y 250"/>
                         <p:inputText requiredMessage="#{txt.lbl_falsedad_datos} Se nesecita un valor"  id="valDatosFalsos"  value="#{gestionExoDedMulPatenteControlador.patValExActual.patentePorcDatosfalsos}" 
-                                     maxlength="20" size="40"/>
+                                     maxlength="3" size="10"/>
                         <p:message for="valDatosFalsos" display="icon"/>
 
 
                         <p:outputLabel  style="font-size: #{txt.font_size}" value="#{txt.lbl_evacion_tribut}"/>
-                        <p:selectOneMenu id="evaTRibutaria" value="#{gestionExoDedMulPatenteControlador.patValExActual.patenteEvasionTributaria}"  style="width:152px">
-                            <f:selectItem itemLabel="Seleccione..." itemValue="" /> 
+                        <p:selectOneMenu   id="evaTRibutaria" value="#{gestionExoDedMulPatenteControlador.patValExActual.patenteEvasionTributaria}"  style="width:152px">
+                            <f:selectItem itemLabel="Seleccione..." itemValue="#{''}" /> 
                             <f:selectItem itemLabel="Tributo 1" itemValue="#{1}" />
                             <f:selectItem itemLabel="Tributo 2" itemValue="#{2}" />
                             <f:selectItem itemLabel="Tributo 3" itemValue="#{3}" />
-                        </p:selectOneMenu>
+                                                    </p:selectOneMenu>
                         <p:message for="evaTRibutaria" display="icon"/>
 
                         <p:outputLabel  style="font-size: #{txt.font_size}" value="#{txt.lbl_porcentaje_ingreso}"/>
                         <p:inputText requiredMessage="#{txt.lbl_porcentaje_ingreso} Se nesecita un valor" id="porceIngreso"  value="#{gestionExoDedMulPatenteControlador.patValExActual.patentePorcIngreso}" 
-                                     maxlength="20" size="40"/>
+                                     maxlength="20" size="10"/>
                         <p:message for="porceIngreso" display="icon"/>
 
                         <p:outputLabel  style="font-size: #{txt.font_size}" value="#{txt.lbl_base_imponible_negativa}"/>
                         <p:inputText requiredMessage="#{txt.lbl_base_imponible_negativa} Se nesecita un valor"  id="baseImpNegativa"  value="#{gestionExoDedMulPatenteControlador.patValExActual.patenteBaseimpNegativa}" 
-                                     maxlength="20" size="40"/>
+                                     maxlength="20" size="10"/>
                         <p:message for="baseImpNegativa" display="icon"/> </h:panelGrid>  
                     <h:panelGrid columns="2" id="pnlConBotExoDeducMul">
                         <p:commandButton value="#{txt.btn_ver_documentos}" 
@@ -213,26 +213,7 @@
                                         <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
                                     </p:confirmDialog>
                                 </p:panel>
-                                <h:panelGrid id="tblListArchvosExoDedmul">
-                                    <p:panel style="width: 750px" header="Archivos Cargados" rendered="#{gestionExoDedMulPatenteControlador.listadoArchivos.size()>0}">
-                                        <p:dataTable    paginator="true" rows="5" id="tablLisExoDedMul" value="#{gestionExoDedMulPatenteControlador.listadoArchivos}"  var="archivoColumna"   
-                                                        selectionMode="single" rowKey="#{archivoColumna.patarcCodigo}"
-                                                        styleClass="pdataTable_font"
-                                                        currentPageReportTemplate="{currentPage} de {totalPages}">                              
-                                            <p:column   headerText="Nombre Archivo" width="100" style="font-size:12px;">
-                                                <h:outputText value="#{archivoColumna.patarcNombre}" style="font-size:12px;" />
-                                            </p:column> 
-
-                                            <p:column headerText="#{txt.lbl_eliminar}" style="width:50px;text-align: center;font-size:12px;" >
-                                                <p:commandButton style="font-size:12px;" icon="ui-icon-trash"  
-                                                                 actionListener="#{gestionExoDedMulPatenteControlador.confirmaEliminarPatArchivo(archivoColumna)}" 
-                                                                 process="@this" update=":frmPat:tabPrin:tablLisExoDedMul,:frmPat:tabPrin:tablLisExoDedMul,frmPat:msgs" async="true" global="false">
-                                                    <p:confirm header="Confirmación" message="¿Está seguro de eliminar el registro?" icon="ui-icon-alert" />
-                                                </p:commandButton>
-                                            </p:column>  
-                                        </p:dataTable>     
-                                    </p:panel>
-                                </h:panelGrid>
+                                
                             </h:panelGrid>
                         </p:panel>
                     </center>
@@ -280,6 +261,16 @@
                                      async="true"
                                      global="false"
                                      />
+                    <p:commandButton value="#{txt.btn_actualizar}" 
+                                     id="btnActualiza2" 
+                                     action="#{gestionExoDedMulPatenteControlador.actualizaPatenteValExtra()}" 
+                                     icon="ui-icon-disk"  
+                                     process="@this,pnlConExuDedMul" 
+                                     update=":frmPat,pnlConExuDedMul,pnlConCargarFile,:frmPat:msgs"
+                                     async="true"
+                                     global="false"
+                                     />
+                
                 </h:panelGrid>
             </h:panelGrid>                      
         </center>

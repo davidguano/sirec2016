@@ -13,7 +13,8 @@ from sirec.catastro_predial_infraestructura  cpi,sirec.catalogo_detalle cd,sirec
 where cpi.catdet_codigo=cd.catdet_codigo
 and cd.cat_codigo=c.cat_codigo
 and catpre_codigo=$P{catpreCodigo}
-and c.cat_nemonico='INF_ENERGIA_ELEC']]>
+and c.cat_nemonico='INF_ENERGIA_ELEC'
+order by cd.catdet_orden]]>
 	</queryString>
 	<field name="coditem" class="java.lang.Integer"/>
 	<field name="codinfra" class="java.lang.Integer"/>

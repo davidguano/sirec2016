@@ -196,7 +196,19 @@
                                                      async="true"
                                                      global="false"
                                                      icon="ui-icon-pencil"
-                                                     update="@form"/>
+                                                     update="@form"
+                                                     onstart="PF('dlgValidando').show();" onsuccess="PF('dlgValidando').hide();"/>
+
+                                </p:column>
+                                <p:column headerText="">
+                                    <p:commandButton id="btnEliProp"
+                                                     action="#{propietarioControlador.eliminarPropietario(item)}"
+                                                     process="@this"
+                                                     async="true"
+                                                     global="false"
+                                                     icon="ui-icon-trash"
+                                                     update="@form"
+                                                     onstart="PF('dlgValidando').show();" onsuccess="PF('dlgValidando').hide();"/>
 
                                 </p:column>
                             </p:dataTable>

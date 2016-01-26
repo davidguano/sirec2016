@@ -62,8 +62,7 @@ where e.catdet_codigo=cd.catdet_codigo
 and cp.catpre_codigo=e.catpre_codigo
 and cp.catpre_codigo=$P{catPreCodigo}
 and e.catpreedi_grupo='4'
-order by 1,2
-]]>
+order by 1,2]]>
 	</queryString>
 	<field name="grupo" class="java.lang.String"/>
 	<field name="subgrupo" class="java.lang.String"/>
@@ -184,7 +183,7 @@ order by 1,2
 				</textElement>
 				<textFieldExpression><![CDATA[$F{piso}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="211" y="0" width="53" height="10" uuid="295e353b-30d6-40eb-b425-b933812542c8"/>
 				<textElement>
 					<font size="7"/>

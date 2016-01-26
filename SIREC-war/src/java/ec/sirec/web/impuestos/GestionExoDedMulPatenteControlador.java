@@ -67,7 +67,7 @@ public class GestionExoDedMulPatenteControlador extends BaseControlador {
     private String buscNumPat;
 
     /**
-     * Exoneración deducciones y multas de patentes
+     * Creates a new instance of GestionDetPatenteControlador
      */
     @PostConstruct
     public void inicializar() {
@@ -97,9 +97,7 @@ public class GestionExoDedMulPatenteControlador extends BaseControlador {
         try {
             if (verificaArchivosCargados()) {
                 if (habilitaEdicion == false) {
-//                if (patenteServicio.existePatenteValoracionExtra(patValExActual.getPatvalextCodigo())) {
-//                    addWarningMessage("Existe Código");
-//                } else {
+
                     guardaPatenteValoracion();
                     patValExActual.setAdidedCodigo(adiDeductivoActual);
                     patValExActual.setPatvalCodigo(patenteValoracionActal);
@@ -114,12 +112,21 @@ public class GestionExoDedMulPatenteControlador extends BaseControlador {
                 addSuccessMessage("Debe Cargar Documentación", "Debe Cargar Documentación");
             }
 
-//            } else {
-//                patenteServicio.editarPatenteValoracionExtra(patValExActual);
-//                addSuccessMessage("Patente Valoración  Actualizado");
-//                patValExActual = new PatenteValoracionExtras();
-//                habilitaEdicion = false;
-//            }
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, null, e);
+        }
+    }
+
+    public void actualizaPatenteValExtra() {
+        try {
+            patValExActual.setAdidedCodigo(adiDeductivoActual);
+            patValExActual.setPatvalCodigo(patenteValoracionActal);
+            patenteServicio.editarPatenteValoracionExtra(patValExActual);
+            addSuccessMessage("Actualizado Exitosamente", "Patente Valoración Extra Actualizado");
+            patValExActual = new PatenteValoracionExtras();
+            cargaObjetosBitacora();
+            guardarArchivos();
+            inicializar();
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, null, e);
         }
@@ -142,6 +149,25 @@ public class GestionExoDedMulPatenteControlador extends BaseControlador {
         }
     }
 
+    public String generaNumPatente() { //Genera numero de patente aleatorio
+        String numeroPatente = "";
+        try {
+            int valorRetornado = patenteActual.getPatCodigo();
+            StringBuffer numSecuencial = new StringBuffer(valorRetornado + "");
+            int valRequerido = 6;
+            int valRetorno = numSecuencial.length();
+            int valNecesita = valRequerido - valRetorno;
+            StringBuffer sb = new StringBuffer(valNecesita);
+            for (int i = 0; i < valNecesita; i++) {
+                sb.append("0");
+            }
+            numeroPatente = "AE-MPM-" + sb.toString() + valorRetornado;
+        } catch (Exception ex) {
+            LOGGER.log(Level.SEVERE, null, ex);
+        }
+        return numeroPatente;
+    }
+
     public void cagarPatenteActual() {
         try {
             patenteActual = patenteServicio.cargarObjPatente(Integer.parseInt(buscNumPat));
@@ -154,11 +180,15 @@ public class GestionExoDedMulPatenteControlador extends BaseControlador {
                     patValExActual = patenteServicio.buscaPatValExtraPorPatValoracion(patenteValoracionActal.getPatvalCodigo());
                     adiDeductivoActual.setAdidedCodigo(patValExActual.getAdidedCodigo().getAdidedCodigo());
                     System.out.println("Si encontro el objeto");
-                    numPatente = "AE-MPM-" + patenteActual.getPatCodigo();
+                    numPatente = generaNumPatente(); //  "AE-MPM-" + patenteActual.getPatCodigo();
                 } else {
                     System.out.println("No encontro el objeto");
-                    numPatente = "AE-MPM-" + patenteActual.getPatCodigo();
+                    numPatente = generaNumPatente();// "AE-MPM-" + patenteActual.getPatCodigo();
                     patValExActual = new PatenteValoracionExtras();
+                    patValExActual.setPatvalextNumMesesIncum(0);
+                    patValExActual.setPatentePorcDatosfalsos(0);
+                    patValExActual.setPatentePorcIngreso(Double.valueOf(0));
+                    patValExActual.setPatenteBaseimpNegativa(BigDecimal.ZERO);
                     adiDeductivoActual = new AdicionalesDeductivos();
                 }
 
@@ -211,7 +241,7 @@ public class GestionExoDedMulPatenteControlador extends BaseControlador {
         try {
             datoGlobalActual = new DatoGlobal();
             usuarioActual = new SegUsuario();
-            datoGlobalActual = patenteServicio.cargarObjPorNombre("Msj_Pat_In");
+            datoGlobalActual = patenteServicio.cargarObjDatGloPorNombre("Msj_Pat_In");
             usuarioActual = (SegUsuario) this.getSession().getAttribute("usuario");
         } catch (Exception ex) {
             LOGGER.log(Level.SEVERE, null, ex);

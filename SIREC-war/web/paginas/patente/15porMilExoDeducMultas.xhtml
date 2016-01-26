@@ -13,55 +13,55 @@
             <h:panelGrid id="pnlCon15xMilExuDedMul" width="1000" columns="1" >
                 <p:panel>
                     <center>
-                    <h:panelGrid id="pnl15xMilExoBuscaPatente" columns="1">
-                                               <p:panel rendered="#{gestionExoDedMulUnoCincoPorMil.verBuscaPatente==1}" header="Búsqueda de Patente:">
-                            <h:panelGrid columns="4">
-                                <p:outputLabel  style="font-size: #{txt.font_size}" value="#{txt.lbl_ingre_valor_busca} AE-MPM-"/>
-                                <p:inputText  id="txtExo15xMilBusPatente"  value="#{gestionExoDedMulUnoCincoPorMil.buscNumPat}" 
-                                              maxlength="20" size="40"/>
-                                <p:message for="txtExo15xMilBusPatente" display="icon"/>
-                                <p:commandButton value="#{txt.btn_aceptar}" 
-                                                 id="btn15xMilExoBuscaPatente" 
-                                                 action="#{gestionExoDedMulUnoCincoPorMil.cagarPatenteActual()}" 
+                        <h:panelGrid id="pnl15xMilExoBuscaPatente" columns="1">
+                            <p:panel rendered="#{gestionExoDedMulUnoCincoPorMil.verBuscaPatente==1}" header="Búsqueda de Patente:">
+                                <h:panelGrid columns="4">
+                                    <p:outputLabel  style="font-size: #{txt.font_size}" value="#{txt.lbl_ingre_valor_busca} AE-MPM-"/>
+                                    <p:inputText  id="txtExo15xMilBusPatente"  value="#{gestionExoDedMulUnoCincoPorMil.buscNumPat}" 
+                                                  maxlength="20" size="40"/>
+                                    <p:message for="txtExo15xMilBusPatente" display="icon"/>
+                                    <p:commandButton value="#{txt.btn_aceptar}" 
+                                                     id="btn15xMilExoBuscaPatente" 
+                                                     action="#{gestionExoDedMulUnoCincoPorMil.cagarPatenteActual()}" 
+                                                     icon="ui-icon-disk"  
+                                                     process="@this,pnl15xMilExoBuscaPatente" 
+                                                     update=":frmPat:tabPrin:pnlCon15xMilExoDedMulNumPat,pnlConValExuDedMul15PorMil"
+                                                     async="true"
+                                                     global="false"
+                                                     />                                       
+                                </h:panelGrid>
+                            </p:panel>
+                            <h:panelGrid columns="2">
+                                <p:commandButton value="#{txt.btn_buscar}" 
+                                                 id="btn15xMilExoBusPat" 
+                                                 action="#{gestionExoDedMulUnoCincoPorMil.buscarPatente()}" 
                                                  icon="ui-icon-disk"  
                                                  process="@this,pnl15xMilExoBuscaPatente" 
-                                                 update=":frmPat:tabPrin:pnlCon15xMilExoDedMulNumPat"
+                                                 update=":frmPat,pnl15xMilExoBuscaPatente"
                                                  async="true"
                                                  global="false"
-                                                 />                                       
+                                                 />   
+                                <p:commandButton value="#{txt.btn_nuevo}" 
+                                                 id="bt15xMilNuePat" 
+                                                 action="#{gestionExoDedMulUnoCincoPorMil.inicializar()}" 
+                                                 icon="ui-icon-disk"  
+                                                 process="@this,pnl15xMilExoBuscaPatente" 
+                                                 update=":frmPat,pnl15xMilExoBuscaPatente,pnlConValExuDedMul15PorMil"
+                                                 async="true"
+                                                 global="false"
+                                                 />    
                             </h:panelGrid>
-                        </p:panel>
-                        <h:panelGrid columns="2">
-                            <p:commandButton value="#{txt.btn_buscar}" 
-                                             id="btn15xMilExoBusPat" 
-                                             action="#{gestionExoDedMulUnoCincoPorMil.buscarPatente()}" 
-                                             icon="ui-icon-disk"  
-                                             process="@this,pnl15xMilExoBuscaPatente" 
-                                             update=":frmPat,pnl15xMilExoBuscaPatente"
-                                             async="true"
-                                             global="false"
-                                             />   
-                            <p:commandButton value="#{txt.btn_nuevo}" 
-                                             id="bt15xMilNuePat" 
-                                             action="#{gestionExoDedMulUnoCincoPorMil.inicializar()}" 
-                                             icon="ui-icon-disk"  
-                                             process="@this,pnl15xMilExoBuscaPatente" 
-                                             update=":frmPat,pnl15xMilExoBuscaPatente"
-                                             async="true"
-                                             global="false"
-                                             />    
                         </h:panelGrid>
-                    </h:panelGrid>
-                        </center>
+                    </center>
                 </p:panel>
-                <p:panel header="#{txt.lbl_header_Exo_Dec_Multas}">
+                <p:panel header="#{txt.lbl_header_Exo_Dec_Multas_POR_MIL}" id="pnlConValExuDedMul15PorMil">
                     <h:panelGrid columns="2">
                         <p:commandButton process="@this" action="#{gestionExoDedMulUnoCincoPorMil.cargarNumPatente()}" value="Ver N° Patente:" update=":frmPat:tabPrin:pnlCon15xMilExoDedMulNumPat"/>
                         <p:panel>
                             <h:panelGrid columns="4" id="pnlCon15xMilExoDedMulNumPat">
                                 <p:outputLabel style="font-size: #{txt.font_size};" value="#{txt.lbl_num_patente}"/>
                                 <p:inputText style="background: lightgreen;color:black;font-weight: bold" disabled="true" id="numPatente15xMilExoDedMul" value="#{gestionExoDedMulUnoCincoPorMil.numPatente}"  
-                                              size="40"/>
+                                             size="40"/>
                                 <p:message for="numPatente15xMilExoDedMul" display="icon"/>  
                                 <psirec:panelInformativo  rendered="#{gestionExoDedMulUnoCincoPorMil.numPatente==null}" id="inf15xMilExoDedMulResult" background="#042B69" ancho="220" icono="fa-exclamation-triangle"
                                                           titulo="#{txt.lbl_head_error_patente}" tamanioTitulo="15" colorTitulo="white"
@@ -124,7 +124,25 @@
                         <p:outputLabel  style="font-size: #{txt.font_size}" value="#{txt.lbl_base_imponible_negativa}"/>
                         <p:inputText  id="baseImpNegativaMil"  value="#{gestionExoDedMulUnoCincoPorMil.patValEx15xMilActual.pat15valextValor}" 
                                       maxlength="20" size="40"/>
-                        <p:message for="baseImpNegativaMil" display="icon"/> </h:panelGrid>  
+                        <p:message for="baseImpNegativaMil" display="icon"/>
+
+                        <p:outputLabel  style="font-size: #{txt.font_size}" value="#{txt.lbl_mes_incumplimiento}"/>
+                        <p:inputText requiredMessage="#{txt.lbl_mes_incumplimiento} Se nesecita un valor"  id="txt15MesIncumplimiento"  value="#{gestionExoDedMulUnoCincoPorMil.patValEx15xMilActual.pat15valNumMesesIncum}" 
+                                     maxlength="2" size="10"/>
+                        <p:message for="txt15MesIncumplimiento" display="icon"/>
+
+                        <p:outputLabel  style="font-size: #{txt.font_size}" value="#{txt.lbl_falsedad_datos} Ingrese el valor entre  1 y 3"/>
+                        <p:inputText requiredMessage="#{txt.lbl_falsedad_datos} Se nesecita un valor"  id="val15DatosFalsos"  value="#{gestionExoDedMulUnoCincoPorMil.patValEx15xMilActual.pat15valEvaluaDatFalsos}" 
+                                     maxlength="3" size="10"/>
+                        <p:message for="val15DatosFalsos" display="icon"/>
+
+                        <p:outputLabel  style="font-size: #{txt.font_size}" value="#{txt.lbl_retraso_comunica_proceso_liquidacion}"/>
+                        <p:inputText requiredMessage="#{txt.lbl_falsedad_datos} Se nesecita un valor"  id="val15ProcesoLiquida"  value="#{gestionExoDedMulUnoCincoPorMil.patValEx15xMilActual.pat15valProcesoLiquidacion}" 
+                                     maxlength="3" size="10"/>
+                        <p:message for="val15ProcesoLiquida" display="icon"/>
+
+
+                    </h:panelGrid>  
                     <h:panelGrid columns="2" id="pnlConBot15xMilExoDedMul">
                         <p:commandButton value="#{txt.btn_ver_documentos}" 
                                          id="btnVerDocuExoxMil" 

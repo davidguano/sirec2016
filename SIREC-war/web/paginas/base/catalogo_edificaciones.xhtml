@@ -39,8 +39,8 @@
                                 </p:column>
                                 <p:column headerText="Valor">
                                     <p:cellEditor>
-                                        <f:facet name="output"><h:outputText value="#{item.catdetValor}"/></f:facet>
-                                        <f:facet name="input"><p:inputText value="#{item.catdetValor}"/></f:facet>
+                                        <f:facet name="output"><h:outputText value="#{item.catdetValorDecimal}"/></f:facet>
+                                        <f:facet name="input"><p:inputText value="#{item.catdetValorDecimal}" onkeypress="return isNumericKey(event);"/></f:facet>
                                     </p:cellEditor>
                                 </p:column>
                                 <p:column style="width:32px;">

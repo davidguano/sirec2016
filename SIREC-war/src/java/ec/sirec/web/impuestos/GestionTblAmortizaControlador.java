@@ -22,6 +22,7 @@ import ec.sirec.web.base.BaseControlador;
 import ec.sirec.web.util.ParametrosFile;
 import java.io.InputStream;
 import java.math.BigDecimal;
+import java.sql.Array;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
@@ -49,9 +50,6 @@ public class GestionTblAmortizaControlador extends BaseControlador {
     private PatenteArchivoServicio patenteArchivoServicio;
 
     @EJB
-    private PropietarioServicio propietarioServicio;
-
-    @EJB
     private PatenteServicio patenteServicio;
 
     private Patente patenteActual;
@@ -76,7 +74,7 @@ public class GestionTblAmortizaControlador extends BaseControlador {
     private int cargarArchivos;
 
     /**
-     * Tabla de amortización
+     * Creates a new instance of GestionDetPatenteControlador
      */
     @PostConstruct
     public void inicializar() {
@@ -116,12 +114,36 @@ public class GestionTblAmortizaControlador extends BaseControlador {
     public void cagarPatenteActual() {
         try {
             patenteActual = patenteServicio.cargarObjPatente(Integer.parseInt(buscNumPat));
-            numPatente = "AE-MPM-" + patenteActual.getPatCodigo();
+            if (patenteActual == null) {
+                numPatente = null;
+                          } else {
+                numPatente = generaNumPatente();//"AE-MPM-" + patenteActual.getPatCodigo();
+                fechaAdjudica = patenteActual.getPatFechaAdjudicacion();
+                fechaVencmiento = patenteActual.getPatFechaVencimiento();
+                listadoArchivos=new ArrayList<PatenteArchivo>();
+            }
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, null, e);
         }
     }
-
+  public String generaNumPatente() { //Genera numero de patente aleatorio
+        String numeroPatente = "";
+        try {
+            int valorRetornado = patenteActual.getPatCodigo();
+            StringBuffer numSecuencial = new StringBuffer(valorRetornado + "");
+            int valRequerido = 6;
+            int valRetorno = numSecuencial.length();
+            int valNecesita = valRequerido - valRetorno;
+            StringBuffer sb = new StringBuffer(valNecesita);
+            for (int i = 0; i < valNecesita; i++) {
+                sb.append("0");
+            }
+            numeroPatente = "AE-MPM-" + sb.toString() + valorRetornado;
+        } catch (Exception ex) {
+            LOGGER.log(Level.SEVERE, null, ex);
+        }
+        return numeroPatente;
+    }
     public void activaPanelVerArchivos() {
         try {
             if (patenteActual.getPatCodigo() == null) {
@@ -156,7 +178,7 @@ public class GestionTblAmortizaControlador extends BaseControlador {
         try {
             datoGlobalActual = new DatoGlobal();
             usuarioActual = new SegUsuario();
-            datoGlobalActual = patenteServicio.cargarObjPorNombre("Msj_Pat_In");
+            datoGlobalActual = patenteServicio.cargarObjDatGloPorNombre("Msj_Pat_In");
             usuarioActual = (SegUsuario) this.getSession().getAttribute("usuario");
         } catch (Exception ex) {
             LOGGER.log(Level.SEVERE, null, ex);
@@ -222,7 +244,7 @@ public class GestionTblAmortizaControlador extends BaseControlador {
             archivo.setName(event.getFile().getFileName());
             archivo.setData(event.getFile().getContents());
             listaFiles.add(archivo);
-            addSuccessMessage(event.getFile().getFileName() + "Archivo Cargado");
+            addSuccessMessage("Archivo Cargado", "Archivo Cargado");
         } catch (Exception ex) {
             LOGGER.log(Level.SEVERE, null, ex);
         }

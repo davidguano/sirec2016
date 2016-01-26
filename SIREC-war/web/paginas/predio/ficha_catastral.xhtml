@@ -20,11 +20,12 @@
 
                                         <p:panel style="background: #CCCCFF;" header="Clave Catastral">
                                             <h:panelGrid id="pnlBusqueda"
-                                                         columns="5" style="text-align: center !important;" >
+                                                         columns="6" style="text-align: center !important;" >
                                                 <p:outputLabel value="Clave Catastral" for="codN"/>
                                                 <f:verbatim/>
                                                 <p:outputLabel value="Cedula/RUC" for="cedRuc"/>
                                                 <f:verbatim/>
+                                                <p:outputLabel value="Apellidos del Propietario" for="apeProp"/>
                                                 <f:verbatim/>
                                                 <p:inputText id="codN" value="#{catastroControlador.claveCatastralBusqueda}"
                                                              required="true" requiredMessage="Valor requerido" maxlength="19" size="17"
@@ -48,9 +49,24 @@
                                                                  update="lstBusqueda"
                                                                  onstart="PF('dlgValidando').show();" onsuccess="PF('dlgValidando').hide();"
                                                                  icon="fa fa-search"/>
+                                                <p:autoComplete id="apeProp" value="#{catastroControlador.propietarioPredioBusqueda}" 
+                                                                completeMethod="#{catastroControlador.obtenerPropietarioPredioPorApellidoProp}"
+                                                                converter="#{propietarioPredioConverter}"
+                                                                minQueryLength="5" 
+                                                                size="50" inputStyle="color:white;font-weight: bold;background: black;"
+                                                                var="prop" itemLabel="#{prop.proCi.proApellidos}#{prop.proCi.proNombres}#{prop.catpreCodigo.claveCatastral}" 
+                                                                itemValue="#{prop}">
+                                                    <p:ajax event="itemSelect" listener="#{catastroControlador.onItemSelect}" 
+                                                            async="true" global="false"
+                                                            process="@this,apeProp"
+                                                                 update="@form"
+                                                                 onstart="PF('dlgValidando').show();" onsuccess="PF('dlgValidando').hide();"/>
+                                                </p:autoComplete>
+                                                
                                                 <p:commandButton id="btnNuevo" value="Nuevo" action="#{catastroControlador.inicializar}"
                                                                  async="true" global="false" process="@this"
                                                                  update="@form"/>
+
                                                 <p:outputLabel value="Precio Base" for="precBase"/>
                                                 <p:inputText id="precBase" value="#{catastroControlador.valoracionActual.catprevalAvaluoTot}"
                                                              disabled="true" size="10"/>
@@ -66,6 +82,7 @@
                                                                          onstart="PF('dlgValidando').show();" onsuccess="PF('dlgValidando').hide();"/>
                                                     </p:column>
                                                 </p:dataTable>
+                                                <f:verbatim/>
                                                 <p:commandButton id="btnReporteFicha" value="Imprimir"
                                                                  action="#{catastroControlador.generarReporteFichaCatastral()}"
                                                                  oncomplete="javascript:window.open('#{facesContext.externalContext.requestContextPath}/ReporteServlet','ReporteServlet')"
@@ -275,7 +292,7 @@
                                                 <p:message for="longitud"/>
                                             </h:panelGrid>
                                             <p:commandButton id="btnGuardarRegPrincipal" value="Guardar"
-                                                             action="#{catastroControlador.guardarRegistroPrincipal}"
+                                                             action="#{catastroControlador.guardarRegistroPrincipalyPropietario}"
                                                              async="true" global="false"
                                                              process="@this,pnlClave,pnlUbicacion,pnlPropietario,pnlRefCart"
                                                              update="@form"
@@ -329,7 +346,7 @@
                                                 </h:panelGrid>
                                             </h:panelGrid>
                                         </p:panel>
-                                        
+
                                         <p:panel id="pnlFoto" header="Foto del predio">
                                             <p:fileUpload fileUploadListener="#{catastroControlador.handleFileUploadFoto}"  
                                                           mode="advanced"
@@ -380,14 +397,14 @@
                                                         </p:confirmDialog>
                                                     </p:column>
                                                 </p:dataTable>
-
+                                                <p:graphicImage value="#{catastroControlador.fotoActual}"></p:graphicImage>
                                             </p:panel>
 
 
 
                                         </p:panel>
-                                        
-                                        
+
+
                                         <p:panel style="background: #6699FF;" header="Superficies del predio">
                                             <h:panelGrid columns="2">
                                                 <h:panelGrid id="pnlSuperf" columns="6">
@@ -460,7 +477,7 @@
                                                             <p:commandButton style="font-size:12px;" icon="ui-icon-trash"  
                                                                              rendered="#{catastroControlador.listaCatastroPredialAreasBloque.size()>0}"
                                                                              actionListener="#{catastroControlador.eliminarAreasyEdificacion}" 
-                                                                             process="@this" async="true" global="false" update="pnlAreas,lstAreasBloque,atotalcons,:frmFicha:msgs"  >
+                                                                             process="@this" async="true" global="false" update="pnlAreas,lstAreasBloque,atotalcons,:frmFicha:msgs,:frmFicha:tbVw:lstAreasBloqueReg,:frmFicha:tbVw:pnlListaEdif"  >
                                                                 <p:confirm header="Confirmación" message="¿Está seguro de eliminar las areas? (Tambien se eliminaran los registros de edificacion.)" icon="ui-icon-alert" />
                                                             </p:commandButton>
                                                             <p:confirmDialog global="true" showEffect="fade" hideEffect="drop">
@@ -666,12 +683,12 @@
 
                                         <p:outputLabel value="En construccion:"/>
                                         <h:panelGrid columns="2">
-                                        <p:selectOneMenu id="encons" value="#{catastroControlador.catastroPredialActual.catdetEnConstruccion.catdetCodigo}"
-                                                         disabled="#{catastroControlador.catastroPredialActual.catdetOcupacion.catdetCodigo==32 or catastroControlador.catastroPredialActual.catdetOcupacion.catdetCodigo==34 }">
-                                            <f:selectItem itemLabel="Seleccione.." itemValue="#{null}"/>
-                                            <f:selectItems value="#{catastroControlador.listaTerrenoConstruccion}" 
-                                                           var ="det" itemValue="#{det.catdetCodigo}" itemLabel="#{det.catdetTexto}" />
-                                        </p:selectOneMenu>
+                                            <p:selectOneMenu id="encons" value="#{catastroControlador.catastroPredialActual.catdetEnConstruccion.catdetCodigo}"
+                                                             disabled="#{catastroControlador.catastroPredialActual.catdetOcupacion.catdetCodigo==32 or catastroControlador.catastroPredialActual.catdetOcupacion.catdetCodigo==34 }">
+                                                <f:selectItem itemLabel="Seleccione.." itemValue="#{null}"/>
+                                                <f:selectItems value="#{catastroControlador.listaTerrenoConstruccion}" 
+                                                               var ="det" itemValue="#{det.catdetCodigo}" itemLabel="#{det.catdetTexto}" />
+                                            </p:selectOneMenu>
                                             <h:inputText id="nBloq" value="#{catastroControlador.catastroPredialActual.catpreBloqueNuevoampl}"
                                                          size="5" maxlength="10"
                                                          disabled="#{catastroControlador.catastroPredialActual.catdetOcupacion.catdetCodigo==32 or catastroControlador.catastroPredialActual.catdetOcupacion.catdetCodigo==34 }"/>
@@ -943,7 +960,7 @@
                                             <f:selectItem itemLabel="Bloque 6" itemValue="6"/>
                                             <p:ajax event="change" listener="#{catastroControlador.listarInformacionEdificaciones}"
                                                     async="true" global="false" process="@this,edifPiso"
-                                                    update="pnlListaEdif"
+                                                    update="pnlListaEdif,:frmFicha:msgs"
                                                     onstart="PF('dlgValidando').show();" onsuccess="PF('dlgValidando').hide();"/>
                                         </p:selectOneMenu>
                                         <p:selectOneMenu id="edifPiso" value="#{catastroControlador.edifPiso}">
@@ -953,7 +970,7 @@
                                             <f:selectItem itemLabel="Piso 4" itemValue="4"/>
                                             <p:ajax event="change" listener="#{catastroControlador.listarInformacionEdificaciones}"
                                                     async="true" global="false" process="@this,edifBloque"
-                                                    update="pnlListaEdif"
+                                                    update="pnlListaEdif,:frmFicha:msgs"
                                                     onstart="PF('dlgValidando').show();" onsuccess="PF('dlgValidando').hide();"/>
                                         </p:selectOneMenu>
                                     </h:panelGrid>
@@ -1145,11 +1162,11 @@
                                             <h:panelGrid>
                                                 <p:outputLabel value="Alicuotas"/>
                                                 <h:panelGrid>
-                                                <p:selectOneMenu id="adAli" value="#{catastroControlador.catastroPredialActual.catdetAlicuotas.catdetCodigo}">
-                                                    <f:selectItem itemLabel="Seleccione.." itemValue="#{null}"/>
-                                                    <f:selectItems value="#{catastroControlador.listaOtraInfoAlicuota}" 
-                                                                   var ="det" itemValue="#{det.catdetCodigo}" itemLabel="#{det.catdetTexto}" />
-                                                </p:selectOneMenu>
+                                                    <p:selectOneMenu id="adAli" value="#{catastroControlador.catastroPredialActual.catdetAlicuotas.catdetCodigo}">
+                                                        <f:selectItem itemLabel="Seleccione.." itemValue="#{null}"/>
+                                                        <f:selectItems value="#{catastroControlador.listaOtraInfoAlicuota}" 
+                                                                       var ="det" itemValue="#{det.catdetCodigo}" itemLabel="#{det.catdetTexto}" />
+                                                    </p:selectOneMenu>
                                                     <h:panelGrid columns="2">
                                                         <p:outputLabel value="% Vivienda"/>
                                                         <p:inputText value="#{catastroControlador.catastroPredialActual.catprePorcVivienda}"

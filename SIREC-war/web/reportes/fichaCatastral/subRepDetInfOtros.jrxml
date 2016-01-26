@@ -13,7 +13,8 @@ from sirec.catastro_predial_infraestructura  cpi,sirec.catalogo_detalle cd,sirec
 where cpi.catdet_codigo=cd.catdet_codigo
 and cd.cat_codigo=c.cat_codigo
 and catpre_codigo=$P{catpreCodigo}
-and c.cat_nemonico='INF_OTROS_SERV']]>
+and c.cat_nemonico='INF_OTROS_SERV'
+order by cd.catdet_orden]]>
 	</queryString>
 	<field name="coditem" class="java.lang.Integer"/>
 	<field name="codinfra" class="java.lang.Integer"/>
@@ -21,15 +22,6 @@ and c.cat_nemonico='INF_OTROS_SERV']]>
 	<field name="nomservinv" class="java.lang.String"/>
 	<detail>
 		<band height="15" splitType="Stretch">
-			<staticText>
-				<reportElement x="82" y="1" width="13" height="13" uuid="dc208198-e21f-4396-9653-028517ff9fe3">
-					<printWhenExpression><![CDATA[$F{codinfra}==92]]></printWhenExpression>
-				</reportElement>
-				<textElement textAlignment="Center" verticalAlignment="Top">
-					<font isBold="true"/>
-				</textElement>
-				<text><![CDATA[x]]></text>
-			</staticText>
 			<rectangle>
 				<reportElement mode="Transparent" x="82" y="2" width="13" height="13" uuid="57319d0f-421f-484b-876a-869774a0edfe"/>
 			</rectangle>
@@ -40,6 +32,11 @@ and c.cat_nemonico='INF_OTROS_SERV']]>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{nomservinv}]]></textFieldExpression>
 			</textField>
+			<staticText>
+				<reportElement x="82" y="1" width="13" height="13" uuid="1c59a0b8-c6fe-40c2-b3e4-7d10f0115a38"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[x]]></text>
+			</staticText>
 		</band>
 	</detail>
 </jasperReport>

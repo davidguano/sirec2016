@@ -82,7 +82,7 @@ public class GestionDecTributariaControlador extends BaseControlador {
     private static final Logger LOGGER = Logger.getLogger(GestionDecTributariaControlador.class.getName());
 
     /**
-     * Declaración Tributaria
+     * Creates a new instance of GestionDetPatenteControlador
      */
     @PostConstruct
     public void inicializar() {
@@ -111,10 +111,6 @@ public class GestionDecTributariaControlador extends BaseControlador {
     public void cargarInfoPatentePropietario() {
         try {
             patenteActual = patenteServicio.buscaParPrRucActEco(propietarioActual.getProCi(), catDetTipActEconActual.getCatdetCodigo());
-//            propietarioActual = propietarioServicio.buscarPropietario(usuarioActual.getUsuIdentificacion());
-            //cambiar metodo: un propietario tiene varios catastros , utilizar metodo listarPropietariosPredioPorPropietario
-            //catastroPredialActual = catastroPredialServicio.cargarObjCatPorPropietario(propietarioActual.getProCi());
-//            patenteActual = patenteServicio.cargarObjPatentePorCatastro(catastroPredialActual.getCatpreCodigo());
         } catch (Exception ex) {
             LOGGER.log(Level.SEVERE, null, ex);
         }

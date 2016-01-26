@@ -57,10 +57,10 @@ public class PropietarioControlador extends BaseControlador {
 
     public void validarCedulaRuc() {
         try {
-            if (propietarioServicio.esCedulaRucValida(propietarioActual.getProCi())) {
+            if (propietarioServicio.esCedulaRucValida(propietarioActual.getProCi(),flagEditar).equals("valida")) {
                 addSuccessMessage("Cedula valida");
             } else {
-                addErrorMessage("Cedula no valida");
+                addErrorMessage(propietarioServicio.esCedulaRucValida(propietarioActual.getProCi(),flagEditar));
                 propietarioActual.setProCi(null);
             }
         } catch (Exception ex) {
@@ -80,38 +80,43 @@ public class PropietarioControlador extends BaseControlador {
 
     public void guardarPropietario() {
         try {
-            boolean b=false;
-            String s="";
+            boolean b = false;
+            String s = "";
             if (propietarioActual.getProTipoPersona().equals("N")) {
-                    s=validarDatosPersonaNatural(propietarioActual);
+                s = validarDatosPersonaNatural(propietarioActual);
             }
             if (propietarioActual.getProTipoPersona().equals("J")) {
-                    s=validarDatosPersonaJuridica(propietarioActual);
+                s = validarDatosPersonaJuridica(propietarioActual);
             }
-            if(s.equals("")){
-                b=true;
-            }else{
-                b=false;
+            if (s.equals("")) {
+                b = true;
+            } else {
+                b = false;
                 addErrorMessage(s);
             }
-            
-            if (propietarioServicio.esCedulaRucValida(propietarioActual.getProCi()) && propietarioServicio.esFechaNacimientoValida(propietarioActual.getProFechaNacimiento()) && b) {
-                if (propietarioActual.getProTipoPersona().equals("N")) {
-                    propietarioActual.setCatdetTipoperjur(null);
-                }
-                if (!flagEditar) {
-                    propietarioActual.setUsuIdentificacion(obtenerUsuarioAutenticado());
-                    propietarioServicio.crearPropietario(propietarioActual);
-                    propietarioActual = new Propietario();
-                    addSuccessMessage("Propietario creado correctamente");
+
+            if (propietarioServicio.esCedulaRucValida(propietarioActual.getProCi(),flagEditar).equals("valida") && b) {
+                if (propietarioServicio.esFechaNacimientoValida(propietarioActual.getProFechaNacimiento())) {
+                    if (propietarioActual.getProTipoPersona().equals("N")) {
+                        propietarioActual.setCatdetTipoperjur(null);
+                    }
+                    if (!flagEditar) {
+                        propietarioActual.setUsuIdentificacion(obtenerUsuarioAutenticado());
+                        propietarioServicio.crearPropietario(propietarioActual);
+                        propietarioActual = new Propietario();
+                        addSuccessMessage("Propietario creado correctamente");
+                    } else {
+                        propietarioActual.setUsuIdentificacion(obtenerUsuarioAutenticado());
+                        propietarioServicio.editarPropietario(propietarioActual);
+                        addSuccessMessage("Propietario editado correctamente");
+                    }
+                    listarPropietarios();
                 } else {
-                    propietarioActual.setUsuIdentificacion(obtenerUsuarioAutenticado());
-                    propietarioServicio.editarPropietario(propietarioActual);
-                    addSuccessMessage("Propietario editado correctamente");
+                    addErrorMessage("Fecha no valida");
                 }
-                listarPropietarios();
+
             } else {
-                addErrorMessage("Cedula o Fecha de Nacimiento no valida");
+                addErrorMessage(propietarioServicio.esCedulaRucValida(propietarioActual.getProCi(),flagEditar));
             }
         } catch (Exception ex) {
             LOGGER.log(Level.SEVERE, null, ex);
@@ -121,10 +126,10 @@ public class PropietarioControlador extends BaseControlador {
     public String validarDatosPersonaNatural(Propietario prop) {
         String s = "";
         try {
-            if(prop.getProCi().length()!=10){
-                s="Cedula debe tener 10 digitos";
+            if (prop.getProCi().length() != 10) {
+                s = "Cedula debe tener 10 digitos";
             }
-            if (prop.getProNombres() == null || prop.getProApellidos() == null ||prop.getProNombres().equals("") ||prop.getProApellidos().equals("")) {
+            if (prop.getProNombres() == null || prop.getProApellidos() == null || prop.getProNombres().equals("") || prop.getProApellidos().equals("")) {
                 s = "Nombres y Apellidos obligatorios";
             } else {
                 if (prop.getProFechaNacimiento() == null) {
@@ -140,20 +145,20 @@ public class PropietarioControlador extends BaseControlador {
         }
         return s;
     }
-    
+
     public String validarDatosPersonaJuridica(Propietario prop) {
         String s = "";
         try {
-            if(prop.getProCi().length()!=13){
-                s="RUC debe tener 13 digitos";
+            if (prop.getProCi().length() != 13) {
+                s = "RUC debe tener 13 digitos";
             }
-            if (prop.getProRazonSocial() == null ||prop.getProRazonSocial().equals("")) {
+            if (prop.getProRazonSocial() == null || prop.getProRazonSocial().equals("")) {
                 s = "Razon social obligatoria";
             } else {
-                    if (prop.getCatdetCiudad() == null) {
-                        s = "Ciudad es obligatoria";
-                    }
-                
+                if (prop.getCatdetCiudad() == null) {
+                    s = "Ciudad es obligatoria";
+                }
+
             }
         } catch (Exception ex) {
             LOGGER.log(Level.SEVERE, null, ex);
@@ -165,6 +170,15 @@ public class PropietarioControlador extends BaseControlador {
         try {
             propietarioActual = vpropietario;
             flagEditar = true;
+        } catch (Exception ex) {
+            LOGGER.log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void eliminarPropietario(Propietario vpropietario) {
+        try {
+            addErrorMessage(propietarioServicio.eliminarPropietario(vpropietario));
+            listarPropietarios();
         } catch (Exception ex) {
             LOGGER.log(Level.SEVERE, null, ex);
         }

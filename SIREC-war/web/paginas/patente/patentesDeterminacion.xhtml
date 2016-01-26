@@ -67,7 +67,7 @@
                                     <p:message for="numPatente1" display="icon"/>  
                                     <psirec:panelInformativo  rendered="#{gestionDetPatenteControlador.numPatente==null}" id="infPeriodo" background="#042B69" ancho="220" icono="fa-exclamation-triangle"
                                                               titulo="#{txt.lbl_head_error_patente}" tamanioTitulo="15" colorTitulo="white"
-                                                              texto="#{txt.lbl_error_num_patente}" tamanioTexto="12" colorTexto="white"/>
+                                                              texto="#{txt.lbl_sin_resultados}" tamanioTexto="12" colorTexto="white"/>
                                 </h:panelGrid>
                             </p:panel>
                         </h:panelGrid>
@@ -169,7 +169,7 @@
                                                  action="#{gestionDetPatenteControlador.guardaPatenteValoracion()}" 
                                                  icon="ui-icon-disk"  
                                                  process="@this,pnlConDetPatente" 
-                                                 update=":frmPat:tabPrin:pnlContienDetImpuestos,:frmPat:msgs"
+                                                 update=":frmPat:tabPrin:pnlConDetPatente,:frmPat:msgs"
                                                  async="true"
                                                  global="false"
                                                  />

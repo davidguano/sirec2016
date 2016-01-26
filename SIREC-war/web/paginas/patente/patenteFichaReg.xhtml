@@ -19,22 +19,23 @@
                                          size="40"/>
                             <p:message for="compPnl1_1" display="icon"/>  
                         </h:panelGrid>
-                        <h:panelGrid columns="6">
-                            <h:outputLabel style="font-size: #{txt.font_size}" value="#{txt.lbl_clave_catastrat}"/>
-                            <p:selectOneMenu  requiredMessage="#{txt.lbl_clave_catastrat} Se necesita un valor" required="true" id="cmbCatastro" 
-                                              value="#{gestionPatenteControlador.catastroPredialSelec}" style="width:250px"
-                                              converter="#{catastroPredialConverter}" var="t">
-                                <f:selectItem  itemLabel="Seleccione..." itemValue=""/> 
-                                <f:selectItems var="tipTem"  
-                                               value="#{gestionPatenteControlador.listaCatastroPredial}" 
-                                               itemLabel="#{tipTem.catpreCodNacional}" 
-                                               itemValue="#{tipTem}"/> 
-                                <p:ajax   listener="#{gestionPatenteControlador.cargarInformacionPropietario()}"  update="panlDatosPropietario" />
-                                <p:column width="200" style="white-space: normal">  
-                                    <h:outputText escape="false" value="#{t.catpreCodNacional}" style="font-size: 10px"/> 
-                                </p:column> 
-                            </p:selectOneMenu>                               
-                            <p:message for="cmbCatastro" display="icon"/>
+                        <h:panelGrid columns="6"> 
+                            <h:panelGrid id="pnlBuscaProPatente" columns="2">
+                                <p:column>
+                                    <h:outputLabel style="font-size: #{txt.font_size}" value="#{txt.lbl_clave_catastrat}"/>
+                                    <p:inputText id="codN" value="#{gestionPatenteControlador.catastroPredBusca}"
+                                                 required="true" requiredMessage="Valor requerido" maxlength="19" size="17"
+                                                 style="color:white;font-weight: bold;background: black;"
+                                                 onkeypress="return isNumberKey(event);"/>
+                                </p:column>
+                                <p:commandButton id="btnBuscarPorClave"
+                                                 value="Buscar" async="true" global="false"
+                                                 action="#{gestionPatenteControlador.cargarInformacionPropietario()}"
+                                                 process="@this,pnlBuscaProPatente"
+                                                 update="panlDatosPropietario,:frmPat:msgs"
+                                                 onstart="PF('dlgValidando').show();" onsuccess="PF('dlgValidando').hide();"
+                                                 icon="fa fa-search"/>
+                            </h:panelGrid>
 
                             <h:outputLabel style="font-size: #{txt.font_size}" value="#{txt.lbl_estado}"/>
                             <p:selectOneMenu requiredMessage="#{txt.lbl_estado} Se necesita un valor" required="true" id="cmbIdentEstado" 
@@ -71,7 +72,7 @@
 
                                 <p:outputLabel  style="font-size: #{txt.font_size}" value="#{txt.lbl_direccion}"/>
                                 <p:inputTextarea    requiredMessage="#{txt.lbl_direccion} Se necesita un valor" style="width: 200px;background: lightgreen;color:black;font-weight: bold" disabled="#{gestionPatenteControlador.habilitaCamposPropietario}" id="compPnl1_5"  value="#{gestionPatenteControlador.propietarioActual.proDireccion}" 
-                                                 />
+                                                    />
                                 <p:message for="compPnl1_5" display="icon"/>
 
                                 <p:outputLabel style="font-size: #{txt.font_size}" value="#{txt.lbl_parroquia}"/>
@@ -102,7 +103,7 @@
 
                                 <p:outputLabel style="font-size: #{txt.font_size}" value="#{txt.lbl_correo}"/>
                                 <p:inputText  style="background: lightgreen;color:black;font-weight: bold" requiredMessage="#{txt.lbl_correo} Se necesita un valor" disabled="#{gestionPatenteControlador.habilitaCamposPropietario}" id="compPnl1_9"  value="#{gestionPatenteControlador.propietarioActual.proCorreo}" 
-                                             size="40"/>
+                                              size="40"/>
                                 <p:message for="compPnl1_9" display="icon"/>
                                 <p:column/>
                                 <h:panelGrid columns="3">

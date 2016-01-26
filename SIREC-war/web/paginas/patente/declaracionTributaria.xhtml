@@ -17,7 +17,7 @@
                             <h:panelGrid columns="1">
                                 <h:panelGrid columns="3">
                                     <h:outputLabel style="font-size: #{txt.font_size}" value="#{txt.lbl_actividad_economica}"/>
-                                    <p:selectOneMenu  requiredMessage="! Debe seleccionar una opción !" required="true" id="cmbActEcon" 
+                                    <p:selectOneMenu  requiredMessage="#{txt.lbl_tipo_declara} Se nesecita un valor"  required="true" id="cmbActEcon" 
                                                       value="#{gestionDecTributariaControlador.catDetTipActEconActual}" style="width:250px"
                                                       converter="#{catalogoDetalleConverter}" var="t">
                                         <f:selectItem  itemLabel="Seleccione..." itemValue=""/> 

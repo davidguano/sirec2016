@@ -70,7 +70,7 @@ public class GestionEmisionPatenteControlador extends BaseControlador {
     private String numPatente;
 
     /**
-     * Emision de patentes
+     * Creates a new instance of GestionDetPatenteControlador
      */
     @PostConstruct
     public void inicializar() {
@@ -88,38 +88,6 @@ public class GestionEmisionPatenteControlador extends BaseControlador {
     public GestionEmisionPatenteControlador() {
     }
 
-//    public void guardaPatenteValExtra() {
-//        try {
-//            if (habilitaEdicion == false) {
-////                if (patenteServicio.existePatenteValoracionExtra(patValExActual.getPatvalextCodigo())) {
-////                    addWarningMessage("Existe Código");
-////                } else {
-//                guardaPatenteValoracion();
-//                patValExActual.setAdidedCodigo(adiDeductivoActual);
-//                patValExActual.setPatvalCodigo(patenteValoracionActal);
-//                patenteServicio.crearPatenteValoracionExtra(patValExActual);
-//                addSuccessMessage("Patente Valoración Extra Guardado");
-//                patValExActual = new PatenteValoracionExtras();
-//                cargaObjetosBitacora();
-//                guardarArchivos();
-//            }
-////            } else {
-////                patenteServicio.editarPatenteValoracionExtra(patValExActual);
-////                addSuccessMessage("Patente Valoración  Actualizado");
-////                patValExActual = new PatenteValoracionExtras();
-////                habilitaEdicion = false;
-////            }
-//        } catch (Exception e) {
-//            LOGGER.log(Level.SEVERE, null, e);
-//        }
-//    }
-//    public void buscarPatente() {
-//        try {
-//            verBuscaPatente = 1;
-//        } catch (Exception e) {
-//            LOGGER.log(Level.SEVERE, null, e);
-//        }
-//    }
     public void listarEmisionPatente() {
         try {
             listaEmisionPatente = patenteServicio.listarEmisionPatente(patenteActual.getPatCodigo(), patValoracionActual.getPatvalAnio(), catDetParroquias.getCatdetCodigo());
