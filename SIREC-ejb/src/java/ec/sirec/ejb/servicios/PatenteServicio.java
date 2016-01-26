@@ -84,7 +84,7 @@ public class PatenteServicio {
         return patenteDao.buscarPorCampo(ENTIDAD_PATENTE, "patCodigo", codPatente);
     }
 
-    public DatoGlobal cargarObjPorNombre(String nombre) throws Exception {
+    public DatoGlobal cargarObjDatGloPorNombre(String nombre) throws Exception {
         return datoGlobalDao.buscarPorCampo(ENTIDAD_DATO_GLOBAL, "datgloNombre", nombre);
     }
 

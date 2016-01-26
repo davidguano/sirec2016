@@ -64,7 +64,14 @@ public class Patente15xmilValoracionExtras implements Serializable {
     private Boolean pat15valextCoop;
     @Column(name = "pat15valext_multi_nac")
     private Boolean pat15valextMultiNac;
-  
+   @Column(name = "pat15val_num_meses_incum")
+    private Integer pat15valNumMesesIncum;
+   @Column(name = "pat15val_evalua_dat_falsos")
+    private Integer pat15valEvaluaDatFalsos;
+   @Column(name = "pat15val_proceso_liquidacion")
+    private Integer pat15valProcesoLiquidacion;
+   
+   
     public Patente15xmilValoracionExtras() {
     }
 
@@ -164,6 +171,30 @@ public class Patente15xmilValoracionExtras implements Serializable {
 
     public void setPat15valextCoop(Boolean pat15valextCoop) {
         this.pat15valextCoop = pat15valextCoop;
+    }
+
+    public Integer getPat15valNumMesesIncum() {
+        return pat15valNumMesesIncum;
+    }
+
+    public void setPat15valNumMesesIncum(Integer pat15valNumMesesIncum) {
+        this.pat15valNumMesesIncum = pat15valNumMesesIncum;
+    }
+
+    public Integer getPat15valEvaluaDatFalsos() {
+        return pat15valEvaluaDatFalsos;
+    }
+
+    public void setPat15valEvaluaDatFalsos(Integer pat15valEvaluaDatFalsos) {
+        this.pat15valEvaluaDatFalsos = pat15valEvaluaDatFalsos;
+    }
+
+    public Integer getPat15valProcesoLiquidacion() {
+        return pat15valProcesoLiquidacion;
+    }
+
+    public void setPat15valProcesoLiquidacion(Integer pat15valProcesoLiquidacion) {
+        this.pat15valProcesoLiquidacion = pat15valProcesoLiquidacion;
     }
 
      

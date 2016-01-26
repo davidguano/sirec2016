@@ -60,6 +60,26 @@ public class PropietarioServicio {
         propietarioDao.editar(vpropietario);
     }
 
+    public boolean existePropietarioEnRegistros(Propietario vprop) throws Exception {
+        //evaluamos en predios por el momento
+        return propietarioPredioDao.existePorCampo("PropietarioPredio", "proCi", vprop);
+    }
+
+    public boolean existePropietarioPorCedula(String vcedula) throws Exception {
+        //evaluamos en predios por el momento
+        return propietarioDao.existePorCampo("Propietario", "proCi", vcedula);
+    }
+
+    public String eliminarPropietario(Propietario vpropietario) throws Exception {
+        if (existePropietarioEnRegistros(vpropietario)) {
+            return "No se puede eliminar. Propietario tiene predios registrados. ";
+        } else {
+            propietarioDao.eliminar(vpropietario);
+            return "Propietario Eliminado Correctamente";
+        }
+
+    }
+
     public List<Propietario> listarPropietariosTodos() throws Exception {
         return propietarioDao.listarOrdenada(ENTIDAD_PROPIETARIO, "proCi", "asc");
     }
@@ -92,6 +112,10 @@ public class PropietarioServicio {
         return propietarioPredioDao.listarPorCampoOrdenada("PropietarioPredio", "proCi.proCi", cedulaProp, "propreCodigo", "asc");
     }
 
+    public List<PropietarioPredio> listarPropietariosPredioPorApellidoPropContiene(String vapellidos) throws Exception {
+        return propietarioPredioDao.listarPorCamposContieneOrdenada("PropietarioPredio", "proCi.proApellidos", vapellidos.toUpperCase(), "propreCodigo", "asc");
+    }
+
     public Propietario obtenerPropietarioPrincipalPredio(Integer idCatastroPre) throws Exception {
         Propietario p = new Propietario();
         List<PropietarioPredio> lstpp = new ArrayList<PropietarioPredio>();
@@ -105,22 +129,46 @@ public class PropietarioServicio {
     public void guardarPropietarioPredio(PropietarioPredio vPP) throws Exception {
         propietarioPredioDao.crear(vPP);
     }
+    public void editarPropietarioPredio(PropietarioPredio vPP) throws Exception {
+        propietarioPredioDao.editar(vPP);
+    }
+
+    public PropietarioPredio buscarPropietarioPredioPorCodigo(Integer vPPcod) throws Exception {
+        return propietarioPredioDao.buscarPorCampo("PropietarioPredio", "propreCodigo", vPPcod);
+    }
+    public PropietarioPredio buscarPropietarioPredioPorCatastro(Integer vcodCatastro) throws Exception {
+        return propietarioPredioDao.buscarPorCampo("PropietarioPredio", "catpreCodigo.catpreCodigo", vcodCatastro);
+    }
 
     public void eliminarPropietarioPredio(PropietarioPredio vPP) throws Exception {
         propietarioPredioDao.eliminar(vPP);
     }
 
-    public boolean esCedulaRucValida(String vcedula) throws Exception {
+    public String esCedulaRucValida(String vcedula, boolean flagEditar) throws Exception {
         String c = "";
         if (vcedula.substring(0, 4).equals("9999")) {
-            return true;
+            return "valida";
         }
         if (vcedula.length() == 13) {
             c = vcedula.substring(0, 10);
         } else {
             c = vcedula;
         }
-        return Utilitarios.validarCedula(c);
+        if (existePropietarioPorCedula(c)) {
+            if(flagEditar){
+                return "valida";
+            }else{
+                return "Ya existe esta cedula";
+            }
+            
+        } else {
+            if (Utilitarios.validarCedula(c)) {
+                return "valida";
+            } else {
+                return "Cedula no valida";
+            }
+        }
+
     }
 
     public List<CatalogoDetalle> listarCiudadesPorTexto(String texto) throws Exception {
@@ -147,10 +195,10 @@ public class PropietarioServicio {
     }
 
     public List<Propietario> listarPorApellidosContiene(String vApellidos) throws Exception {
-        return propietarioDao.listarPorCamposContieneOrdenada(ENTIDAD_PROPIETARIO, "proApellidos", vApellidos, "proApellidos", "asc");
+        return propietarioDao.listarPorCamposContieneOrdenada(ENTIDAD_PROPIETARIO, "proApellidos", vApellidos.toUpperCase(), "proApellidos", "asc");
     }
 
     public List<Propietario> listarPorNombresContiene(String vNombres) throws Exception {
-        return propietarioDao.listarPorCamposContieneOrdenada(ENTIDAD_PROPIETARIO, "proNombres", vNombres, "proApellidos", "asc");
+        return propietarioDao.listarPorCamposContieneOrdenada(ENTIDAD_PROPIETARIO, "proNombres", vNombres.toUpperCase(), "proApellidos", "asc");
     }
 }

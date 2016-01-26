@@ -7,9 +7,11 @@
 package ec.sirec.ejb.facade;
 
 import ec.sirec.ejb.entidades.CatastroPredial;
+import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 
 /**
  *
@@ -28,5 +30,11 @@ public class CatastroPredialFacade extends AbstractFacade<CatastroPredial> {
     public CatastroPredialFacade() {
         super(CatastroPredial.class);
     }
-    
+    public List<CatastroPredial> listarPorClaveCatastralContiene(String vvalor1) throws Exception {
+        String sql = "select e from CatastroPredial e where CONCAT(e.catpreCodNacional,e.catpreCodLocal) like :vvalor1 order by e.catpreCodigo asc";
+        Query q = getEntityManager().createQuery(sql);
+        q.setParameter("vvalor1", "%"+vvalor1+"%");
+        return q.getResultList();
+
+    }
 }

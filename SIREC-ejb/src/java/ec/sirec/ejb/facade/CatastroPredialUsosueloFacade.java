@@ -10,6 +10,7 @@ import ec.sirec.ejb.entidades.CatastroPredialUsosuelo;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 
 /**
  *
@@ -27,6 +28,13 @@ public class CatastroPredialUsosueloFacade extends AbstractFacade<CatastroPredia
 
     public CatastroPredialUsosueloFacade() {
         super(CatastroPredialUsosuelo.class);
+    }
+    
+    public void actualizarRegistrosUsoSuelo(Integer vcodCat, int itemIni, int itemFin) throws Exception {
+        String sql = " update CatastroPredialUsosuelo u set u.catpreusuAplica=false where u.catpreCodigo.catpreCodigo=:vcodCat and u.catpreusuItem>=:itemIni and u.catpreusuItem<=:itemFin";
+        Query q = getEntityManager().createQuery(sql);
+        q.setParameter("vcodCat", vcodCat).setParameter("itemIni", itemIni).setParameter("itemFin", itemFin);
+        q.executeUpdate();
     }
     
 }

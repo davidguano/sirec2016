@@ -178,7 +178,7 @@ public abstract class AbstractFacade<T> {
 
     }
     public List<T> listarPor1Campo1ContieneOrdenada(String ventidad, String vcampo1, Object vvalor1, String vcampo2, Object vvalor2, String vcampoOrd, String vforma) throws Exception {
-        String sql = "select e from " + ventidad + " e where e." + vcampo1 + " =:vvalor1 and e." + vcampo2 + " like :vvalor2 order by e." + vcampoOrd + " " + vforma;
+        String sql = "select e from " + ventidad + " e where e." + vcampo1 + " =:vvalor1 and UPPER(e." + vcampo2 + ") like :vvalor2 order by e." + vcampoOrd + " " + vforma;
         Query q = getEntityManager().createQuery(sql);
         q.setParameter("vvalor1", vvalor1).setParameter("vvalor2", "%"+vvalor2+"%");
         return q.getResultList();
@@ -199,7 +199,7 @@ public abstract class AbstractFacade<T> {
 
     }
     public List<T> listarPorCamposContieneOrdenada(String ventidad, String vcampo1, Object vvalor1, String vcampoOrd, String vforma) throws Exception {
-        String sql = "select e from " + ventidad + " e where e." + vcampo1 + "  like :vvalor1 order by e." + vcampoOrd + " " + vforma;
+        String sql = "select e from " + ventidad + " e where UPPER(e." + vcampo1 + ")  like :vvalor1 order by e." + vcampoOrd + " " + vforma;
         Query q = getEntityManager().createQuery(sql);
         q.setParameter("vvalor1", "%"+vvalor1+"%");
         return q.getResultList();

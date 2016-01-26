@@ -57,7 +57,7 @@ public class CatalogoDetalleServicio {
     return catalogoDetalleDao.buscarPorCampo(ENTIDAD_CAT_DETALLE, "catdetCodigo", codCatDet);
     }
     public List<CatalogoDetalle> listarPorNemonicoyTextoContiene(String vnemonicoCatalogo,String vTexto) throws Exception{
-        return catalogoDetalleDao.listarPor1Campo1ContieneOrdenada(ENTIDAD_CAT_DETALLE, "catCodigo.catNemonico", vnemonicoCatalogo,"catdetTexto", vTexto,  "catdetOrden", "asc");
+        return catalogoDetalleDao.listarPor1Campo1ContieneOrdenada(ENTIDAD_CAT_DETALLE, "catCodigo.catNemonico", vnemonicoCatalogo,"catdetTexto", vTexto.toUpperCase(),  "catdetOrden", "asc");
     }
     
     public List<CatalogoDetalle> listarPorNemonicoyItemsIn(String vnemonicoCatalogo, String listaItems) throws Exception{

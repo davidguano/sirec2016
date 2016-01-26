@@ -43,41 +43,28 @@ public class PropietarioFacade extends AbstractFacade<Propietario> {
             return (Propietario) q.getResultList().get(0);
         }
     }
-    
-    public String codigoAutomaticoDesconocidoNatural(){
-        String sql = "select count(p) from Propietario p"
-                + " where p.proCi like '999999%'" ;
+
+    public String codigoAutomaticoDesconocidoNatural() {
+        String sql = "select max(p.proCi) from Propietario p"
+                + " where p.proCi like '9999E%' and LENGTH(p.proCi)=10 and p.proCi<>'9999999999'";
         Query q = em.createQuery(sql);
-        if (q.getResultList().isEmpty()) {
-            return "9999999001";
+        if (q.getResultList().isEmpty() || q.getResultList().get(0)==null) {
+            return "9999E10001";
         } else {
-            if((Long)q.getSingleResult()>=9){
-                if((Long)q.getSingleResult()>=99){
-                    return "9999999"+((Long)q.getSingleResult()+1);
-                }else{
-                    return "9999999"+"0"+((Long)q.getSingleResult()+1);
-                }
-            }else{
-                return "9999999"+"00"+((Long)q.getSingleResult()+1);
-            }
+            String rs = String.valueOf(q.getSingleResult());
+            return "9999E" + ((Long.valueOf(rs.substring(5, 10))) + 1);
         }
     }
-    public String codigoAutomaticoDesconocidoJuridico(){
-        String sql = "select count(p) from Propietario p"
-                + " where p.proCi like '999999%'" ;
+
+    public String codigoAutomaticoDesconocidoJuridico() {
+        String sql = "select max(p.proCi) from Propietario p"
+                + " where p.proCi like '9999999E%' and LENGTH(p.proCi)=13 and p.proCi<>'9999999999999'";
         Query q = em.createQuery(sql);
-        if (q.getResultList().isEmpty()) {
-            return "9999999999001";
+        if (q.getResultList().isEmpty() || q.getResultList().get(0)==null) {
+            return "9999999E10001";
         } else {
-            if((Long)q.getSingleResult()>=9){
-                if((Long)q.getSingleResult()>=99){
-                    return "9999999999"+((Long)q.getSingleResult()+1);
-                }else{
-                    return "9999999999"+"0"+((Long)q.getSingleResult()+1);
-                }
-            }else{
-                return "9999999999"+"00"+((Long)q.getSingleResult()+1);
-            }
+            String rs = String.valueOf(q.getSingleResult());
+            return "9999999E" + ((Long.valueOf(rs.substring(8, 13))) + 1);
         }
     }
 }
