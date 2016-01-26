@@ -175,7 +175,7 @@ public class GestionImpuestoPredialControlador extends BaseControlador {
                 
              //listaAdicionalesDeductivosDeduccionesSeleccion = new ArrayList<String>();
               List<AdicionalesDeductivos> listaD_PR = adicionalesDeductivosServicio.recuperarAdicionesDeductivos(catastroPredialValoracionActual, "D", "PR");
-                for (int i = 0; i < listaR_PR.size(); i++) {                     
+                for (int i = 0; i < listaD_PR.size(); i++) {                     
                      listaAdicionalesDeductivosDeduccionesSeleccion.add(listaD_PR.get(i).getAdidedCodigo()+"");
                 }
                 
