@@ -57,6 +57,10 @@ public class PredioArchivoServicio {
     public List<PredioArchivo> listarArchivosXImpuesto(CatastroPredial catastro, String tipoImp) throws Exception {
         return predioArchivoDao.listarPor2CamposOrdenada(ENTIDAD_PREDIO_ARCHIVO, "catpreCodigo", catastro, "prearcTipo", tipoImp, "ultaccMarcatiempo", "asc");
     }
+    
+    public List<PredioArchivo> listarArchivosXImpuesto(CatastroPredial catastro, String tipoImp, Integer anio) throws Exception {
+        return predioArchivoDao.listarPor3CamposOrdenada(ENTIDAD_PREDIO_ARCHIVO, "catpreCodigo", catastro, "prearcTipo", tipoImp, "prearcAnio", anio, "ultaccMarcatiempo", "asc");
+    }
 
 //    public boolean existeAplicacion(Integer vApli) throws Exception {
 //        return segAplicacionDao.existePorCampo(ENTIDAD_APLICACION, "apliCodigo", vApli);
