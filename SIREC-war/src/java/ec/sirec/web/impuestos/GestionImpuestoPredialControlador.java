@@ -187,7 +187,9 @@ public class GestionImpuestoPredialControlador extends BaseControlador {
             
             }
             System.out.println("xsss:  " + catastroPredialValoracionActual.getCatprevalCodigo());
-                                                           
+            
+            listarArchivos();
+            
         } catch (Exception ex) {
             LOGGER.log(Level.SEVERE, null, ex);
         }
@@ -256,7 +258,7 @@ public class GestionImpuestoPredialControlador extends BaseControlador {
             if (catastroPredialActual != null) {                
                 listaPredioArchivo = new ArrayList<PredioArchivo>();
                // listaPredioArchivo = predioArchivoServicio.listarArchivos(usuarioActual);
-               listaPredioArchivo = predioArchivoServicio.listarArchivosXImpuesto(catastroPredialActual, "PR");                                
+               listaPredioArchivo = predioArchivoServicio.listarArchivosXImpuesto(catastroPredialActual, "PR",anio);                                
             }else{
                 listaPredioArchivo = new ArrayList<PredioArchivo>();
                 addWarningMessage("Eliga la clave Catastral!"); 
@@ -286,6 +288,10 @@ public class GestionImpuestoPredialControlador extends BaseControlador {
         try {
 
             if (catastroPredialActual.getCatpreCodigo() != null) {
+                
+                if (anio!= 0) {
+                    
+                
                 predioArchivo = new PredioArchivo();
                 predioArchivo.setPrearcNombre(event.getFile().getFileName());
                 predioArchivo.setCatpreCodigo(catastroPredialActual);
@@ -294,7 +300,8 @@ public class GestionImpuestoPredialControlador extends BaseControlador {
                 predioArchivo.setUsuIdentificacion(usuarioActual);
                 predioArchivo.setUltaccDetalle("");
                 predioArchivo.setUltaccMarcatiempo(new Date());
-
+                predioArchivo.setPrearcAnio(anio); 
+                
                 predioArchivoServicio.crearPredioArchivo(predioArchivo);
 
                 FacesMessage msg = new FacesMessage("El documento ", event.getFile().getFileName() + " ha sido cargado satisfactoriamente.");
@@ -304,7 +311,9 @@ public class GestionImpuestoPredialControlador extends BaseControlador {
             } else {
                 addErrorMessage("Seleccione Clave Catastral!!!");
             }
-
+          }else{
+            addErrorMessage("Seleccione Año");
+            }
         } catch (Exception ex) {
             LOGGER.log(Level.SEVERE, null, ex);
         }
