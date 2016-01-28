@@ -13,7 +13,26 @@
                             
                             
                             <h:panelGrid id="pnlCC" columns="2">
-                                     <p:outputLabel value="#{txt.clave_catastral}"/>                                
+                                
+                                
+                                 <p:outputLabel value="Apellido del Propiertario"/> 
+                                
+                                <p:autoComplete id="apeProp" value="#{gestionImpuestoPredialControlador.propietarioPredioBusqueda}" 
+                                                                completeMethod="#{gestionImpuestoPredialControlador.obtenerPropietarioPredioPorApellidoProp}"
+                                                                converter="#{propietarioPredioConverter}"
+                                                                minQueryLength="5" 
+                                                                size="100" inputStyle="color:white;font-weight: bold;background: black;"
+                                                                var="prop" itemLabel="#{prop ne null ? prop.proCi.proApellidos.toString().concat(' ').concat(prop.proCi.proNombres).concat('  Clave Catastral: ').concat(prop.catpreCodigo.claveCatastral) : ''}" 
+                                                                itemValue="#{prop}">
+                                     <p:ajax event="itemSelect" listener="#{gestionImpuestoPredialControlador.onItemSelect}" 
+                                                            async="true" global="false"
+                                                            process="@this"
+                                                            update=":frmImpPredial:tabImpPred:pnlAnio, :frmImpPredial:tabImpPred:pnlRec, :frmImpPredial:tabImpPred:pnlExo, :frmImpPredial:tabImpPred:pnlDec"
+                                                                 onstart="PF('dlgValidando').show();" onsuccess="PF('dlgValidando').hide();"/>
+                                                </p:autoComplete>
+                                
+                                
+                               <!--      <p:outputLabel value="#{txt.clave_catastral}"/>                                
                                 <p:selectOneMenu id="alPred" value="#{gestionImpuestoPredialControlador.catastroPredialActual}" style="width:154px"
                                                          converter="#{catastroPredialConverter}" var="t">
                                             <f:selectItem itemLabel="Seleccione..." itemValue="" /> 
@@ -26,7 +45,7 @@
                                             </p:column> 
                                             <p:ajax listener="#{gestionImpuestoPredialControlador.buscarClaveCatastral()}"
                                          process="@this" async="true" global="false"/>  
-                                        </p:selectOneMenu>                                 
+                                        </p:selectOneMenu>      -->                           
                             </h:panelGrid>
                                                                                          
                             <h:panelGrid id="pnlAnio" columns="3">                                                       
@@ -38,7 +57,7 @@
                                             <f:selectItem itemLabel="2016" itemValue="2016" />          
                                             <f:selectItem itemLabel="2017" itemValue="2017" />    
                                             <p:ajax listener="#{gestionImpuestoPredialControlador.buscarValoracion()}"
-                                                    process="@this,alPred" async="true" global="false" update=":frmImpPredial:tabImpPred:pnlDec, :frmImpPredial:tabImpPred:pnlRec, :frmImpPredial:tabImpPred:pnlExo, :frmImpPredial:tabImpPred:pnllstArch"/>  
+                                                    process="@this" async="true" global="false" update=":frmImpPredial:tabImpPred:pnlDec, :frmImpPredial:tabImpPred:pnlRec, :frmImpPredial:tabImpPred:pnlExo, :frmImpPredial:tabImpPred:pnllstArch"/>  
                                         </p:selectOneMenu>
                                                                        
                                 </h:panelGrid> 
@@ -162,7 +181,7 @@
                                                      id="btnGuardar" 
                                                      action="#{gestionImpuestoPredialControlador.guardarAdicionalesDeductivos()}" 
                                                      icon="ui-icon-disk"  
-                                                     process="@this, pnllstArch, pnlRec, pnlExo, pnlDec, pnlCC, alPred, pnlAnio" 
+                                                     process="@this, pnllstArch, pnlRec, pnlExo, pnlDec, pnlCC, apeProp, pnlAnio" 
                                                      update=":frmImpPredial:msgs"
                                                      async="true"
                                                      global="false"
