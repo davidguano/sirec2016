@@ -15,6 +15,7 @@ import ec.sirec.ejb.entidades.CpValoracionExtras;
 import ec.sirec.ejb.entidades.DatoGlobal;
 import ec.sirec.ejb.entidades.FittoCorvini;
 import ec.sirec.ejb.entidades.PredioArchivo;
+import ec.sirec.ejb.entidades.PropietarioPredio;
 import ec.sirec.ejb.entidades.RecaudacionCab;
 import ec.sirec.ejb.entidades.RecaudacionDet;
 import ec.sirec.ejb.entidades.SegUsuario;
@@ -51,6 +52,7 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
 import org.primefaces.event.FileUploadEvent;
+import org.primefaces.event.SelectEvent;
 import org.primefaces.model.StreamedContent;
 
 /**
@@ -106,6 +108,8 @@ public class GestionImpuestoPredialControlador extends BaseControlador {
     private int anioPr;
     private CatalogoDetalle catalogoParroquia;
     private CatalogoDetalle catalogoSector;
+    
+    private PropietarioPredio propietarioPredioBusqueda;
    
     private EjecutarValoracion ejecutarValoracionAcual;
 
@@ -894,6 +898,35 @@ public class GestionImpuestoPredialControlador extends BaseControlador {
         }
     }
     
+    public List<PropietarioPredio> obtenerPropietarioPredioPorApellidoProp(String vapellido) {
+        List<PropietarioPredio> lstPP = new ArrayList<PropietarioPredio>();
+        try {
+            lstPP = catastroPredialServicio.listarPropietariosPredioPorApellidoPropContiene(vapellido);
+        } catch (Exception ex) {
+            LOGGER.log(Level.SEVERE, null, ex);
+        }
+        return lstPP;
+    }
+    
+     public void onItemSelect(SelectEvent event) {
+        try {
+            PropietarioPredio pp = (PropietarioPredio) event.getObject();
+            pp = catastroPredialServicio.buscarPropietarioPredioPorCodigo(pp.getPropreCodigo());
+            //catastroPredialActual = iraCatastroDesdeBusqueda(pp.getCatpreCodigo());
+            catastroPredialActual = catastroPredialServicio.cargarObjetoCatastro(pp.getCatpreCodigo().getCatpreCodigo());
+            
+             anio = 0;
+               listaAdicionalesDeductivosRecargosSeleccion = new ArrayList<String>();
+                 listaAdicionalesDeductivosDeduccionesSeleccion = new ArrayList<String>();
+                  listaAdicionalesDeductivosExoneracionesSeleccion = new ArrayList<String>();
+            
+            
+            //catastroPredialActual = ;
+        } catch (Exception ex) {
+            LOGGER.log(Level.SEVERE, null, ex);
+        }
+    }
+    
     // METODOS
     public List<AdicionalesDeductivos> getListaAdicionalesDeductivosRecargos() {
         return listaAdicionalesDeductivosRecargos;
@@ -1064,5 +1097,12 @@ public class GestionImpuestoPredialControlador extends BaseControlador {
         this.anioPr = anioPr;
     }
     
+     public PropietarioPredio getPropietarioPredioBusqueda() {
+        return propietarioPredioBusqueda;
+    }
+
+    public void setPropietarioPredioBusqueda(PropietarioPredio propietarioPredioBusqueda) {
+        this.propietarioPredioBusqueda = propietarioPredioBusqueda;
+    }
     
 }
