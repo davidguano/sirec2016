@@ -15,6 +15,7 @@ import ec.sirec.ejb.entidades.CatastroPredialValoracion;
 import ec.sirec.ejb.entidades.CpAlcabalaValoracionExtras;
 import ec.sirec.ejb.entidades.PredioArchivo;
 import ec.sirec.ejb.entidades.Propietario;
+import ec.sirec.ejb.entidades.PropietarioPredio;
 import ec.sirec.ejb.entidades.SegUsuario;
 import ec.sirec.ejb.servicios.AdicionalesDeductivosServicio;
 import ec.sirec.ejb.servicios.CatalogoDetalleServicio;
@@ -51,6 +52,7 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.primefaces.component.datatable.DataTable;
 import org.primefaces.event.FileUploadEvent;
+import org.primefaces.event.SelectEvent;
 import org.primefaces.model.StreamedContent;
 
 /**
@@ -88,7 +90,9 @@ public class GestionAlcabalasControlador extends BaseControlador {
     private Propietario propietario;
     private List<PredioArchivo> listaAlcabalasArchivo;
     private PredioArchivo predioArchivo;
-
+    private PropietarioPredio propietarioPredioBusqueda;
+    private int anio;
+    
     /// ATRIBUTOS PLUSVALIA
     
     private List<CatalogoDetalle> listaTipoDeTarifa;
@@ -135,7 +139,8 @@ public class GestionAlcabalasControlador extends BaseControlador {
             catalogoDetalleConcepto = new CatalogoDetalle();
             listaAlcabalasArchivo = new ArrayList<PredioArchivo>();
             predioArchivo = new PredioArchivo();
-            listarCatastroPredial();
+            anio = 0;
+            //listarCatastroPredial();
             obtenerUsuario();
             listarConceptos();
             listarCatalogosDetalle();
@@ -195,7 +200,9 @@ public class GestionAlcabalasControlador extends BaseControlador {
             System.out.println("m: " + propietario.getProNombres());
 
             catastroPredialValoracionActual = new CatastroPredialValoracion();
-            catastroPredialValoracionActual = catastroPredialValoracionServicio.buscarPorCatastroPredial(catastroPredialActual);
+            catastroPredialValoracionActual = catastroPredialValoracionServicio.existeCatastroValoracion(catastroPredialActual, anio); 
+            
+            catastroPredialAlcabalaValoracion.setCatprealcvalAnio(anio);            
 
         } catch (Exception ex) {
             LOGGER.log(Level.SEVERE, null, ex);
@@ -319,21 +326,7 @@ public class GestionAlcabalasControlador extends BaseControlador {
         }
     }
 
-//    public void startDownload(PredioArchivo archivo) {
-//        HttpServletResponse response = (HttpServletResponse) FacesContext.getCurrentInstance()
-//                .getExternalContext().getResponse();
-//        try {
-//            response.setContentType("application/pdf");
-//            response.setHeader("Content-Disposition", "attachment;filename=" + archivo.getPrearcNombre());
-//            response.getOutputStream().write(archivo.getPrearcData());
-//            response.getOutputStream().flush();
-//            response.getOutputStream().close();
-//            FacesContext.getCurrentInstance().responseComplete();
-//        } catch (IOException ioex) {
-//            System.out.println("kkkkkkkkkjdjdjdjd");
-//            LOGGER.log(Level.SEVERE, null, ioex);            
-//        }
-//    }   
+  
     public void descargarArchivo(PredioArchivo patArchivoActual) {
         predioArchivo = patArchivoActual;
         FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("datoArchivo", patArchivoActual.getPrearcData());
@@ -408,6 +401,29 @@ public class GestionAlcabalasControlador extends BaseControlador {
             } else {
                 addErrorMessage("No existe Clave Catastral");
             }
+        } catch (Exception ex) {
+            LOGGER.log(Level.SEVERE, null, ex);
+        }
+    }
+    
+     public List<PropietarioPredio> obtenerPropietarioPredioPorApellidoProp(String vapellido) {
+        List<PropietarioPredio> lstPP = new ArrayList<PropietarioPredio>();
+        try {
+            lstPP = catastroPredialServicio.listarPropietariosPredioPorApellidoPropContiene(vapellido);
+        } catch (Exception ex) {
+            LOGGER.log(Level.SEVERE, null, ex);
+        }
+        return lstPP;
+    }
+     
+       public void onItemSelect(SelectEvent event) {
+        try {
+            PropietarioPredio pp = (PropietarioPredio) event.getObject();
+            pp = catastroPredialServicio.buscarPropietarioPredioPorCodigo(pp.getPropreCodigo());            
+            catastroPredialActual = catastroPredialServicio.cargarObjetoCatastro(pp.getCatpreCodigo().getCatpreCodigo());                                               
+            
+            
+            
         } catch (Exception ex) {
             LOGGER.log(Level.SEVERE, null, ex);
         }
@@ -734,7 +750,19 @@ public void calularRebajaDesvalorizacionBaseImpImpuesto() {
         this.listaCatastroPredialTablaValoracionSeleccion = listaCatastroPredialTablaValoracionSeleccion;
     }
 
+     public PropietarioPredio getPropietarioPredioBusqueda() {
+        return propietarioPredioBusqueda;
+    }
 
+    public void setPropietarioPredioBusqueda(PropietarioPredio propietarioPredioBusqueda) {
+        this.propietarioPredioBusqueda = propietarioPredioBusqueda;
+    }
     
-    
+    public int getAnio() {
+        return anio;
+    }
+
+    public void setAnio(int anio) {
+        this.anio = anio;
+    }
 }
