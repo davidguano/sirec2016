@@ -14,7 +14,12 @@
                                 <h:panelGrid id="panelIngreso" columns="3">                                                                                                       
                                 <p:outputLabel value="#{txt.clave_catastral}" style="font-size:14px"/>
                                 
-                                <p:selectOneMenu id="alPred" value="#{gestionAlcabalasControlador.catastroPredialActual}" style="width:180px;font-weight: bold;background: green;"
+                                <p:inputText id="alPred" value="#{gestionAlcabalasControlador.catastroPredialActual.catpreCodNacional}#{gestionAlcabalasControlador.catastroPredialActual.catpreCodLocal}"                                                     
+                                             readonly="true" required="true" requiredMessage="Se nesecita un valor: #{txt.clave_catastral}"
+                                             style="font-family: Arial; font-size: 15px;"/>
+                                 <p:message  for="alPred" display="icon"/>
+                                
+                               <!-- <p:selectOneMenu id="alPred" value="#{gestionAlcabalasControlador.catastroPredialActual}" style="width:180px;font-weight: bold;background: green;"
                                                  converter="#{catastroPredialConverter}" var="t" required="true" requiredMessage="Se nesecita un valor: #{txt.clave_catastral}">
                                             <f:selectItem itemLabel="Seleccione..." itemValue="" /> 
                                             <f:selectItems var="tipo" 
@@ -28,16 +33,22 @@
                                          process="@this" async="true" global="false"/>                                             
                                         </p:selectOneMenu> 
                                  <p:message  for="alPred" display="icon"/>
-                                
+                                -->
                                 <p:outputLabel value="#{txt.anio}"/>
-                                <p:selectOneMenu id="alAnio" value="#{gestionAlcabalasControlador.catastroPredialAlcabalaValoracion.catprealcvalAnio}" style="width:180px; font-weight: bold;background: green;"
+                                
+                                <p:inputText id="alAnio" value="#{gestionAlcabalasControlador.catastroPredialAlcabalaValoracion.catprealcvalAnio}"                                                     
+                                             readonly="true" required="true" requiredMessage="Se nesecita un valor: #{txt.anio}"
+                                             style="font-family: Arial; font-size: 15px;"/>
+                                
+                               <!-- <p:selectOneMenu id="alAnio" value="#{gestionAlcabalasControlador.catastroPredialAlcabalaValoracion.catprealcvalAnio}" style="width:180px; font-weight: bold;background: green;"
                                                  required="true" requiredMessage="Se nesecita un valor: #{txt.anio}"
                                                  >
                                             <f:selectItem itemLabel="Seleccione..." itemValue="" /> 
                                             <f:selectItem itemLabel="2015" itemValue="2015" />
-                                            <f:selectItem itemLabel="2016" itemValue="2015" />          
-                                            <f:selectItem itemLabel="2017" itemValue="2015" />          
+                                            <f:selectItem itemLabel="2016" itemValue="2016" />          
+                                            <f:selectItem itemLabel="2017" itemValue="2017" />          
                                         </p:selectOneMenu>
+                                 -->
                                 <p:message  for="alAnio" display="icon"/>
                                 
                                 <p:outputLabel value="#{txt.parroquia}"/>
