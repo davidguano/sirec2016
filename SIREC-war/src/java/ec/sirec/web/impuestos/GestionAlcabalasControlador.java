@@ -203,7 +203,7 @@ public class GestionAlcabalasControlador extends BaseControlador {
             catastroPredialValoracionActual = catastroPredialValoracionServicio.existeCatastroValoracion(catastroPredialActual, anio); 
             
             catastroPredialAlcabalaValoracion.setCatprealcvalAnio(anio);            
-
+            listarArchivos();
         } catch (Exception ex) {
             LOGGER.log(Level.SEVERE, null, ex);
         }
@@ -277,7 +277,7 @@ public class GestionAlcabalasControlador extends BaseControlador {
         try {
             if (catastroPredialActual != null) {
                 listaAlcabalasArchivo = new ArrayList<PredioArchivo>();
-                listaAlcabalasArchivo = predioArchivoServicio.listarArchivosXImpuesto(catastroPredialActual, "AL");
+                listaAlcabalasArchivo = predioArchivoServicio.listarArchivosXImpuesto(catastroPredialActual, "AL",anio);
             } else {
                 listaAlcabalasArchivo = new ArrayList<PredioArchivo>();
                 addWarningMessage("Eliga la clave Catastral!");
@@ -310,6 +310,7 @@ public class GestionAlcabalasControlador extends BaseControlador {
             predioArchivo.setCatpreCodigo(catastroPredialActual);
             predioArchivo.setPrearcData(event.getFile().getContents());
             predioArchivo.setPrearcTipo("AL");
+            predioArchivo.setPrearcAnio(anio); 
             predioArchivo.setUsuIdentificacion(usuarioActual);
             predioArchivo.setUltaccDetalle("Documento justificativo de la deducción o exención - Alcabala");
             predioArchivo.setUltaccMarcatiempo(new Date());
