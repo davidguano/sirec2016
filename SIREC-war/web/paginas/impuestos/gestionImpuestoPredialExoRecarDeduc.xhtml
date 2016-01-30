@@ -10,11 +10,9 @@
                 <center>
                     <h:panelGrid id="panelContieneAplicacion1" width="1000" columns="1" >
                         <p:panel header="#{txt.impuesto_predial}" style="background: #B9AED9;">
-                            
-                            
+                                                       
                             <h:panelGrid id="pnlCC" columns="2">
-                                
-                                
+                                                                
                                  <p:outputLabel value="Apellido del Propiertario"/> 
                                 
                                 <p:autoComplete id="apeProp" value="#{gestionImpuestoPredialControlador.propietarioPredioBusqueda}" 
@@ -27,12 +25,26 @@
                                      <p:ajax event="itemSelect" listener="#{gestionImpuestoPredialControlador.onItemSelect}" 
                                                             async="true" global="false"
                                                             process="@this"
-                                                            update=":frmImpPredial:tabImpPred:pnlAnio, :frmImpPredial:tabImpPred:pnlRec, :frmImpPredial:tabImpPred:pnlExo, :frmImpPredial:tabImpPred:pnlDec"
+                                                            update=":frmImpPredial:tabImpPred:pnlAnio, :frmImpPredial:tabImpPred:pnlRec, :frmImpPredial:tabImpPred:pnlExo, :frmImpPredial:tabImpPred:pnlDec, :frmImpPredial:tabImpPred:alPred"
                                                                  onstart="PF('dlgValidando').show();" onsuccess="PF('dlgValidando').hide();"/>
                                                 </p:autoComplete>
                                 
-                                
-                               <!--      <p:outputLabel value="#{txt.clave_catastral}"/>                                
+                                  <p:outputLabel value="#{txt.clave_catastral}"/> 
+                                 <p:autoComplete id="alPred" value="#{gestionImpuestoPredialControlador.catastroPredialActual}" 
+                                                                completeMethod="#{gestionImpuestoPredialControlador.obtenerCatastroXCalve}"
+                                                                converter="#{catastroPredialConverter}"
+                                                                minQueryLength="5" 
+                                                                size="100" inputStyle="color:white;font-weight: bold;background: black;"
+                                                                var="CC" itemLabel="#{CC.catpreCodNacional}#{CC.catpreCodLocal}" 
+                                                                itemValue="#{CC}">
+                                     <p:ajax event="itemSelect" listener="#{gestionImpuestoPredialControlador.onItemSelectClave}" 
+                                                            async="true" global="false"
+                                                            process="@this"
+                                                            update=":frmImpPredial:tabImpPred:pnlAnio, :frmImpPredial:tabImpPred:pnlRec, :frmImpPredial:tabImpPred:pnlExo, :frmImpPredial:tabImpPred:pnlDec, :frmImpPredial:tabImpPred:apeProp"
+                                                                 onstart="PF('dlgValidando').show();" onsuccess="PF('dlgValidando').hide();"/>
+                                                </p:autoComplete>
+                                 
+                                    <!--                              
                                 <p:selectOneMenu id="alPred" value="#{gestionImpuestoPredialControlador.catastroPredialActual}" style="width:154px"
                                                          converter="#{catastroPredialConverter}" var="t">
                                             <f:selectItem itemLabel="Seleccione..." itemValue="" /> 

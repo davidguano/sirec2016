@@ -12,10 +12,18 @@
             <h:form id="frmImpPredial">   
                 <p:growl id="msgs" showDetail="true"/>
                 <center>
+                    
+                     <p:outputLabel id="preExiste" value="Existe exoneración, recargo o deducción que aplicar al predio?"/>                                                                                       
+                                        <p:selectBooleanCheckbox id="preExisteChk"
+                                                                 value="#{gestionImpuestoPredialControlador.existe}">
+                                            <p:ajax event="change"                                                                                   
+                                                        process="@this" update=":frmImpPredial:tabImpPred:" async="true" global="false"/>
+                                        </p:selectBooleanCheckbox>
+                                        <p:message for="preExiste"/> 
+                    
                     <p:tabView id="tabImpPred" style="font-size:13px">
                         <p:ajax event="tabChange" />
-
-                        <p:tab title="#{txt.impuesto_predial}">
+                        <p:tab title="#{txt.impuesto_predial}" rendered="#{gestionImpuestoPredialControlador.existe==true}">
                             <ui:include src="gestionImpuestoPredialExoRecarDeduc.xhtml" />
                         </p:tab>
                         <p:tab title="#{txt.DETERMINACION_EMISION}">
