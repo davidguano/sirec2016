@@ -95,6 +95,10 @@ public class CatastroPredialServicio {
     public PropietarioPredio buscarPropietarioPredioPorCodigo(Integer vPPcod) throws Exception {
         return propietarioServicio.buscarPropietarioPredioPorCodigo(vPPcod);
     }
+    
+    public PropietarioPredio buscarPropietarioPredioPorCatastro(Integer vcodCatastro) throws Exception {
+        return propietarioServicio.buscarPropietarioPredioPorCatastro(vcodCatastro);
+    }
 
     public List<CatastroPredial> listarCatastroPorCedulaPropietario(String vcedula) throws Exception {
         List<CatastroPredial> lstC = new ArrayList<CatastroPredial>();
