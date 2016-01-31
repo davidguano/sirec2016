@@ -15,6 +15,7 @@ import ec.sirec.ejb.entidades.CpValoracionExtras;
 import ec.sirec.ejb.entidades.DatoGlobal;
 import ec.sirec.ejb.entidades.FittoCorvini;
 import ec.sirec.ejb.entidades.PredioArchivo;
+import ec.sirec.ejb.entidades.Propietario;
 import ec.sirec.ejb.entidades.PropietarioPredio;
 import ec.sirec.ejb.entidades.RecaudacionCab;
 import ec.sirec.ejb.entidades.RecaudacionDet;
@@ -32,6 +33,7 @@ import ec.sirec.web.base.BaseControlador;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -108,7 +110,7 @@ public class GestionImpuestoPredialControlador extends BaseControlador {
     private int anioPr;
     private CatalogoDetalle catalogoParroquia;
     private CatalogoDetalle catalogoSector;
-    
+    private boolean existe;
     private PropietarioPredio propietarioPredioBusqueda;
    
     private EjecutarValoracion ejecutarValoracionAcual;
@@ -136,6 +138,7 @@ public class GestionImpuestoPredialControlador extends BaseControlador {
     @PostConstruct
     public void inicializar() {
         try {
+            existe = false;
             listarCatalogosDetalle();
             obtenerUsuario();
             catastroPredialActual = new CatastroPredial();
@@ -157,9 +160,9 @@ public class GestionImpuestoPredialControlador extends BaseControlador {
     public void buscarValoracion() {
         try {
 
-             listaAdicionalesDeductivosRecargosSeleccion = new ArrayList<String>();
-                 listaAdicionalesDeductivosDeduccionesSeleccion = new ArrayList<String>();
-                  listaAdicionalesDeductivosExoneracionesSeleccion = new ArrayList<String>();
+            listaAdicionalesDeductivosRecargosSeleccion = new ArrayList<String>();
+            listaAdicionalesDeductivosDeduccionesSeleccion = new ArrayList<String>();
+            listaAdicionalesDeductivosExoneracionesSeleccion = new ArrayList<String>();
             
             catastroPredialValoracionActual = new CatastroPredialValoracion();
             catastroPredialValoracionActual = catastroPredialValoracionServicio.existeCatastroValoracion(catastroPredialActual, anio);                      
@@ -198,7 +201,7 @@ public class GestionImpuestoPredialControlador extends BaseControlador {
             LOGGER.log(Level.SEVERE, null, ex);
         }
     }
-        
+         
     public void listarCatastroPredialERD() {
         try {
             listaCatastroPredialExoRecarDeduc = catastroPredialServicio.listarClaveCatastral();
@@ -348,7 +351,7 @@ public class GestionImpuestoPredialControlador extends BaseControlador {
         return null;
     }
     
-     public void valoracionConstruccion() {
+     public void valoracionConstruccion(CatastroPredial catastroPredialActual) {
          try {                           
           catastroPredialActual = catastroPredialServicio.cargarObjetoCatastro(catastroPredialActual.getCatpreCodigo());   
              
@@ -399,12 +402,26 @@ public class GestionImpuestoPredialControlador extends BaseControlador {
             // List<Integer> FactorDepreciacion = new ArrayList<Integer>();
              List<Double> FD = new ArrayList<Double>();
              for (int i = 0; i < vidaUtil.size(); i++) {
-                 int factoresInt = (int) Math.round(((double) Edad.get(i) / (double) vidaUtil.get(i)) * 100);                
-                // System.out.println("factoresInt: "+factoresInt);                 
+                 
+//                 System.out.println("vidaUtil.get(i) "+vidaUtil.get(i));  
+//                 System.out.println("catastroPredialActual "+catastroPredialActual); 
+                 
+                 Double vid = vidaUtil.get(i);
+                 if(vid==null){
+                 vid=Double.valueOf("0");
+                 }
+                 
+                 Integer edad = Edad.get(i);
+                 if(edad==null){
+                 edad=0;
+                 }
+                 
+                 int factoresInt = (int) Math.round(((double) edad / (double) vid) * 100);                
+                 System.out.println("factoresInt: "+factoresInt);                 
                  fittoCorvini = new FittoCorvini();
                  fittoCorvini = fittoCorviniServicio.obtenerValoresClase(factoresInt);
-
-                 if (estadoCons.get(i).equals("ESTABLE")) {
+                 if(fittoCorvini!=null){                 
+                     if (estadoCons.get(i).equals("ESTABLE")) {
                      FD.add(fittoCorvini.getClase1()/100);
                  } else {
                      if (estadoCons.get(i).equals("A REPARAR")) {
@@ -414,7 +431,10 @@ public class GestionImpuestoPredialControlador extends BaseControlador {
                              FD.add(fittoCorvini.getClase5()/100);
                          }
                      }
-                 }
+                 }                 
+                 }else{
+                     FD.add(Double.valueOf("0"));                  
+                 }                                    
              }
           
           for (int i = 0; i < FD.size(); i++) {   
@@ -435,11 +455,20 @@ public class GestionImpuestoPredialControlador extends BaseControlador {
                  }                 
                  if(inicio2<fin2){                     
                      if(i<fin2){
-                          Grupo2.add(inicio2, CPEdif.getCatdetCodigo().getCatdetValorDecimal()); 
-                          Grupo2AUX.add(inicio2, CPEdif.getCatdetCodigo().getCatdetValorDecimal());                           
+                         Double valor2 = CPEdif.getCatdetCodigo().getCatdetValorDecimal();
+                         if(valor2==null){
+                         valor2=Double.valueOf("0");
+                         }
+                          Grupo2.add(inicio2, valor2); 
+                          Grupo2AUX.add(inicio2, valor2);                           
                           // System.out.println("Grupo2.get(inicio2): "+ Grupo2.get(inicio2));                          
-                     }else{                                                                                                    
-                         Grupo2.set(inicio2, CPEdif.getCatdetCodigo().getCatdetValorDecimal()+ Grupo2AUX.get(inicio2));                          
+                     }else{ 
+                         Double valor2 = CPEdif.getCatdetCodigo().getCatdetValorDecimal();
+                         if(valor2==null){
+                         valor2=Double.valueOf("0");
+                         }
+                         
+                         Grupo2.set(inicio2, valor2+ Grupo2AUX.get(inicio2));                          
                          //System.out.println(Grupo2.get(inicio2)+" = "+ CPEdif.getCatdetCodigo().getCatdetValor() +" + "+ Grupo2AUX.get(inicio2));                             
                          Grupo2AUX.set(inicio2, Grupo2.get(inicio2));                                                                           
                          //System.out.println("total: "+ Grupo2AUX.get(inicio2));                         
@@ -461,10 +490,19 @@ public class GestionImpuestoPredialControlador extends BaseControlador {
                  }                 
                  if(inicio3<fin3){                     
                      if(i<fin3){
-                          Grupo3.add(inicio3, CPEdif.getCatdetCodigo().getCatdetValorDecimal()); 
-                          Grupo3AUX.add(inicio3, CPEdif.getCatdetCodigo().getCatdetValorDecimal());                                                                           
-                     }else{                                                                                                    
-                         Grupo3.set(inicio3, CPEdif.getCatdetCodigo().getCatdetValorDecimal()+ Grupo3AUX.get(inicio3));                                               
+                         Double valor3 = CPEdif.getCatdetCodigo().getCatdetValorDecimal();
+                         if(valor3==null){
+                         valor3=Double.valueOf("0");
+                         }
+                          Grupo3.add(inicio3, valor3); 
+                          Grupo3AUX.add(inicio3, valor3);                                                                           
+                     }else{
+                         Double valor3 = CPEdif.getCatdetCodigo().getCatdetValorDecimal();
+                         if(valor3==null){
+                         valor3=Double.valueOf("0");
+                         }
+                         
+                         Grupo3.set(inicio3, valor3 + Grupo3AUX.get(inicio3));                                               
                          Grupo3AUX.set(inicio3, Grupo3.get(inicio3));                                                                                                             
                      }                     
                      inicio3++;
@@ -485,15 +523,25 @@ public class GestionImpuestoPredialControlador extends BaseControlador {
                  if(inicio4<fin4){                     
                      if (i < fin4) {
                          try {
-                             Grupo4.add(inicio4, CPEdif.getCatdetCodigo().getCatdetValorDecimal());
-                             Grupo4AUX.add(inicio4, CPEdif.getCatdetCodigo().getCatdetValorDecimal());
+                             Double valor4 = CPEdif.getCatdetCodigo().getCatdetValorDecimal();
+                         if(valor4==null){
+                         valor4=Double.valueOf("0");
+                         }
+                             
+                             Grupo4.add(inicio4, valor4);
+                             Grupo4AUX.add(inicio4, valor4);
                          } catch (NullPointerException ex) {
                              Grupo4.add(inicio4, Double.valueOf("0"));
                              Grupo4AUX.add(inicio4, Double.valueOf("0"));
                          }
                      }else{
                          try{
-                         Grupo4.set(inicio4, CPEdif.getCatdetCodigo().getCatdetValorDecimal()+ Grupo4AUX.get(inicio4));                                               
+                           Double valor4 = CPEdif.getCatdetCodigo().getCatdetValorDecimal();
+                         if(valor4==null){
+                         valor4=Double.valueOf("0");
+                         }   
+                             
+                         Grupo4.set(inicio4, valor4 + Grupo4AUX.get(inicio4));                                               
                          Grupo4AUX.set(inicio4, Grupo4.get(inicio4));  
                          } catch (NullPointerException ex) {
                              Grupo4.set(inicio4, 0 + Grupo4AUX.get(inicio4));                                               
@@ -512,49 +560,45 @@ public class GestionImpuestoPredialControlador extends BaseControlador {
           BigDecimal valorAvaluoConstruccion = BigDecimal.ZERO;
           BigDecimal valorAvaluoTerrero = new BigDecimal(10000);
           
-          for (int i = 0; i < vidaUtil.size(); i++) {                
-             double d = (VN.get(i)-(VN.get(i)*FD.get(i)))*catastroPredialActual.getCatpreAreaTotalCons();   
+          for (int i = 0; i < vidaUtil.size(); i++) {
+              Double AreaTotalCons = catastroPredialActual.getCatpreAreaTotalCons();
+              if(AreaTotalCons==null){
+              AreaTotalCons = Double.valueOf("0");
+              }
+              Double FDvalor = FD.get(i);
+              if(FDvalor==null){
+              FDvalor = Double.valueOf("0");
+              }
+              
+             double d = (VN.get(i)-(VN.get(i)*FDvalor))*AreaTotalCons;   
 //             System.out.println(" "+ VN.get(i)+" - "+VN.get(i) +" * "+ FD.get(i)+") *"+catastroPredialActual.getCatpreAreaTotalCons());           
 //             System.out.println("d: "+ d); 
-          valorAvaluoConstruccion = valorAvaluoConstruccion.add(new BigDecimal((VN.get(i)-(VN.get(i)*FD.get(i)))*catastroPredialActual.getCatpreAreaTotalCons())) ;                                                    
-          }
-          
-          
-          
+          valorAvaluoConstruccion = valorAvaluoConstruccion.add(new BigDecimal((VN.get(i)-(VN.get(i)*FDvalor))*AreaTotalCons)) ;                                                    
+          }                              
           
           catastroPredialValoracionActual.setCatpreCodigo(catastroPredialActual);
-          catastroPredialValoracionActual.setCatprevalAvaluoEdif(valorAvaluoConstruccion); 
-          catastroPredialValoracionActual.setCatprevalAvaluoTerr(valorAvaluoTerrero); 
-          catastroPredialValoracionActual.setCatprevalAvaluoTot(valorAvaluoConstruccion.add(valorAvaluoTerrero)); 
-          catastroPredialValoracionActual.setCatprevalValorPropieda(valorAvaluoConstruccion.add(valorAvaluoTerrero));   
+          catastroPredialValoracionActual.setCatprevalAvaluoEdif(valorAvaluoConstruccion.setScale(2, RoundingMode.HALF_UP)); 
+          catastroPredialValoracionActual.setCatprevalAvaluoTerr(valorAvaluoTerrero.setScale(2, RoundingMode.HALF_UP)); 
+          catastroPredialValoracionActual.setCatprevalAvaluoTot(valorAvaluoConstruccion.add(valorAvaluoTerrero).setScale(2, RoundingMode.HALF_UP)); 
+          catastroPredialValoracionActual.setCatprevalValorPropieda(valorAvaluoConstruccion.add(valorAvaluoTerrero).setScale(2, RoundingMode.HALF_UP));   
           
-          calcularBaseImponible();
+          calcularBaseImponible(catastroPredialActual);
           
-          catastroPredialValoracionActual.setCatprevalImpuesto(catastroPredialValoracionActual.getCatprevalBaseImponible().multiply(new BigDecimal(datoGlobalServicio.obtenerDatoGlobal("Banda_Impositiva_Urbana").getDatgloValor()).divide(new BigDecimal(100))));  
-          catastroPredialValoracionActual.setCatprevalBomberos(catastroPredialValoracionActual.getCatprevalBaseImponible().multiply(new BigDecimal(datoGlobalServicio.obtenerDatoGlobal("Bomberos").getDatgloValor()).divide(new BigDecimal(100))));  
-          catastroPredialValoracionActual.setCatprevalSolarNoedificado(catastroPredialValoracionActual.getCatprevalBaseImponible().multiply(new BigDecimal(datoGlobalServicio.obtenerDatoGlobal("Solar_No_Edif").getDatgloValor()).divide(new BigDecimal(100))));  
-          catastroPredialValoracionActual.setCatprevalTasaAdm(new BigDecimal(datoGlobalServicio.obtenerDatoGlobal("Tasa_Administrativa").getDatgloValor()));  
-          catastroPredialValoracionActual.setCatprevalAnio(anio);
+          catastroPredialValoracionActual.setCatprevalImpuesto(catastroPredialValoracionActual.getCatprevalBaseImponible().multiply(new BigDecimal(datoGlobalServicio.obtenerDatoGlobal("Banda_Impositiva_Urbana").getDatgloValor()).divide(new BigDecimal(100))).setScale(2, RoundingMode.HALF_UP));  
+          catastroPredialValoracionActual.setCatprevalBomberos(catastroPredialValoracionActual.getCatprevalBaseImponible().multiply(new BigDecimal(datoGlobalServicio.obtenerDatoGlobal("Bomberos").getDatgloValor()).divide(new BigDecimal(100))).setScale(2, RoundingMode.HALF_UP));  
+          catastroPredialValoracionActual.setCatprevalSolarNoedificado(catastroPredialValoracionActual.getCatprevalBaseImponible().multiply(new BigDecimal(datoGlobalServicio.obtenerDatoGlobal("Solar_No_Edif").getDatgloValor()).divide(new BigDecimal(100))).setScale(2, RoundingMode.HALF_UP));  
+          catastroPredialValoracionActual.setCatprevalTasaAdm(new BigDecimal(datoGlobalServicio.obtenerDatoGlobal("Tasa_Administrativa").getDatgloValor()).setScale(2, RoundingMode.HALF_UP));  
+          catastroPredialValoracionActual.setCatprevalAnio(anioPr);
           
           catastroPredialValoracionServicio.editarAplicacion(catastroPredialValoracionActual);
-          
-          
-//          catastroPredialValoracionActual.setCatprevalBaseImponible(valorAvaluoConstruccion.add(valorAvaluoTerrero));                                        
-//          catastroPredialValoracionActual.setCatprevalImpuesto(valorAvaluoConstruccion.add(valorAvaluoTerrero).multiply(new BigDecimal(datoGlobalServicio.obtenerDatoGlobal("Banda_Impositiva_Urbana").getDatgloValor()).divide(new BigDecimal(100))));  
-//          catastroPredialValoracionActual.setCatprevalBomberos(valorAvaluoConstruccion.add(valorAvaluoTerrero).multiply(new BigDecimal(datoGlobalServicio.obtenerDatoGlobal("Bomberos").getDatgloValor()).divide(new BigDecimal(100))));  
-//          catastroPredialValoracionActual.setCatprevalSolarNoedificado(valorAvaluoConstruccion.add(valorAvaluoTerrero).multiply(new BigDecimal(datoGlobalServicio.obtenerDatoGlobal("Solar_No_Edif").getDatgloValor()).divide(new BigDecimal(100))));  
-//          catastroPredialValoracionActual.setCatprevalTasaAdm(new BigDecimal(datoGlobalServicio.obtenerDatoGlobal("Tasa_Administrativa").getDatgloValor()));  
-//          catastroPredialValoracionActual.setCatprevalAnio(anio);
-          
-        //  catastroPredialValoracionServicio.crearAplicacion(catastroPredialValoracionActual);
           
           System.out.println("valorConstruccionT: "+ valorAvaluoConstruccion);
         } catch (Exception ex) {
             LOGGER.log(Level.SEVERE, null, ex);
         }
     }
-     
-     public void calcularBaseImponible() {
+              
+     public void calcularBaseImponible(CatastroPredial catastroPredialActual) {
         
         try {
            List<CpValoracionExtras> adicDeduc = cpValoracionExtrasServicio.listarCpValoracionExtrasXCatPreVal(catastroPredialValoracionActual);
@@ -569,7 +613,7 @@ public class GestionImpuestoPredialControlador extends BaseControlador {
              }
                System.out.println("ds>: "+VE.getAdidedCodigo().getAdidedNemonico());
            }
-           if(terceraEdad=true){
+           if(terceraEdad==true){
            
                //catastroPredialServicio.obtenerPropietarioPrincipalPredio(catastroPredialActual.getCatpreCodigo()).getProCi();
                BigDecimal totalAvaluoxPro = BigDecimal.ZERO;
@@ -582,24 +626,23 @@ public class GestionImpuestoPredialControlador extends BaseControlador {
                    }
                }
                if(totalAvaluoxPro.compareTo(new BigDecimal(datoGlobalServicio.obtenerDatoGlobal("500RBU").getDatgloValor()))==1){
-                     catastroPredialValoracionActual.setCatprevalBaseImponible(totalAvaluoxPro.subtract(new BigDecimal(datoGlobalServicio.obtenerDatoGlobal("500RBU").getDatgloValor())));               
+                     catastroPredialValoracionActual.setCatprevalBaseImponible(totalAvaluoxPro.subtract(new BigDecimal(datoGlobalServicio.obtenerDatoGlobal("500RBU").getDatgloValor())).setScale(2, RoundingMode.HALF_UP));               
                }else{
                    if(totalAvaluoxPro.compareTo(new BigDecimal(datoGlobalServicio.obtenerDatoGlobal("500RBU").getDatgloValor()))==-1){                   
-                       catastroPredialValoracionActual.setCatprevalBaseImponible(totalAvaluoxPro);                               
+                       catastroPredialValoracionActual.setCatprevalBaseImponible(totalAvaluoxPro.setScale(2, RoundingMode.HALF_UP));                               
                }               
                }
                
                System.out.println("total: " + totalAvaluoxPro);
                
            }else{
-               catastroPredialValoracionActual.setCatprevalBaseImponible(catastroPredialValoracionActual.getCatprevalAvaluoTot());                
+               catastroPredialValoracionActual.setCatprevalBaseImponible(catastroPredialValoracionActual.getCatprevalAvaluoTot().setScale(2, RoundingMode.HALF_UP));                
            }
 
         } catch (Exception ex) {
             LOGGER.log(Level.SEVERE, null, ex);
         }
     } 
-     
 
     public void guardarAdicionalesDeductivos() {
         try {
@@ -642,9 +685,9 @@ public class GestionImpuestoPredialControlador extends BaseControlador {
                         }
 
                         
-                       valoracionConstruccion(); 
+                     //  valoracionConstruccion(); 
                         
-                        calcularBaseImponible();
+                        //calcularBaseImponible();
                         
                         //catastroPredialValoracionActual.setCatprevalBaseImponible(valorAvaluoConstruccion.add(valorAvaluoTerrero));                                        
           
@@ -683,34 +726,38 @@ public class GestionImpuestoPredialControlador extends BaseControlador {
     
 
     public void ejecutarValoracion() {
-        try {
+        try { 
             totalTotal = new BigDecimal(0);
             listaEjecutarValoracion = new ArrayList<EjecutarValoracion>();
             catastroPredialValoracionActualEje = new ArrayList<CatastroPredialValoracion>();
             
-            if (criterio.equals("C")) {
-                
-               catastroPredialValoracionActualEje = catastroPredialValoracionServicio.buscarValoracionXClaveCatastral(catastroPredialActual, anioPr);
-                
-               // listaCatastroPredialAValoracion = catastroPredialServicio.listarCatastroXCodigo(catastroPredialActual.getCatpreCodigo());
+            if (criterio.equals("C")) {                
+                catastroPredialServicio.crearCatastroXCasatroVal(catastroPredialActual, anioPr);                 
+               catastroPredialValoracionActualEje = catastroPredialValoracionServicio.buscarValoracionXClaveCatastral(catastroPredialActual, anioPr);                               
             } else {
-                if (criterio.equals("T")) {
-                    //listaCatastroPredialAValoracion = catastroPredialServicio.listarClaveCatastral();
+                if (criterio.equals("T")) {                                       
+                    catastroPredialServicio.crearCatastroXTodo(anioPr); 
                      catastroPredialValoracionActualEje = catastroPredialValoracionServicio.listarCatastroAnioTodo(anioPr);
                 }else{
-                    if (criterio.equals("P")) {                                                                        
-                        catastroPredialValoracionActualEje = catastroPredialValoracionServicio.listarCatastroXParroquia(catalogoParroquia, anioPr);
-                    //listaCatastroPredialAValoracion = catastroPredialServicio.listarCatastroXParroquia(catalogoParroquia); 
+                    if (criterio.equals("P")) {         
+                        
+                        catastroPredialServicio.crearCatastroXParroquiaVal(catalogoParroquia, anioPr);                         
+                        catastroPredialValoracionActualEje = catastroPredialValoracionServicio.listarCatastroXParroquia(catalogoParroquia, anioPr);                   
                 }else{
-                        if (criterio.equals("S")) {                                                                        
-                            catastroPredialValoracionActualEje = catastroPredialValoracionServicio.listarCatastroXSector(catalogoSector, anioPr);
-                 //   listaCatastroPredialAValoracion = catastroPredialServicio.listarCatastroXSector(catalogoSector); 
-                }
-                                        
+                        if (criterio.equals("S")) {      
+                            catastroPredialServicio.crearCatastroXSectorVal(catalogoSector, anioPr); 
+                            catastroPredialValoracionActualEje = catastroPredialValoracionServicio.listarCatastroXSector(catalogoSector, anioPr);                
+                }                                        
                     }
                 }
             }
 
+            
+            for (int i = 0; i < catastroPredialValoracionActualEje.size(); i++) {
+               catastroPredialValoracionActual  = catastroPredialValoracionActualEje.get(i);               
+               valoracionConstruccion(catastroPredialValoracionActual.getCatpreCodigo());
+            }
+            
             for (int i = 0; i < catastroPredialValoracionActualEje.size(); i++) {
                
 //                CatastroPredial CP = listaCatastroPredialAValoracion.get(i);
@@ -797,9 +844,7 @@ public class GestionImpuestoPredialControlador extends BaseControlador {
                 } else {
                     eVal.setTotalRecargos(BigDecimal.ZERO);
                 }
-                
-      
-                
+                                      
                 if (cpValoracionExtrasServicio.obteneValorTipoAdicional(CP.getCatpreCodigo(), CPV.getCatprevalCodigo(),"PR", "D") != null) {
                     eVal.setTotalDeduciones(cpValoracionExtrasServicio.obteneValorTipoAdicional(CP.getCatpreCodigo(), CPV.getCatprevalCodigo(), "PR", "D"));
                 } else {
@@ -818,10 +863,10 @@ public class GestionImpuestoPredialControlador extends BaseControlador {
                         .add(eVal.getCatastroPredialValoracion().getCatprevalImpuesto()).add(eVal.getCatastroPredialValoracion().getCatprevalBomberos())
                         .add(eVal.getCatastroPredialValoracion().getCatprevalSolarNoedificado())
                         .add(eVal.getCatastroPredialValoracion().getCatprevalTasaAdm()).add(eVal.getTotalRecargos()).add(eVal.getTotalDeduciones())
-                        .subtract(eVal.getTotalExoneracion()));   
+                        .subtract(eVal.getTotalExoneracion()).setScale(2, RoundingMode.HALF_UP));   
 
                 listaEjecutarValoracion.add(eVal);                
-                totalTotal = totalTotal.add(eVal.getTotalRegistro());
+                totalTotal = totalTotal.add(eVal.getTotalRegistro().setScale(2, RoundingMode.HALF_UP));
                  }           
         } catch (Exception ex) {
             LOGGER.log(Level.SEVERE, null, ex);
@@ -908,20 +953,49 @@ public class GestionImpuestoPredialControlador extends BaseControlador {
         return lstPP;
     }
     
+    public List<CatastroPredial> obtenerCatastroXCalve(String clave) {
+        List<CatastroPredial> lstPP = new ArrayList<CatastroPredial>();
+        try {
+            lstPP = catastroPredialServicio.listarCatastrosPorClaveContieneContiene(clave);
+        } catch (Exception ex) {
+            LOGGER.log(Level.SEVERE, null, ex);
+        }
+        return lstPP;
+    }
+    
      public void onItemSelect(SelectEvent event) {
         try {
             PropietarioPredio pp = (PropietarioPredio) event.getObject();
             pp = catastroPredialServicio.buscarPropietarioPredioPorCodigo(pp.getPropreCodigo());
             //catastroPredialActual = iraCatastroDesdeBusqueda(pp.getCatpreCodigo());
-            catastroPredialActual = catastroPredialServicio.cargarObjetoCatastro(pp.getCatpreCodigo().getCatpreCodigo());
+            catastroPredialActual = catastroPredialServicio.cargarObjetoCatastro(pp.getCatpreCodigo().getCatpreCodigo());            
+             limpiar();
+        } catch (Exception ex) {
+            LOGGER.log(Level.SEVERE, null, ex);
+        }
+    }
+     
+     public void onItemSelectClave(SelectEvent event) {
+        try {
+            CatastroPredial pp = (CatastroPredial) event.getObject();
             
+             propietarioPredioBusqueda = new PropietarioPredio();
+             propietarioPredioBusqueda = catastroPredialServicio.buscarPropietarioPredioPorCatastro(pp.getCatpreCodigo());            
+            catastroPredialActual = catastroPredialServicio.cargarObjetoCatastro(pp.getCatpreCodigo());            
+             limpiar();
+        } catch (Exception ex) {
+            LOGGER.log(Level.SEVERE, null, ex);
+        }
+    }
+     
+     public void limpiar() {
+        try {
+           
              anio = 0;
-               listaAdicionalesDeductivosRecargosSeleccion = new ArrayList<String>();
-                 listaAdicionalesDeductivosDeduccionesSeleccion = new ArrayList<String>();
-                  listaAdicionalesDeductivosExoneracionesSeleccion = new ArrayList<String>();
-            
-            
-            //catastroPredialActual = ;
+             listaAdicionalesDeductivosRecargosSeleccion = new ArrayList<String>();
+             listaAdicionalesDeductivosDeduccionesSeleccion = new ArrayList<String>();
+             listaAdicionalesDeductivosExoneracionesSeleccion = new ArrayList<String>();
+         
         } catch (Exception ex) {
             LOGGER.log(Level.SEVERE, null, ex);
         }
@@ -1104,5 +1178,12 @@ public class GestionImpuestoPredialControlador extends BaseControlador {
     public void setPropietarioPredioBusqueda(PropietarioPredio propietarioPredioBusqueda) {
         this.propietarioPredioBusqueda = propietarioPredioBusqueda;
     }
-    
+
+    public boolean isExiste() {
+        return existe;
+    }
+
+    public void setExiste(boolean existe) {
+        this.existe = existe;
+    }        
 }
